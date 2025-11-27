@@ -8,10 +8,10 @@ const ViewSessionsContent = () => {
 
   return (
     <AppLayout>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex h-screen overflow-hidden bg-background w-full">
         {/* Middle Pane - Sessions List */}
         <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          className={`transition-all duration-300 ease-in-out overflow-hidden flex-shrink-0 ${
             isSessionsListVisible ? 'w-96 opacity-100' : 'w-0 opacity-0'
           }`}
         >
@@ -19,7 +19,9 @@ const ViewSessionsContent = () => {
         </div>
 
         {/* Right Pane - Session Detail */}
-        <SessionDetail />
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <SessionDetail />
+        </div>
       </div>
     </AppLayout>
   );
