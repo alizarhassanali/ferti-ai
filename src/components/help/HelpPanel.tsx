@@ -7,7 +7,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerPortal,
 } from '@/components/ui/drawer';
 
 interface HelpPanelProps {
@@ -69,8 +68,7 @@ export const HelpPanel = ({ open, onOpenChange }: HelpPanelProps) => {
 
   return (
     <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
-      <DrawerPortal>
-        <DrawerContent className="!fixed !inset-y-0 !right-0 !h-screen !w-[350px] !max-w-[350px] !mt-0 !rounded-none border-l bg-background flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.12)] !z-[9999] overflow-y-auto">
+        <DrawerContent className="!fixed !inset-y-0 !right-0 !left-auto !h-screen !w-[350px] !max-w-[350px] !mt-0 !rounded-none !rounded-l-none border-l bg-background flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.12)] !z-[9999] overflow-y-auto !bottom-auto !inset-x-auto">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             {selectedArticle ? (
@@ -287,7 +285,6 @@ export const HelpPanel = ({ open, onOpenChange }: HelpPanelProps) => {
             </div>
           </div>
         </DrawerContent>
-      </DrawerPortal>
     </Drawer>
   );
 };

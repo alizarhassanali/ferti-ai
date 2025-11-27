@@ -70,24 +70,24 @@ export const LeftPane = () => {
     <>
       <div className={`h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-60'}`}>
       {/* User Profile Section */}
-      <div className="p-4 border-b border-nav-border relative">
-        <div className="flex items-center justify-between mb-2 pr-8">
+      <div className="p-4 border-b border-nav-border relative overflow-hidden">
+        <div className={`flex items-center mb-2 ${isCollapsed ? 'justify-center' : 'justify-between pr-8'}`}>
           {!isCollapsed && (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex-1">
+              <DropdownMenuTrigger className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-nav-hover cursor-pointer group">
-                  <Avatar className="h-10 w-10">
+                  <Avatar className="h-10 w-10 flex-shrink-0">
                     <AvatarImage src={user.profileImage} />
                     <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 text-left min-w-0">
+                  <div className="flex-1 text-left min-w-0 overflow-hidden">
                     <div className="font-semibold text-sm text-foreground truncate">{user.name}</div>
-                    <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{user.clinic}</div>
+                    <div className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5 truncate">{user.clinic}</div>
                   </div>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
@@ -103,12 +103,14 @@ export const LeftPane = () => {
             </DropdownMenu>
           )}
           {isCollapsed && (
-            <Avatar className="h-10 w-10 mx-auto">
-              <AvatarImage src={user.profileImage} />
-              <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
+            <div className="flex items-center justify-center w-full">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user.profileImage} />
+                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+            </div>
           )}
           <TooltipProvider>
             <Tooltip>
@@ -118,7 +120,7 @@ export const LeftPane = () => {
                   className="absolute top-2 right-2 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
                   aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
                 >
-                  <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? 'rotate-90' : '-rotate-90'}`} />
+                  <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? '-rotate-90' : 'rotate-90'}`} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right">
