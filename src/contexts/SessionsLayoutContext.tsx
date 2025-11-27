@@ -1,0 +1,37 @@
+import { createContext, useContext, useState, ReactNode } from 'react';
+
+interface SessionsLayoutContextType {
+  isSessionsListVisible: boolean;
+  toggleSessionsList: () => void;
+}
+
+const SessionsLayoutContext = createContext<SessionsLayoutContextType | undefined>(undefined);
+
+export const SessionsLayoutProvider = ({ children }: { children: ReactNode }) => {
+  const [isSessionsListVisible, setIsSessionsListVisible] = useState(() => {
+    const saved = localStorage.getItem('sessions-list-visible');
+    return saved !== 'false'; // Default to true
+  });
+
+  const toggleSessionsList = () => {
+    setIsSessionsListVisible((prev) => {
+      const newValue = !prev;
+      localStorage.setItem('sessions-list-visible', String(newValue));
+      return newValue;
+    });
+  };
+
+  return (
+    <SessionsLayoutContext.Provider value={{ isSessionsListVisible, toggleSessionsList }}>
+      {children}
+    </SessionsLayoutContext.Provider>
+  );
+};
+
+export const useSessionsLayout = () => {
+  const context = useContext(SessionsLayoutContext);
+  if (context === undefined) {
+    throw new Error('useSessionsLayout must be used within SessionsLayoutProvider');
+  }
+  return context;
+};
