@@ -1,3 +1,4 @@
+import { AppLayout } from '@/components/layout/AppLayout';
 import { TemplatesHeader } from '@/components/templates/TemplatesHeader';
 import { TemplatesFilters } from '@/components/templates/TemplatesFilters';
 import { TemplatesTable } from '@/components/templates/TemplatesTable';
@@ -24,34 +25,36 @@ const MyTemplates = () => {
   } = useTemplates();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-6 py-8 max-w-7xl">
-        <TemplatesHeader onCreateTemplate={openCreateModal} />
-        
-        <TemplatesFilters
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-        
-        <TemplatesTable
-          templates={sortedTemplates}
-          onSort={setSortBy}
-          onToggleFavorite={toggleFavorite}
-          onDelete={deleteTemplate}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
+    <AppLayout>
+      <div className="flex-1 overflow-y-auto bg-background">
+        <div className="container mx-auto px-6 py-8 max-w-7xl">
+          <TemplatesHeader onCreateTemplate={openCreateModal} />
+          
+          <TemplatesFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
+          
+          <TemplatesTable
+            templates={sortedTemplates}
+            onSort={setSortBy}
+            onToggleFavorite={toggleFavorite}
+            onDelete={deleteTemplate}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
 
-        <CreateTemplateModal
-          isOpen={isCreateModalOpen}
-          step={createModalStep}
-          selectedType={selectedTemplateType}
-          onClose={closeCreateModal}
-          onStepChange={setCreateModalStep}
-          onTypeSelect={setSelectedTemplateType}
-        />
+          <CreateTemplateModal
+            isOpen={isCreateModalOpen}
+            step={createModalStep}
+            selectedType={selectedTemplateType}
+            onClose={closeCreateModal}
+            onStepChange={setCreateModalStep}
+            onTypeSelect={setSelectedTemplateType}
+          />
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
