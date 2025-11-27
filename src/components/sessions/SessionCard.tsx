@@ -13,7 +13,9 @@ interface Session {
 interface SessionCardProps {
   session: Session;
   isSelected: boolean;
+  isActive?: boolean;
   onSelect: () => void;
+  onClick?: () => void;
 }
 
 const statusConfig = {
@@ -34,7 +36,7 @@ const statusConfig = {
   },
 };
 
-export const SessionCard = ({ session, isSelected, onSelect }: SessionCardProps) => {
+export const SessionCard = ({ session, isSelected, isActive, onSelect, onClick }: SessionCardProps) => {
   const StatusIcon = statusConfig[session.status].icon;
 
   return (
@@ -42,16 +44,19 @@ export const SessionCard = ({ session, isSelected, onSelect }: SessionCardProps)
       className={`
         group relative flex items-start gap-3 p-3 rounded-lg border border-border
         hover:bg-accent cursor-pointer transition-colors
-        ${isSelected ? 'bg-accent border-primary' : 'bg-card'}
+        ${isActive ? 'bg-accent border-primary' : 'bg-card'}
       `}
-      onClick={onSelect}
+      onClick={onClick}
     >
       {/* Checkbox */}
       <Checkbox
         checked={isSelected}
         onCheckedChange={onSelect}
         className="mt-0.5"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
       />
 
       {/* Content */}
