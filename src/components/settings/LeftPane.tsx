@@ -70,8 +70,8 @@ export const LeftPane = () => {
     <>
       <div className={`h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-60'}`}>
       {/* User Profile Section */}
-      <div className="p-4 border-b border-nav-border">
-        <div className="flex items-center justify-between mb-2">
+      <div className="p-4 border-b border-nav-border relative">
+        <div className="flex items-center justify-between mb-2 pr-8">
           {!isCollapsed && (
             <DropdownMenu>
               <DropdownMenuTrigger className="flex-1">
@@ -110,15 +110,23 @@ export const LeftPane = () => {
               </AvatarFallback>
             </Avatar>
           )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={toggleSidebar}
+                  className="absolute top-2 right-2 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
+                >
+                  <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? 'rotate-90' : '-rotate-90'}`} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{isCollapsed ? "Expand sidebar" : "Minimise sidebar"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-        <button
-          onClick={toggleSidebar}
-          className="w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
-          title={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
-        >
-          <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? 'rotate-90' : '-rotate-90'}`} />
-          {!isCollapsed && <span className="text-xs font-medium">Minimise sidebar</span>}
-        </button>
       </div>
 
       {/* Navigation Items */}
