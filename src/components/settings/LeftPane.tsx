@@ -8,9 +8,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const LeftPane = () => {
   const { user, selectedCategory, setSelectedCategory } = useSettings();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getInitials = (name: string) => {
     return name
@@ -28,10 +31,10 @@ export const LeftPane = () => {
     { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant' },
     { type: 'separator' },
     { label: 'Templates', type: 'header' },
-    { icon: FileText, label: 'My Templates', id: 'my-templates' },
+    { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
     { icon: Store, label: 'Template Hub', id: 'template-hub' },
     { type: 'separator' },
-    { icon: Settings, label: 'Settings', id: 'settings', active: true },
+    { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
     { type: 'separator' },
     { icon: HelpCircle, label: 'Help', id: 'help' },
   ];
@@ -87,12 +90,16 @@ export const LeftPane = () => {
             }
 
             const Icon = item.icon!;
-            const isActive = item.id === 'settings';
+            const isActive = item.route ? location.pathname === item.route : false;
 
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => item.id && setSelectedCategory('profile')}
+                  onClick={() => {
+                    if (item.route) {
+                      navigate(item.route);
+                    }
+                  }}
                   className={`
                     w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
                     transition-colors
