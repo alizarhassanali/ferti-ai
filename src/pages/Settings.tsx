@@ -1,17 +1,16 @@
 import { SettingsProvider } from '@/contexts/SettingsContext';
-import { LeftPane } from '@/components/settings/LeftPane';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { MiddlePane } from '@/components/settings/MiddlePane';
 import { RightPane } from '@/components/settings/RightPane';
 
 const Settings = () => {
   return (
-    <SettingsProvider>
-      <div className="flex h-screen w-full overflow-hidden">
-        <LeftPane />
+    <AppLayout>
+      <SettingsProvider>
         <MiddlePane />
         <RightPane />
-      </div>
-    </SettingsProvider>
+      </SettingsProvider>
+    </AppLayout>
   );
 };
 
