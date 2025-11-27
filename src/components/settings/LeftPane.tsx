@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut } from 'lucide-react';
+import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -36,6 +37,18 @@ export const LeftPane = () => {
     return saved === 'true';
   });
 
+  // Try to get sessions layout context (only available on /sessions route)
+  let sessionsLayout;
+  try {
+    sessionsLayout = useSessionsLayout();
+  } catch {
+    // Not on sessions page, context not available
+    sessionsLayout = null;
+  }
+
+  const isSessionsPage = location.pathname === '/sessions';
+  const isSessionsListVisible = sessionsLayout?.isSessionsListVisible ?? true;
+
   const toggleSidebar = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
@@ -52,7 +65,13 @@ export const LeftPane = () => {
 
   const navItems = [
     { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
-    { icon: FileText, label: 'View sessions', id: 'sessions', hasArrow: true, route: '/sessions' },
+    { 
+      icon: FileText, 
+      label: isSessionsPage && !isSessionsListVisible ? 'View sessions' : 'View sessions', 
+      id: 'sessions', 
+      route: '/sessions',
+      isToggleable: true
+    },
     { type: 'separator' },
     { icon: FileCode, label: 'Chart Prep', id: 'chart-prep' },
     { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant' },
@@ -152,6 +171,26 @@ export const LeftPane = () => {
             const Icon = item.icon!;
             const isActive = item.route ? location.pathname === item.route : false;
 
+            // Determine label and arrow for toggleable items (View sessions)
+            const displayLabel = item.isToggleable && isSessionsPage
+              ? (isSessionsListVisible ? 'Hide sessions' : 'View sessions')
+              : item.label;
+            
+            const ArrowIcon = item.isToggleable && isSessionsPage
+              ? (isSessionsListVisible ? ChevronLeft : ChevronRight)
+              : null;
+
+            const handleClick = () => {
+              if (item.id === 'help') {
+                setHelpPanelOpen(true);
+              } else if (item.id === 'sessions' && isSessionsPage && sessionsLayout) {
+                // Toggle sessions list if we're already on the sessions page
+                sessionsLayout.toggleSessionsList();
+              } else if (item.route) {
+                navigate(item.route);
+              }
+            };
+
             return (
               <li key={item.id}>
                 {isCollapsed ? (
@@ -159,13 +198,7 @@ export const LeftPane = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
-                          onClick={() => {
-                            if (item.id === 'help') {
-                              setHelpPanelOpen(true);
-                            } else if (item.route) {
-                              navigate(item.route);
-                            }
-                          }}
+                          onClick={handleClick}
                           className={`
                             w-full flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium
                             transition-colors
@@ -179,19 +212,13 @@ export const LeftPane = () => {
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="right">
-                        <p>{item.label}</p>
+                        <p>{displayLabel}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 ) : (
                   <button
-                    onClick={() => {
-                      if (item.id === 'help') {
-                        setHelpPanelOpen(true);
-                      } else if (item.route) {
-                        navigate(item.route);
-                      }
-                    }}
+                    onClick={handleClick}
                     className={`
                       w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
                       transition-colors
@@ -202,8 +229,8 @@ export const LeftPane = () => {
                     `}
                   >
                     <Icon className="h-4 w-4" />
-                    <span className="flex-1 text-left">{item.label}</span>
-                    {item.hasArrow && <span className="text-muted-foreground">›</span>}
+                    <span className="flex-1 text-left">{displayLabel}</span>
+                    {ArrowIcon && <ArrowIcon className="h-4 w-4 text-muted-foreground" />}
                   </button>
                 )}
               </li>
