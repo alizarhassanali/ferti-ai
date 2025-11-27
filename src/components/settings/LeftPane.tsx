@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -8,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { HelpPanel } from '@/components/help/HelpPanel';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
@@ -22,6 +24,7 @@ export const LeftPane = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = mockUser;
+  const [helpPanelOpen, setHelpPanelOpen] = useState(false);
 
   const getInitials = (name: string) => {
     return name
@@ -48,7 +51,8 @@ export const LeftPane = () => {
   ];
 
   return (
-    <div className="w-60 h-screen bg-nav border-r border-nav-border flex flex-col">
+    <>
+      <div className="w-60 h-screen bg-nav border-r border-nav-border flex flex-col">
       {/* User Profile Section */}
       <div className="p-4 border-b border-nav-border">
         <DropdownMenu>
@@ -104,7 +108,9 @@ export const LeftPane = () => {
               <li key={item.id}>
                 <button
                   onClick={() => {
-                    if (item.route) {
+                    if (item.id === 'help') {
+                      setHelpPanelOpen(true);
+                    } else if (item.route) {
                       navigate(item.route);
                     }
                   }}
@@ -126,6 +132,9 @@ export const LeftPane = () => {
           })}
         </ul>
       </nav>
-    </div>
+      </div>
+      
+      <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
+    </>
   );
 };

@@ -20,7 +20,7 @@ export const AIAssistant = () => {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="🤖 Ask Heidi to do anything..."
+          placeholder="🤖 Ask NotesAI to do anything..."
           className="pr-10"
         />
         <Button
