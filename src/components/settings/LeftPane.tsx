@@ -1,5 +1,4 @@
 import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut } from 'lucide-react';
-import { useSettings } from '@/contexts/SettingsContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -10,10 +9,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+// Mock user - in production, this would come from auth context
+const mockUser = {
+  name: "Dr. Shahid Saya",
+  email: "shahid.saya@fertilitypartners.ca",
+  role: 'Physician' as const,
+  clinic: "Fertility Partners - Toronto",
+  profileImage: undefined,
+};
+
 export const LeftPane = () => {
-  const { user, selectedCategory, setSelectedCategory } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
+  const user = mockUser;
 
   const getInitials = (name: string) => {
     return name
