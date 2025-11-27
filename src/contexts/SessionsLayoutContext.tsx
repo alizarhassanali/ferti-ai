@@ -3,6 +3,8 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface SessionsLayoutContextType {
   isSessionsListVisible: boolean;
   toggleSessionsList: () => void;
+  selectedSessionId: string | null;
+  setSelectedSessionId: (id: string | null) => void;
 }
 
 const SessionsLayoutContext = createContext<SessionsLayoutContextType | undefined>(undefined);
@@ -12,6 +14,8 @@ export const SessionsLayoutProvider = ({ children }: { children: ReactNode }) =>
     const saved = localStorage.getItem('sessions-list-visible');
     return saved !== 'false'; // Default to true
   });
+  
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
 
   const toggleSessionsList = () => {
     setIsSessionsListVisible((prev) => {
@@ -22,7 +26,14 @@ export const SessionsLayoutProvider = ({ children }: { children: ReactNode }) =>
   };
 
   return (
-    <SessionsLayoutContext.Provider value={{ isSessionsListVisible, toggleSessionsList }}>
+    <SessionsLayoutContext.Provider 
+      value={{ 
+        isSessionsListVisible, 
+        toggleSessionsList,
+        selectedSessionId,
+        setSelectedSessionId
+      }}
+    >
       {children}
     </SessionsLayoutContext.Provider>
   );

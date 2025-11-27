@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Filter, ArrowUpDown, RefreshCw, Plug, Video, ExternalLink } from 'lucide-react';
+import { Search, Filter, ArrowUpDown, RefreshCw, Plug } from 'lucide-react';
 import { SessionCard } from './SessionCard';
 import { SessionFilters } from './SessionFilters';
 import { SessionSort } from './SessionSort';
 import { ScheduledMeetingCard } from './ScheduledMeetingCard';
+import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
+import { demoSessions } from '@/types/session';
 
 interface Session {
   id: string;
@@ -27,13 +29,6 @@ interface ScheduledMeeting {
   meetingLink?: string;
 }
 
-const mockSessions: Session[] = [
-  { id: '1', title: 'Untitled session', date: '11/27/2025', time: '9:46AM', status: 'draft' },
-  { id: '2', title: 'Test Patient', date: '11/27/2025', time: '7:36AM', status: 'complete' },
-  { id: '3', title: 'Untitled session', date: '11/25/2025', time: '9:22PM', status: 'draft' },
-  { id: '4', title: 'Follow-up Visit', date: '11/25/2025', time: '2:15PM', status: 'complete' },
-  { id: '5', title: 'Initial Consultation', date: '11/24/2025', time: '10:30AM', status: 'review' },
-];
 
 const demoMeetings: ScheduledMeeting[] = [
   {
@@ -59,23 +54,25 @@ const demoMeetings: ScheduledMeeting[] = [
 ];
 
 export const SessionList = () => {
+  const { selectedSessionId, setSelectedSessionId } = useSessionsLayout();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
 
-  const groupSessionsByDate = (sessions: Session[]) => {
-    const grouped: Record<string, Session[]> = {};
+  const groupSessionsByDate = (sessions: typeof demoSessions) => {
+    const grouped: Record<string, typeof demoSessions> = {};
     sessions.forEach((session) => {
-      if (!grouped[session.date]) {
-        grouped[session.date] = [];
+      const dateKey = session.date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
       }
-      grouped[session.date].push(session);
+      grouped[dateKey].push(session);
     });
     return grouped;
   };
 
-  const filteredSessions = mockSessions.filter((session) =>
+  const filteredSessions = demoSessions.filter((session) =>
     session.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -85,6 +82,10 @@ export const SessionList = () => {
     setSelectedSessions((prev) =>
       prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
     );
+  };
+
+  const handleSessionClick = (id: string) => {
+    setSelectedSessionId(id);
   };
 
   return (
@@ -170,9 +171,17 @@ export const SessionList = () => {
                 {sessions.map((session) => (
                   <SessionCard
                     key={session.id}
-                    session={session}
+                    session={{
+                      id: session.id,
+                      title: session.title,
+                      date: session.date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
+                      time: session.time,
+                      status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft'
+                    }}
                     isSelected={selectedSessions.includes(session.id)}
+                    isActive={selectedSessionId === session.id}
                     onSelect={() => handleSelectSession(session.id)}
+                    onClick={() => handleSessionClick(session.id)}
                   />
                 ))}
               </div>

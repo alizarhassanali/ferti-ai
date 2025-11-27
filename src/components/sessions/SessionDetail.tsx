@@ -1,72 +1,278 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Plus, Trash2, Copy, Calendar, Globe, Zap, Mic, ThumbsUp, ThumbsDown, X, ArrowUpRight } from 'lucide-react';
+import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
+import { demoSessions } from '@/types/session';
 
 export const SessionDetail = () => {
+  const { selectedSessionId } = useSessionsLayout();
+  const selectedSession = demoSessions.find(s => s.id === selectedSessionId);
+  
+  const [activeTab, setActiveTab] = useState(() => {
+    if (!selectedSession) return 'dictation';
+    if (selectedSession.hasTranscript) return 'transcript';
+    return 'dictation';
+  });
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const formatDateTime = (date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + 
+      ' ' + date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  };
+
+  if (!selectedSession) {
+    return (
+      <div className="flex-1 h-screen overflow-hidden bg-background flex items-center justify-center">
+        <div className="text-center text-muted-foreground space-y-2">
+          <p>Select a session to view details</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 h-screen overflow-hidden bg-background flex flex-col">
       {/* Header */}
       <div className="border-b border-border p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <Input
-            placeholder="Add patient details"
-            className="max-w-md"
-          />
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Today 10:45PM</span>
-            <span>English</span>
+          <div className="flex items-center gap-2 flex-1">
+            <Input
+              placeholder="Add patient details"
+              defaultValue={selectedSession.patientName || selectedSession.title}
+              className="max-w-md"
+            />
+            <Button variant="ghost" size="icon">
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="default" size="sm">
+              Create
+            </Button>
+            <Button variant="outline" size="sm">
+              {selectedSession.status === 'empty' ? 'Dictate' : 'Resume'}
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            <span>{formatDateTime(selectedSession.date)}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Globe className="h-3 w-3" />
+            <span>{selectedSession.language}</span>
+          </div>
+          <Badge variant="secondary" className="gap-1 bg-green-500/10 text-green-600">
+            <Zap className="h-3 w-3" />
+            14 days trial
+          </Badge>
+          <div className="flex items-center gap-1">
+            ⏱️ <span>{formatDuration(selectedSession.duration)}</span>
+          </div>
+          <div className="flex items-center gap-0.5">
+            <Mic className="h-3 w-3" />
+            <span className="flex gap-0.5">
+              {[1, 2, 3, 4, 5].map(i => (
+                <span key={i} className="h-1 w-1 rounded-full bg-muted-foreground" />
+              ))}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="transcript" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-full justify-start rounded-none border-b border-border px-4">
-          <TabsTrigger value="transcript" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
-            Transcript
-          </TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+        <TabsList className="w-full justify-start rounded-none border-b border-border px-4 bg-transparent">
+          {selectedSession.hasTranscript && (
+            <TabsTrigger value="transcript" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+              📝 Transcript
+            </TabsTrigger>
+          )}
           <TabsTrigger value="dictation" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
-            Dictation
+            🎙️ Dictation
           </TabsTrigger>
-          <TabsTrigger value="add" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
+          {selectedSession.notes?.map((note) => (
+            <TabsTrigger 
+              key={note.id} 
+              value={note.id} 
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary gap-2"
+            >
+              {note.type === 'clinical_note' && '📋'}
+              {note.type === 'letter_to_gp' && '📄'}
+              {note.title}
+              {note.isClosable && (
+                <X className="h-3 w-3 hover:text-destructive" onClick={(e) => e.stopPropagation()} />
+              )}
+            </TabsTrigger>
+          ))}
+          <TabsTrigger value="add" className="rounded-none border-b-2 border-transparent">
             <Plus className="h-4 w-4" />
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="transcript" className="flex-1 overflow-y-auto m-0 p-6">
-          <div className="max-w-3xl mx-auto space-y-4">
-            <div className="text-center text-muted-foreground py-12">
-              <p>No transcript available yet</p>
-              <p className="text-sm mt-2">Start recording to generate a transcript</p>
+        {/* Empty State */}
+        {selectedSession.status === 'empty' && (
+          <div className="flex-1 flex items-center justify-center p-6">
+            <div className="text-center space-y-6 max-w-md">
+              <ArrowUpRight className="h-12 w-12 mx-auto text-muted-foreground" />
+              <div className="space-y-2">
+                <p className="text-lg font-medium">Start this session using the header</p>
+                <p className="text-sm text-muted-foreground">
+                  Your note will appear here once your session is complete
+                </p>
+              </div>
+              <Button variant="outline" className="gap-2">
+                🎙️ Start dictating ▾
+              </Button>
+              <div className="text-sm text-muted-foreground">
+                Select your visit mode in the dropdown
+              </div>
             </div>
           </div>
-        </TabsContent>
+        )}
 
+        {/* Transcript Tab */}
+        {selectedSession.hasTranscript && (
+          <TabsContent value="transcript" className="flex-1 overflow-y-auto m-0 p-6 space-y-4">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex justify-end mb-4">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Copy className="h-4 w-4" />
+                  Copy
+                </Button>
+              </div>
+              <div className="space-y-4">
+                {selectedSession.transcript?.segments.map((segment, idx) => (
+                  <div key={idx} className="space-y-1">
+                    {segment.timestamp && (
+                      <div className="text-xs text-muted-foreground">{segment.timestamp}</div>
+                    )}
+                    <p className="text-sm">{segment.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 mt-8 pt-4 border-t">
+                <Button variant="ghost" size="sm">
+                  <ThumbsUp className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <ThumbsDown className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+        )}
+
+        {/* Dictation Tab */}
         <TabsContent value="dictation" className="flex-1 overflow-y-auto m-0 p-6">
           <div className="max-w-3xl mx-auto space-y-4">
-            <div className="text-center text-muted-foreground py-12">
-              <p>No dictation available yet</p>
-              <p className="text-sm mt-2">Start dictating to create notes</p>
+            <div className="flex justify-between items-center">
+              <Button variant="outline" size="sm" className="gap-2">
+                ✨ Smart dictation
+              </Button>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="icon">
+                  <Mic className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Copy className="h-4 w-4" />
+                  Copy
+                </Button>
+              </div>
+            </div>
+            <Textarea
+              value={selectedSession.dictation || ''}
+              placeholder="Start dictating..."
+              className="min-h-[400px] resize-none"
+            />
+            <div className="flex items-center justify-between pt-4 border-t">
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm">
+                  <ThumbsUp className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm">
+                  <ThumbsDown className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>⚙️ Personalisation off</span>
+                <span>📋 0 tasks</span>
+              </div>
             </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="add" className="flex-1 overflow-y-auto m-0 p-6">
-          <div className="max-w-3xl mx-auto space-y-4">
-            <div className="text-center text-muted-foreground py-12">
-              <p>Add additional content</p>
+        {/* Note Tabs */}
+        {selectedSession.notes?.map((note) => (
+          <TabsContent key={note.id} value={note.id} className="flex-1 overflow-y-auto m-0 p-6">
+            <div className="max-w-3xl mx-auto space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2">
+                  <Badge variant="outline">{note.title}</Badge>
+                  <Badge variant="secondary" className="bg-purple-500/10 text-purple-600">⚡ Pro</Badge>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    Sync changes
+                  </Button>
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+              <Textarea
+                value={note.content}
+                className="min-h-[400px] resize-none font-mono text-sm"
+              />
+              <div className="flex items-center justify-between pt-4 border-t">
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm">
+                    <ThumbsUp className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <ThumbsDown className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span>⚙️ Personalisation off</span>
+                  <span>📋 0 tasks</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
+        ))}
       </Tabs>
 
       {/* AI Assistant Input */}
-      <div className="border-t border-border p-4">
-        <Input
-          placeholder="Ask NotesAI to do anything..."
-          className="w-full"
-        />
+      <div className="border-t border-border p-4 space-y-2">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="🤖 Ask NotesAI to do anything..."
+            className="flex-1"
+          />
+          <Button size="icon" variant="ghost">
+            <Mic className="h-4 w-4" />
+          </Button>
+          <Button size="icon">
+            ➤
+          </Button>
+        </div>
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>⚠️ Review your note before use to ensure it accurately represents the visit</span>
+          <span>Tutorials 28% 🟢</span>
+        </div>
       </div>
     </div>
   );
