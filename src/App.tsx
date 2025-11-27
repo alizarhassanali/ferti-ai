@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
+import NewSession from "./pages/NewSession";
+import ViewSessions from "./pages/ViewSessions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,6 +20,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/new-session" element={<NewSession />} />
+          <Route path="/sessions" element={<ViewSessions />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/my-templates" element={<MyTemplates />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

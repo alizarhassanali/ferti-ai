@@ -32,8 +32,8 @@ export const LeftPane = () => {
   };
 
   const navItems = [
-    { icon: Plus, label: 'New session', id: 'new-session' },
-    { icon: FileText, label: 'View sessions', id: 'sessions', hasArrow: true },
+    { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
+    { icon: FileText, label: 'View sessions', id: 'sessions', hasArrow: true, route: '/sessions' },
     { type: 'separator' },
     { icon: FileCode, label: 'Chart Prep', id: 'chart-prep' },
     { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant' },
