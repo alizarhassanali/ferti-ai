@@ -8,6 +8,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 
@@ -25,6 +31,16 @@ export const LeftPane = () => {
   const location = useLocation();
   const user = mockUser;
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar-collapsed');
+    return saved === 'true';
+  });
+
+  const toggleSidebar = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    localStorage.setItem('sidebar-collapsed', String(newState));
+  };
 
   const getInitials = (name: string) => {
     return name
@@ -52,37 +68,57 @@ export const LeftPane = () => {
 
   return (
     <>
-      <div className="w-60 h-screen bg-nav border-r border-nav-border flex flex-col">
+      <div className={`h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-60'}`}>
       {/* User Profile Section */}
       <div className="p-4 border-b border-nav-border">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="w-full">
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-nav-hover cursor-pointer group">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user.profileImage} />
-                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 text-left min-w-0">
-                <div className="font-semibold text-sm text-foreground truncate">{user.name}</div>
-                <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">{user.clinic}</div>
-              </div>
-              <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
-            <DropdownMenuItem disabled className="opacity-50">
-              <span className="text-xs">Switch Clinic (Coming Soon)</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut className="h-4 w-4 mr-2" />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center justify-between mb-2">
+          {!isCollapsed && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex-1">
+                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-nav-hover cursor-pointer group">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user.profileImage} />
+                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 text-left min-w-0">
+                    <div className="font-semibold text-sm text-foreground truncate">{user.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{user.clinic}</div>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem disabled className="opacity-50">
+                  <span className="text-xs">Switch Clinic (Coming Soon)</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {isCollapsed && (
+            <Avatar className="h-10 w-10 mx-auto">
+              <AvatarImage src={user.profileImage} />
+              <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar>
+          )}
+        </div>
+        <button
+          onClick={toggleSidebar}
+          className="w-full flex items-center justify-center gap-2 p-2 rounded-lg hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
+          title={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
+        >
+          <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? 'rotate-90' : '-rotate-90'}`} />
+          {!isCollapsed && <span className="text-xs font-medium">Minimise sidebar</span>}
+        </button>
       </div>
 
       {/* Navigation Items */}
@@ -94,10 +130,12 @@ export const LeftPane = () => {
             }
 
             if (item.type === 'header') {
-              return (
+              return !isCollapsed ? (
                 <li key={item.label} className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {item.label}
                 </li>
+              ) : (
+                <li key={item.label} className="h-px bg-nav-border my-2" />
               );
             }
 
@@ -106,27 +144,58 @@ export const LeftPane = () => {
 
             return (
               <li key={item.id}>
-                <button
-                  onClick={() => {
-                    if (item.id === 'help') {
-                      setHelpPanelOpen(true);
-                    } else if (item.route) {
-                      navigate(item.route);
-                    }
-                  }}
-                  className={`
-                    w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
-                    transition-colors
-                    ${isActive
-                      ? 'bg-nav-active text-primary border-l-3 border-primary font-semibold'
-                      : 'text-foreground hover:bg-nav-hover'
-                    }
-                  `}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.hasArrow && <span className="text-muted-foreground">›</span>}
-                </button>
+                {isCollapsed ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => {
+                            if (item.id === 'help') {
+                              setHelpPanelOpen(true);
+                            } else if (item.route) {
+                              navigate(item.route);
+                            }
+                          }}
+                          className={`
+                            w-full flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium
+                            transition-colors
+                            ${isActive
+                              ? 'bg-nav-active text-primary border-l-3 border-primary font-semibold'
+                              : 'text-foreground hover:bg-nav-hover'
+                            }
+                          `}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        <p>{item.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (item.id === 'help') {
+                        setHelpPanelOpen(true);
+                      } else if (item.route) {
+                        navigate(item.route);
+                      }
+                    }}
+                    className={`
+                      w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
+                      transition-colors
+                      ${isActive
+                        ? 'bg-nav-active text-primary border-l-3 border-primary font-semibold'
+                        : 'text-foreground hover:bg-nav-hover'
+                      }
+                    `}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="flex-1 text-left">{item.label}</span>
+                    {item.hasArrow && <span className="text-muted-foreground">›</span>}
+                  </button>
+                )}
               </li>
             );
           })}

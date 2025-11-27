@@ -70,7 +70,7 @@ export const HelpPanel = ({ open, onOpenChange }: HelpPanelProps) => {
   return (
     <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
       <DrawerPortal>
-        <DrawerContent className="fixed inset-y-0 right-0 h-screen w-full sm:w-[380px] mt-0 rounded-none border-l bg-background flex flex-col">
+        <DrawerContent className="fixed inset-y-0 right-0 h-screen w-[350px] max-w-[90vw] mt-0 rounded-none border-l bg-background flex flex-col shadow-[-4px_0_20px_rgba(0,0,0,0.15)] z-[1000]">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             {selectedArticle ? (
