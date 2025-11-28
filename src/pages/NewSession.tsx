@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { NewSessionHeader } from '@/components/newSession/NewSessionHeader';
+import { SessionDetailsHeader } from '@/components/newSession/SessionDetailsHeader';
 import { SessionsListPanel } from '@/components/newSession/SessionsListPanel';
 import { TranscriptPanel } from '@/components/newSession/TranscriptPanel';
 import { MedicalContextPanel } from '@/components/newSession/MedicalContextPanel';
@@ -24,6 +25,9 @@ const NewSession = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('SOAP Note (Standard)');
   const [generatedNote, setGeneratedNote] = useState<GeneratedNote | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [patientDetails, setPatientDetails] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('english');
+  const [sessionDate] = useState(new Date());
 
   const handleNewSession = () => {
     setTranscript('');
@@ -68,6 +72,14 @@ const NewSession = () => {
           selectedTemplate={selectedTemplate}
           onTemplateChange={setSelectedTemplate}
           onNewSession={handleNewSession}
+        />
+
+        <SessionDetailsHeader
+          patientDetails={patientDetails}
+          onPatientDetailsChange={setPatientDetails}
+          sessionDate={sessionDate}
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={setSelectedLanguage}
         />
 
         {/* Three Column Layout */}
