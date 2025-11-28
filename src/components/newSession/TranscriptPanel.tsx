@@ -10,7 +10,7 @@ interface TranscriptPanelProps {
 }
 
 export const TranscriptPanel = ({ transcript, onTranscriptChange }: TranscriptPanelProps) => {
-  const [visitType, setVisitType] = useState<'virtual' | 'in-person'>('in-person');
+  const [viewMode, setViewMode] = useState<'transcript' | 'dictate'>('transcript');
 
   return (
     <div className="flex flex-col h-full bg-background border-r border-border">
@@ -34,12 +34,12 @@ export const TranscriptPanel = ({ transcript, onTranscriptChange }: TranscriptPa
         </div>
       </div>
 
-      {/* Visit Type Toggle */}
+      {/* View Mode Toggle */}
       <div className="px-4 py-2 border-b border-border">
-        <Tabs value={visitType} onValueChange={(v) => setVisitType(v as 'virtual' | 'in-person')}>
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'transcript' | 'dictate')}>
           <TabsList className="w-full">
-            <TabsTrigger value="virtual" className="flex-1">Virtual visit</TabsTrigger>
-            <TabsTrigger value="in-person" className="flex-1">In person</TabsTrigger>
+            <TabsTrigger value="transcript" className="flex-1">Transcript</TabsTrigger>
+            <TabsTrigger value="dictate" className="flex-1">Dictate</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
