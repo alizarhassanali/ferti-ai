@@ -8,6 +8,7 @@ import { RecordingControlsBar } from '@/components/newSession/RecordingControlsB
 import { GeneratedNotePanel } from '@/components/newSession/GeneratedNotePanel';
 import { AIAssistant } from '@/components/session/AIAssistant';
 import { AlertTriangle } from 'lucide-react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 interface GeneratedNote {
   template: string;
@@ -81,18 +82,20 @@ const NewSession = () => {
           onLanguageChange={setSelectedLanguage}
         />
 
-        {/* Two Column Layout */}
-        <div className="flex-1 flex overflow-hidden w-full">
+        {/* Two Column Resizable Layout */}
+        <ResizablePanelGroup direction="horizontal" className="flex-1 overflow-hidden w-full">
           {/* Left: Transcript */}
-          <div className="flex-1 min-w-0">
+          <ResizablePanel defaultSize={60} minSize={30}>
             <TranscriptPanel
               transcript={transcript}
               onTranscriptChange={setTranscript}
             />
-          </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
 
           {/* Right: Medical Context or Results */}
-          <div className="w-96 flex-shrink-0">
+          <ResizablePanel defaultSize={40} minSize={25}>
             {showResults ? (
               <GeneratedNotePanel generatedNote={generatedNote} />
             ) : (
@@ -101,8 +104,8 @@ const NewSession = () => {
                 onMedicalContextChange={setMedicalContext}
               />
             )}
-          </div>
-        </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
 
         {/* Recording Controls Bar */}
         <RecordingControlsBar
