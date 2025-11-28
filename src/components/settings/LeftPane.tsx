@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -32,6 +32,7 @@ export const LeftPane = () => {
   const location = useLocation();
   const user = mockUser;
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebar-collapsed');
     return saved === 'true';
@@ -87,7 +88,39 @@ export const LeftPane = () => {
 
   return (
     <>
-      <div className={`h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-60'}`}>
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(true)}
+        className="md:hidden fixed top-4 left-4 z-40 p-2 rounded-md bg-nav text-foreground hover:bg-nav-hover shadow-lg"
+        aria-label="Open menu"
+      >
+        <Menu className="h-6 w-6" />
+      </button>
+
+      {/* Mobile Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300
+        ${isCollapsed ? 'w-16' : 'w-60'}
+        hidden md:flex
+        ${isMobileMenuOpen ? '!flex fixed inset-y-0 left-0 z-50 w-60' : ''}
+      `}>
+      {/* Mobile Close Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(false)}
+        className="md:hidden absolute top-4 right-4 z-10 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground"
+        aria-label="Close menu"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
       {/* User Profile Section */}
       <div className="p-4 border-b border-nav-border relative overflow-hidden">
         <div className={`flex items-center mb-2 ${isCollapsed ? 'justify-center' : 'justify-between pr-8'}`}>
@@ -136,7 +169,7 @@ export const LeftPane = () => {
               <TooltipTrigger asChild>
                 <button
                   onClick={toggleSidebar}
-                  className="absolute top-2 right-2 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
+                  className="hidden md:block absolute top-2 right-2 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
                   aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
                 >
                   <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? '-rotate-90' : 'rotate-90'}`} />
@@ -181,6 +214,9 @@ export const LeftPane = () => {
               : null;
 
             const handleClick = () => {
+              // Close mobile menu when navigating
+              setIsMobileMenuOpen(false);
+              
               if (item.id === 'help') {
                 setHelpPanelOpen(true);
               } else if (item.id === 'sessions' && isSessionsPage && sessionsLayout) {

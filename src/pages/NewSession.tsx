@@ -72,7 +72,7 @@ const NewSession = () => {
           onBack={() => setShowResults(false)}
         />
       ) : (
-        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
+        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full px-4 md:px-0 pt-16 md:pt-0">
           {/* Unified Header */}
           <SessionDetailsHeader
             patientDetails={patientDetails}
@@ -114,7 +114,7 @@ const NewSession = () => {
           />
 
           {/* AI Assistant Input */}
-          <div className="border-t border-border p-4">
+          <div className="border-t border-border p-4 touch-manipulation">
             <AIAssistant />
           </div>
 
