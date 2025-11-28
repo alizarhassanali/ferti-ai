@@ -24,7 +24,7 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* Template Tabs */}
+      {/* Template Tabs and File Button */}
       <div className="flex items-center border-b border-border bg-background">
         <Tabs value={activeTemplate} onValueChange={setActiveTemplate} className="flex-1">
           <TabsList className="w-full h-auto justify-start rounded-none bg-transparent border-0 p-0">
@@ -47,11 +47,7 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
         >
           <Plus className="h-4 w-4" />
         </Button>
-      </div>
-
-      {/* Header */}
-      <div className="flex items-center justify-end px-4 py-3 border-b border-border">
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button variant="ghost" size="sm" className="gap-2 flex-shrink-0">
           <Paperclip className="h-4 w-4" />
           File
         </Button>
