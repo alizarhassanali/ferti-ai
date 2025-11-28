@@ -4,7 +4,7 @@ import { SessionDetailsHeader } from '@/components/newSession/SessionDetailsHead
 import { TranscriptPanel } from '@/components/newSession/TranscriptPanel';
 import { MedicalContextPanel } from '@/components/newSession/MedicalContextPanel';
 import { RecordingControlsBar } from '@/components/newSession/RecordingControlsBar';
-import { GeneratedNotePanel } from '@/components/newSession/GeneratedNotePanel';
+import { GeneratedNoteFullscreen } from '@/components/newSession/GeneratedNoteFullscreen';
 import { AIAssistant } from '@/components/session/AIAssistant';
 import { AlertTriangle } from 'lucide-react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
@@ -65,64 +65,68 @@ const NewSession = () => {
 
   return (
     <AppLayout>
-      <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
-        {/* Unified Header */}
-        <SessionDetailsHeader
-          patientDetails={patientDetails}
-          onPatientDetailsChange={setPatientDetails}
-          sessionDate={sessionDate}
-          selectedLanguage={selectedLanguage}
-          onLanguageChange={setSelectedLanguage}
-          selectedTemplate={selectedTemplate}
-          onTemplateChange={setSelectedTemplate}
-          onNewSession={handleNewSession}
+      {showResults ? (
+        <GeneratedNoteFullscreen
+          generatedNote={generatedNote}
+          medicalContext={medicalContext}
+          onBack={() => setShowResults(false)}
         />
+      ) : (
+        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
+          {/* Unified Header */}
+          <SessionDetailsHeader
+            patientDetails={patientDetails}
+            onPatientDetailsChange={setPatientDetails}
+            sessionDate={sessionDate}
+            selectedLanguage={selectedLanguage}
+            onLanguageChange={setSelectedLanguage}
+            selectedTemplate={selectedTemplate}
+            onTemplateChange={setSelectedTemplate}
+            onNewSession={handleNewSession}
+          />
 
-        {/* Two Column Resizable Layout */}
-        <ResizablePanelGroup direction="horizontal" className="flex-1 overflow-hidden w-full">
-          {/* Left: Transcript */}
-          <ResizablePanel defaultSize={60} minSize={30}>
-            <TranscriptPanel
-              transcript={transcript}
-              onTranscriptChange={setTranscript}
-            />
-          </ResizablePanel>
+          {/* Two Column Resizable Layout */}
+          <ResizablePanelGroup direction="horizontal" className="flex-1 overflow-hidden w-full">
+            {/* Left: Transcript */}
+            <ResizablePanel defaultSize={60} minSize={30}>
+              <TranscriptPanel
+                transcript={transcript}
+                onTranscriptChange={setTranscript}
+              />
+            </ResizablePanel>
 
-          <ResizableHandle withHandle />
+            <ResizableHandle withHandle />
 
-          {/* Right: Medical Context or Results */}
-          <ResizablePanel defaultSize={40} minSize={25}>
-            {showResults ? (
-              <GeneratedNotePanel generatedNote={generatedNote} />
-            ) : (
+            {/* Right: Medical Context */}
+            <ResizablePanel defaultSize={40} minSize={25}>
               <MedicalContextPanel
                 medicalContext={medicalContext}
                 onMedicalContextChange={setMedicalContext}
               />
-            )}
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            </ResizablePanel>
+          </ResizablePanelGroup>
 
-        {/* Recording Controls Bar */}
-        <RecordingControlsBar
-          isRecording={isRecording}
-          onToggleRecording={() => setIsRecording(!isRecording)}
-          onGenerate={handleGenerate}
-        />
+          {/* Recording Controls Bar */}
+          <RecordingControlsBar
+            isRecording={isRecording}
+            onToggleRecording={() => setIsRecording(!isRecording)}
+            onGenerate={handleGenerate}
+          />
 
-        {/* AI Assistant Input */}
-        <div className="border-t border-border p-4">
-          <AIAssistant />
-        </div>
+          {/* AI Assistant Input */}
+          <div className="border-t border-border p-4">
+            <AIAssistant />
+          </div>
 
-        {/* Footer Warning */}
-        <div className="border-t border-border bg-muted/30 px-6 py-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-            <span>Review your note before use to ensure it accurately represents the visit</span>
+          {/* Footer Warning */}
+          <div className="border-t border-border bg-muted/30 px-6 py-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <span>Review your note before use to ensure it accurately represents the visit</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </AppLayout>
   );
 };
