@@ -1,19 +1,18 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Edit, Trash2, Copy, Check, Mic, Settings, ChevronLeft } from 'lucide-react';
+import { Edit, Trash2, Copy, Check, Mic, Settings } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 interface TranscriptPanelProps {
   transcript: string;
   onTranscriptChange: (value: string) => void;
 }
-
-export const TranscriptPanel = ({ transcript, onTranscriptChange }: TranscriptPanelProps) => {
+export const TranscriptPanel = ({
+  transcript,
+  onTranscriptChange
+}: TranscriptPanelProps) => {
   const [viewMode, setViewMode] = useState<'transcript' | 'dictate'>('transcript');
-
-  return (
-    <div className="flex flex-col h-full bg-background border-r border-border">
+  return <div className="flex flex-col h-full bg-background border-r border-border">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-3">
@@ -36,7 +35,7 @@ export const TranscriptPanel = ({ transcript, onTranscriptChange }: TranscriptPa
 
       {/* View Mode Toggle */}
       <div className="px-4 py-2 border-b border-border">
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'transcript' | 'dictate')}>
+        <Tabs value={viewMode} onValueChange={v => setViewMode(v as 'transcript' | 'dictate')}>
           <TabsList className="w-full">
             <TabsTrigger value="transcript" className="flex-1">Transcript</TabsTrigger>
             <TabsTrigger value="dictate" className="flex-1">Dictate</TabsTrigger>
@@ -46,22 +45,12 @@ export const TranscriptPanel = ({ transcript, onTranscriptChange }: TranscriptPa
 
       {/* Transcript Content */}
       <div className="flex-1 overflow-hidden relative">
-        <Textarea
-          value={transcript}
-          onChange={(e) => onTranscriptChange(e.target.value)}
-          placeholder="Your transcript will appear here as you speak or record..."
-          className="w-full h-full resize-none border-0 rounded-none focus-visible:ring-0 p-4"
-        />
+        <Textarea value={transcript} onChange={e => onTranscriptChange(e.target.value)} placeholder="Your transcript will appear here as you speak or record..." className="w-full h-full resize-none border-0 rounded-none focus-visible:ring-0 p-4" />
         
         {/* Collapse Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute bottom-4 right-4 h-8 w-8 bg-background border border-border shadow-sm"
-        >
-          <ChevronLeft className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="absolute bottom-4 right-4 h-8 w-8 bg-background border border-border shadow-sm">
+          
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
