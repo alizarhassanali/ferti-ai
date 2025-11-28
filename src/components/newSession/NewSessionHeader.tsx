@@ -33,14 +33,6 @@ export const NewSessionHeader = ({
       {/* Left Section */}
       <div className="flex items-center gap-3">
         <h2 className="text-lg font-semibold">Sessions</h2>
-        <Button
-          onClick={onNewSession}
-          size="sm"
-          className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
-        >
-          New session
-          <Plus className="h-4 w-4" />
-        </Button>
       </div>
 
       {/* Center Section */}
