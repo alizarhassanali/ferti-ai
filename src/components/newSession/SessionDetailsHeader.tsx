@@ -31,9 +31,17 @@ export const SessionDetailsHeader = ({
   return (
     <div className="border-b border-border bg-background">
       {/* Template Selection and Patient Details Row */}
-      <div className="px-6 py-3 flex items-center justify-between gap-4">
-        {/* Template Selector */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="px-6 py-3 flex items-center gap-4">
+        {/* Patient Details Input - Left aligned, borderless */}
+        <Input
+          placeholder="Add Patient Details"
+          value={patientDetails}
+          onChange={(e) => onPatientDetailsChange(e.target.value)}
+          className="flex-1 max-w-2xl border-0 shadow-none focus-visible:ring-0 px-0"
+        />
+
+        {/* Template Selector - Right aligned */}
+        <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
@@ -41,7 +49,7 @@ export const SessionDetailsHeader = ({
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="end">
               {templates.map(template => (
                 <DropdownMenuItem key={template} onClick={() => onTemplateChange(template)}>
                   {template}
@@ -54,14 +62,6 @@ export const SessionDetailsHeader = ({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-
-        {/* Patient Details Input */}
-        <Input
-          placeholder="Add Patient Details"
-          value={patientDetails}
-          onChange={(e) => onPatientDetailsChange(e.target.value)}
-          className="flex-1 max-w-2xl"
-        />
       </div>
 
       {/* Date and Language Row */}

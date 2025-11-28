@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Paperclip, Plus, X, Mail, FileDown, Pencil, Copy, FileText } from 'lucide-react';
+import { Paperclip, Plus, X, Mail, FileDown, Pencil, Copy, FileText, Maximize2, Minimize2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface MedicalContextPanelProps {
   medicalContext: string;
@@ -13,6 +14,7 @@ interface MedicalContextPanelProps {
 export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: MedicalContextPanelProps) => {
   const { toast } = useToast();
   const [activeTemplate, setActiveTemplate] = useState('1');
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [templates, setTemplates] = useState([
     { id: '1', name: 'Untitled 1' },
     { id: '2', name: 'Untitled 2' }
@@ -47,7 +49,7 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* Template Tabs and File Button */}
+      {/* Template Tabs and Actions */}
       <div className="flex items-center border-b border-border bg-background">
         <Tabs value={activeTemplate} onValueChange={setActiveTemplate} className="flex-1">
           <TabsList className="w-full h-auto justify-start rounded-none bg-transparent border-0 p-0">
@@ -62,6 +64,15 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
             ))}
           </TabsList>
         </Tabs>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10 flex-shrink-0"
+          onClick={() => setIsFullscreen(true)}
+          title="Fullscreen"
+        >
+          <Maximize2 className="h-4 w-4" />
+        </Button>
         <Button
           variant="ghost"
           size="icon"
@@ -143,6 +154,21 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
           </Button>
         </div>
       </div>
+
+      {/* Fullscreen Dialog */}
+      <Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
+        <DialogContent className="max-w-5xl h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Medical Context - {templates.find(t => t.id === activeTemplate)?.name}</DialogTitle>
+          </DialogHeader>
+          <Textarea
+            value={medicalContext}
+            onChange={(e) => onMedicalContextChange(e.target.value)}
+            placeholder="Enter patient information, vitals, lab results, etc..."
+            className="w-full h-[calc(100%-60px)] resize-none text-base"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
