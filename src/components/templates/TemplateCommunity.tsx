@@ -142,6 +142,150 @@ export const TemplateCommunity = () => {
         verified: true
       },
       usageCount: 1744
+    },
+    {
+      type: 'Document',
+      title: 'Problem Based Primary Clinic Note',
+      author: {
+        name: 'David Janese',
+        avatar: '/placeholder.svg',
+        specialty: 'Family Medicine Specialist',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 1635
+    },
+    {
+      type: 'Document',
+      title: 'ADHD DSM-5 Criteria',
+      author: {
+        name: 'Kieran McLeod',
+        avatar: '/placeholder.svg',
+        specialty: 'Psychiatrist',
+        country: 'EU',
+        verified: true
+      },
+      usageCount: 1433
+    },
+    {
+      type: 'Document',
+      title: 'Case Formulation [4Ps]',
+      author: {
+        name: 'Olga Lavalle',
+        avatar: '/placeholder.svg',
+        specialty: 'Psychologist',
+        country: 'EU',
+        verified: true
+      },
+      usageCount: 1352
+    },
+    {
+      type: 'Note',
+      title: 'Supervision Template',
+      author: {
+        name: 'Sheyan Gunapala',
+        avatar: '/placeholder.svg',
+        specialty: 'Psychologist',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 1320
+    },
+    {
+      type: 'Note',
+      title: 'Simple Meeting Points and Action Plans',
+      author: {
+        name: 'Melissa Lemon',
+        avatar: '/placeholder.svg',
+        specialty: 'General Practitioner',
+        country: 'GB',
+        verified: true
+      },
+      usageCount: 1155
+    },
+    {
+      type: 'Note',
+      title: 'Mental Health Appointment',
+      author: {
+        name: 'Kieran Dang',
+        avatar: '/placeholder.svg',
+        specialty: 'General Practitioner',
+        country: 'EU',
+        verified: true
+      },
+      usageCount: 1129
+    },
+    {
+      type: 'Note',
+      title: 'Emergency Room Assessment',
+      author: {
+        name: 'Sarah Mitchell',
+        avatar: '/placeholder.svg',
+        specialty: 'Emergency Medicine',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 987
+    },
+    {
+      type: 'Document',
+      title: 'Discharge Summary Template',
+      author: {
+        name: 'James Wong',
+        avatar: '/placeholder.svg',
+        specialty: 'Internal Medicine',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 856
+    },
+    {
+      type: 'Note',
+      title: 'Pediatric Well-Child Visit',
+      author: {
+        name: 'Amanda Rodriguez',
+        avatar: '/placeholder.svg',
+        specialty: 'Pediatrician',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 742
+    },
+    {
+      type: 'Document',
+      title: 'Referral Letter Template',
+      author: {
+        name: 'Thomas Baker',
+        avatar: '/placeholder.svg',
+        specialty: 'General Practitioner',
+        country: 'GB',
+        verified: true
+      },
+      usageCount: 698
+    },
+    {
+      type: 'Note',
+      title: 'Telemedicine Consultation',
+      author: {
+        name: 'Maria Santos',
+        avatar: '/placeholder.svg',
+        specialty: 'Family Medicine',
+        country: 'EU',
+        verified: true
+      },
+      usageCount: 645
+    },
+    {
+      type: 'Document',
+      title: 'Pre-Operative Assessment',
+      author: {
+        name: 'Robert Chen',
+        avatar: '/placeholder.svg',
+        specialty: 'Anesthesiologist',
+        country: 'US',
+        verified: true
+      },
+      usageCount: 589
     }
   ];
 
@@ -150,7 +294,7 @@ export const TemplateCommunity = () => {
       <div className="container mx-auto px-6 py-8 max-w-7xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-serif">Template Community</h1>
+          <h1 className="text-4xl font-serif">Template Hub</h1>
           <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
