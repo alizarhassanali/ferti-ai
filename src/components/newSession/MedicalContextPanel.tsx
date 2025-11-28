@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Paperclip, Plus, X } from 'lucide-react';
+import { Paperclip, Plus, X, Mail, FileDown, Pencil, Copy, FileText } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 interface MedicalContextPanelProps {
   medicalContext: string;
@@ -10,6 +11,7 @@ interface MedicalContextPanelProps {
 }
 
 export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: MedicalContextPanelProps) => {
+  const { toast } = useToast();
   const [activeTemplate, setActiveTemplate] = useState('1');
   const [templates, setTemplates] = useState([
     { id: '1', name: 'Untitled 1' },
@@ -20,6 +22,27 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
     const newId = String(templates.length + 1);
     setTemplates([...templates, { id: newId, name: `Untitled ${newId}` }]);
     setActiveTemplate(newId);
+  };
+
+  const handleCopyText = () => {
+    navigator.clipboard.writeText(medicalContext);
+    toast({ title: "Copied to clipboard" });
+  };
+
+  const handleSendEmail = () => {
+    toast({ title: "Email feature coming soon" });
+  };
+
+  const handleSaveAsFile = () => {
+    toast({ title: "Save feature coming soon" });
+  };
+
+  const handleEdit = () => {
+    toast({ title: "Edit mode activated" });
+  };
+
+  const handleSaveAsPDF = () => {
+    toast({ title: "PDF export coming soon" });
   };
 
   return (
@@ -68,8 +91,57 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
           value={medicalContext}
           onChange={(e) => onMedicalContextChange(e.target.value)}
           placeholder="Enter patient information, vitals, lab results, etc..."
-          className="w-full h-[calc(100%-80px)] resize-none"
+          className="w-full h-[calc(100%-140px)] resize-none"
         />
+        
+        {/* Action Icons */}
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleCopyText}
+            className="h-8 w-8"
+            title="Copy text"
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleSendEmail}
+            className="h-8 w-8"
+            title="Send as email"
+          >
+            <Mail className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleSaveAsFile}
+            className="h-8 w-8"
+            title="Save as file"
+          >
+            <FileDown className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleEdit}
+            className="h-8 w-8"
+            title="Edit"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleSaveAsPDF}
+            className="h-8 w-8"
+            title="Save as PDF"
+          >
+            <FileText className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
