@@ -1,38 +1,21 @@
 import { Button } from '@/components/ui/button';
 import { Plus, Settings, ChevronDown } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 interface NewSessionHeaderProps {
   selectedTemplate: string;
   onTemplateChange: (template: string) => void;
   onNewSession: () => void;
 }
-
-const templates = [
-  'SOAP Note (Standard)',
-  'My Dictation',
-  'My Consult Letter',
-  'Progress Note',
-  'H&P',
-  'Procedure Note',
-  'Custom Template...',
-];
-
+const templates = ['SOAP Note (Standard)', 'My Dictation', 'My Consult Letter', 'Progress Note', 'H&P', 'Procedure Note', 'Custom Template...'];
 export const NewSessionHeader = ({
   selectedTemplate,
   onTemplateChange,
-  onNewSession,
+  onNewSession
 }: NewSessionHeaderProps) => {
-  return (
-    <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
+  return <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
       {/* Left Section */}
       <div className="flex items-center gap-3">
-        <h2 className="text-lg font-semibold">Sessions</h2>
+        
       </div>
 
       {/* Center Section */}
@@ -46,14 +29,9 @@ export const NewSessionHeader = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center">
-            {templates.map((template) => (
-              <DropdownMenuItem
-                key={template}
-                onClick={() => onTemplateChange(template)}
-              >
+            {templates.map(template => <DropdownMenuItem key={template} onClick={() => onTemplateChange(template)}>
                 {template}
-              </DropdownMenuItem>
-            ))}
+              </DropdownMenuItem>)}
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -64,18 +42,6 @@ export const NewSessionHeader = ({
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Settings className="h-4 w-4" />
-          Preferences
-        </Button>
-        <Button variant="ghost" size="sm">
-          Medical Context
-        </Button>
-        <Button variant="ghost" size="sm">
-          Results
-        </Button>
-      </div>
-    </div>
-  );
+      
+    </div>;
 };
