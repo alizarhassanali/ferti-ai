@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Paperclip } from 'lucide-react';
+import { Paperclip, Plus, X } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface MedicalContextPanelProps {
   medicalContext: string;
@@ -8,8 +10,45 @@ interface MedicalContextPanelProps {
 }
 
 export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: MedicalContextPanelProps) => {
+  const [activeTemplate, setActiveTemplate] = useState('1');
+  const [templates, setTemplates] = useState([
+    { id: '1', name: 'Untitled 1' },
+    { id: '2', name: 'Untitled 2' }
+  ]);
+
+  const handleAddTemplate = () => {
+    const newId = String(templates.length + 1);
+    setTemplates([...templates, { id: newId, name: `Untitled ${newId}` }]);
+    setActiveTemplate(newId);
+  };
+
   return (
     <div className="flex flex-col h-full bg-background">
+      {/* Template Tabs */}
+      <div className="flex items-center border-b border-border bg-background">
+        <Tabs value={activeTemplate} onValueChange={setActiveTemplate} className="flex-1">
+          <TabsList className="w-full h-auto justify-start rounded-none bg-transparent border-0 p-0">
+            {templates.map((template) => (
+              <TabsTrigger
+                key={template.id}
+                value={template.id}
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
+              >
+                {template.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10 flex-shrink-0"
+          onClick={handleAddTemplate}
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-end px-4 py-3 border-b border-border">
         <Button variant="ghost" size="sm" className="gap-2">
