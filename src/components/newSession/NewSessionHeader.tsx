@@ -1,0 +1,89 @@
+import { Button } from '@/components/ui/button';
+import { Plus, Settings, ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+interface NewSessionHeaderProps {
+  selectedTemplate: string;
+  onTemplateChange: (template: string) => void;
+  onNewSession: () => void;
+}
+
+const templates = [
+  'SOAP Note (Standard)',
+  'My Dictation',
+  'My Consult Letter',
+  'Progress Note',
+  'H&P',
+  'Procedure Note',
+  'Custom Template...',
+];
+
+export const NewSessionHeader = ({
+  selectedTemplate,
+  onTemplateChange,
+  onNewSession,
+}: NewSessionHeaderProps) => {
+  return (
+    <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
+      {/* Left Section */}
+      <div className="flex items-center gap-3">
+        <h2 className="text-lg font-semibold">Sessions</h2>
+        <Button
+          onClick={onNewSession}
+          size="sm"
+          className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        >
+          New session
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Center Section */}
+      <div className="flex items-center gap-2">
+        {/* Template Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2">
+              {selectedTemplate}
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center">
+            {templates.map((template) => (
+              <DropdownMenuItem
+                key={template}
+                onClick={() => onTemplateChange(template)}
+              >
+                {template}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Add Template Button */}
+        <Button variant="outline" size="icon" className="h-9 w-9">
+          <Plus className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Right Section */}
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" className="gap-2">
+          <Settings className="h-4 w-4" />
+          Preferences
+        </Button>
+        <Button variant="ghost" size="sm">
+          Medical Context
+        </Button>
+        <Button variant="ghost" size="sm">
+          Results
+        </Button>
+      </div>
+    </div>
+  );
+};
