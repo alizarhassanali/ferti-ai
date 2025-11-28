@@ -3,10 +3,9 @@ import { Button } from '@/components/ui/button';
 
 interface TemplatesHeaderProps {
   onCreateTemplate: () => void;
-  onBrowseCommunity?: () => void;
 }
 
-export const TemplatesHeader = ({ onCreateTemplate, onBrowseCommunity }: TemplatesHeaderProps) => {
+export const TemplatesHeader = ({ onCreateTemplate }: TemplatesHeaderProps) => {
   return (
     <div className="flex items-center justify-between mb-6">
       <div>
@@ -18,7 +17,7 @@ export const TemplatesHeader = ({ onCreateTemplate, onBrowseCommunity }: Templat
       </div>
       
       <div className="flex gap-3">
-        <Button variant="outline" className="gap-2" onClick={onBrowseCommunity}>
+        <Button variant="outline" className="gap-2">
           <Globe className="h-4 w-4" />
           Browse community
         </Button>

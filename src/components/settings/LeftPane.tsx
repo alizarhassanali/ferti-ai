@@ -78,7 +78,7 @@ export const LeftPane = () => {
     { type: 'separator' },
     { label: 'Templates', type: 'header' },
     { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
-    { icon: Store, label: 'Template Hub', id: 'template-hub' },
+    { icon: Store, label: 'Template Hub', id: 'template-hub', route: '/template-hub' },
     { type: 'separator' },
     { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
     { type: 'separator' },
