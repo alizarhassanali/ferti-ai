@@ -1,7 +1,11 @@
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Globe } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Calendar, Globe, Plus, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
+
+const templates = ['SOAP Note (Standard)', 'My Dictation', 'My Consult Letter', 'Progress Note', 'H&P', 'Procedure Note', 'Custom Template...'];
 
 interface SessionDetailsHeaderProps {
   patientDetails: string;
@@ -9,6 +13,9 @@ interface SessionDetailsHeaderProps {
   sessionDate: Date;
   selectedLanguage: string;
   onLanguageChange: (value: string) => void;
+  selectedTemplate: string;
+  onTemplateChange: (template: string) => void;
+  onNewSession: () => void;
 }
 
 export const SessionDetailsHeader = ({
@@ -16,17 +23,44 @@ export const SessionDetailsHeader = ({
   onPatientDetailsChange,
   sessionDate,
   selectedLanguage,
-  onLanguageChange
+  onLanguageChange,
+  selectedTemplate,
+  onTemplateChange,
+  onNewSession
 }: SessionDetailsHeaderProps) => {
   return (
     <div className="border-b border-border bg-background">
-      {/* Patient Details Row */}
-      <div className="px-6 py-3">
+      {/* Template Selection and Patient Details Row */}
+      <div className="px-6 py-3 flex items-center justify-between gap-4">
+        {/* Template Selector */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                {selectedTemplate}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {templates.map(template => (
+                <DropdownMenuItem key={template} onClick={() => onTemplateChange(template)}>
+                  {template}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <Button variant="outline" size="icon" className="h-9 w-9">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Patient Details Input */}
         <Input
           placeholder="Add Patient Details"
           value={patientDetails}
           onChange={(e) => onPatientDetailsChange(e.target.value)}
-          className="max-w-2xl"
+          className="flex-1 max-w-2xl"
         />
       </div>
 

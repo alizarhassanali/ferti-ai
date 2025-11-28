@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { NewSessionHeader } from '@/components/newSession/NewSessionHeader';
 import { SessionDetailsHeader } from '@/components/newSession/SessionDetailsHeader';
 import { TranscriptPanel } from '@/components/newSession/TranscriptPanel';
 import { MedicalContextPanel } from '@/components/newSession/MedicalContextPanel';
@@ -67,19 +66,16 @@ const NewSession = () => {
   return (
     <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
-        {/* Header */}
-        <NewSessionHeader
-          selectedTemplate={selectedTemplate}
-          onTemplateChange={setSelectedTemplate}
-          onNewSession={handleNewSession}
-        />
-
+        {/* Unified Header */}
         <SessionDetailsHeader
           patientDetails={patientDetails}
           onPatientDetailsChange={setPatientDetails}
           sessionDate={sessionDate}
           selectedLanguage={selectedLanguage}
           onLanguageChange={setSelectedLanguage}
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
+          onNewSession={handleNewSession}
         />
 
         {/* Two Column Resizable Layout */}
