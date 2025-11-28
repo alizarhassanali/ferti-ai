@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { NewSessionHeader } from '@/components/newSession/NewSessionHeader';
 import { SessionDetailsHeader } from '@/components/newSession/SessionDetailsHeader';
-import { SessionsListPanel } from '@/components/newSession/SessionsListPanel';
 import { TranscriptPanel } from '@/components/newSession/TranscriptPanel';
 import { MedicalContextPanel } from '@/components/newSession/MedicalContextPanel';
 import { RecordingControlsBar } from '@/components/newSession/RecordingControlsBar';
@@ -82,14 +81,9 @@ const NewSession = () => {
           onLanguageChange={setSelectedLanguage}
         />
 
-        {/* Three Column Layout */}
+        {/* Two Column Layout */}
         <div className="flex-1 flex overflow-hidden w-full">
-          {/* Left: Sessions List */}
-          <div className="w-80 flex-shrink-0">
-            <SessionsListPanel />
-          </div>
-
-          {/* Middle: Transcript */}
+          {/* Left: Transcript */}
           <div className="flex-1 min-w-0">
             <TranscriptPanel
               transcript={transcript}
