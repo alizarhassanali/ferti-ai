@@ -10,19 +10,17 @@ import {
 import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
-import { TEMPLATES, DEMO_NOTES } from '@/data/demoContent';
-import { useEffect, useState } from 'react';
+import { TEMPLATES } from '@/data/demoContent';
+import { useState } from 'react';
 
 interface NoteTabProps {
   tabs: NoteTabType[];
   activeTabId: string;
   onTabsChange: (tabs: NoteTabType[]) => void;
   onActiveTabChange: (tabId: string) => void;
-  selectedTemplateId: string;
-  onTemplateChange: (templateId: string) => void;
   isGenerating: boolean;
   hasContent: boolean;
-  onGenerate: () => void;
+  onGenerate: (templateId: string) => void;
 }
 
 export const NoteTab = ({
@@ -30,8 +28,6 @@ export const NoteTab = ({
   activeTabId,
   onTabsChange,
   onActiveTabChange,
-  selectedTemplateId,
-  onTemplateChange,
   isGenerating,
   hasContent,
   onGenerate,
@@ -40,23 +36,23 @@ export const NoteTab = ({
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
 
-  // Auto-generate when template is selected and has content
-  useEffect(() => {
-    if (selectedTemplateId && hasContent && !isGenerating && !activeTab?.content) {
-      onGenerate();
-    }
-  }, [selectedTemplateId]);
+  // Get the current tab's template ID
+  const currentTemplateId = activeTab?.templateId || '';
 
   const handleTemplateSelect = (templateId: string) => {
+    // Update the tab's templateId
+    const newTabs = tabs.map(t =>
+      t.id === activeTabId ? { ...t, templateId } : t
+    );
+    onTabsChange(newTabs);
+
     if (!hasContent) {
       setShowNoContentWarning(true);
-      onTemplateChange(templateId);
       return;
     }
     setShowNoContentWarning(false);
-    onTemplateChange(templateId);
-    // Trigger generation
-    setTimeout(() => onGenerate(), 100);
+    // Trigger generation with this template
+    setTimeout(() => onGenerate(templateId), 100);
   };
 
   const addNewTab = () => {
@@ -104,7 +100,7 @@ export const NoteTab = ({
     }
   };
 
-  const selectedTemplate = TEMPLATES.find(t => t.id === selectedTemplateId);
+  const selectedTemplate = TEMPLATES.find(t => t.id === currentTemplateId);
 
   return (
     <div className="flex flex-col h-full">

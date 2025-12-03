@@ -44,7 +44,6 @@ const NewSession = () => {
     { id: '1', title: 'Untitled 1', templateId: '', content: '' },
   ]);
   const [activeNoteTabId, setActiveNoteTabId] = useState('1');
-  const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [sessionDate] = useState(new Date());
@@ -156,18 +155,18 @@ const NewSession = () => {
     transcriptContent.trim().length > 0 || 
     dictationContent.trim().length > 0;
 
-  const handleGenerate = useCallback(() => {
-    if (!selectedTemplateId || !hasContent) return;
+  const handleGenerate = useCallback((templateId: string) => {
+    if (!templateId || !hasContent) return;
     
     setIsGenerating(true);
     
     setTimeout(() => {
-      const template = TEMPLATES.find(t => t.id === selectedTemplateId);
-      const generatedContent = DEMO_NOTES[selectedTemplateId] || 'Generated note content will appear here...';
+      const template = TEMPLATES.find(t => t.id === templateId);
+      const generatedContent = DEMO_NOTES[templateId] || 'Generated note content will appear here...';
       
       const newTabs = noteTabs.map(t =>
         t.id === activeNoteTabId
-          ? { ...t, templateId: selectedTemplateId, title: template?.name || t.title, content: generatedContent }
+          ? { ...t, templateId, title: template?.name || t.title, content: generatedContent }
           : t
       );
       setNoteTabs(newTabs);
@@ -179,7 +178,7 @@ const NewSession = () => {
         description: `${template?.name} has been created.`,
       });
     }, 1500);
-  }, [selectedTemplateId, hasContent, noteTabs, activeNoteTabId, toast]);
+  }, [hasContent, noteTabs, activeNoteTabId, toast]);
 
   return (
     <AppLayout>
@@ -233,8 +232,6 @@ const NewSession = () => {
             activeNoteTabId={activeNoteTabId}
             onNoteTabsChange={setNoteTabs}
             onActiveNoteTabChange={setActiveNoteTabId}
-            selectedTemplateId={selectedTemplateId}
-            onTemplateChange={setSelectedTemplateId}
             isGenerating={isGenerating}
             hasContent={hasContent}
             onGenerate={handleGenerate}
