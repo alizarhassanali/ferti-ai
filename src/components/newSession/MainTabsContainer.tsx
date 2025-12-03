@@ -27,6 +27,8 @@ interface MainTabsContainerProps {
   selectedTemplateId: string;
   onTemplateChange: (templateId: string) => void;
   isGenerating: boolean;
+  hasContent: boolean;
+  onGenerate: () => void;
 }
 
 export const MainTabsContainer = ({
@@ -50,6 +52,8 @@ export const MainTabsContainer = ({
   selectedTemplateId,
   onTemplateChange,
   isGenerating,
+  hasContent,
+  onGenerate,
 }: MainTabsContainerProps) => {
   const isTranscribe = recordingMode === 'transcribe';
   const accentColor = isTranscribe ? 'text-emerald-600' : 'text-violet-600';
@@ -128,6 +132,8 @@ export const MainTabsContainer = ({
             selectedTemplateId={selectedTemplateId}
             onTemplateChange={onTemplateChange}
             isGenerating={isGenerating}
+            hasContent={hasContent}
+            onGenerate={onGenerate}
           />
         )}
       </div>

@@ -20,6 +20,7 @@ export const TEMPLATES = [
   { id: 'consultation', name: 'Consultation Note', description: 'Specialist consultation format' },
   { id: 'discharge', name: 'Discharge Summary', description: 'Patient discharge documentation' },
   { id: 'patient-instructions', name: 'Patient Instructions', description: 'Take-home instructions' },
+  { id: 'brief-clinical', name: 'Brief Clinical Note', description: 'Quick clinical summary' },
 ];
 
 export const DEMO_NOTES: Record<string, string> = {
@@ -202,5 +203,19 @@ Schedule an appointment in 2 weeks, or sooner if symptoms worsen.
 
 Physical Therapy: [Contact information will be provided]
 
-Questions? Call our office at [Phone Number]`
+Questions? Call our office at [Phone Number]`,
+
+  'brief-clinical': `BRIEF CLINICAL NOTE
+
+Date: [Current Date]
+
+CC: Lower back pain x 3 weeks
+
+HPI: 45 y/o male, dull aching pain 6/10, worse sitting, better with movement. No red flags.
+
+PE: Paraspinal tenderness, limited ROM, neuro intact, SLR negative.
+
+Dx: Mechanical LBP - musculoligamentous strain
+
+Plan: NSAIDs, PT referral, ergonomic mods, f/u 2 weeks PRN.`
 };

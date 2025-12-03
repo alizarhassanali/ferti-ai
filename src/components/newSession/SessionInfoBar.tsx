@@ -1,16 +1,9 @@
-import { Calendar, ArrowRight, Loader2, ChevronDown } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { LanguageSelector } from './LanguageSelector';
 import { MicrophoneSelector } from './MicrophoneSelector';
 import { RecordingModeButton } from './RecordingModeButton';
 import { RecordingMode } from '@/types/session';
-import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 interface SessionInfoBarProps {
   sessionDate: Date;
@@ -27,10 +20,6 @@ interface SessionInfoBarProps {
   onModeChange: (mode: RecordingMode) => void;
   onToggleRecording: () => void;
   onUploadAudio: () => void;
-  canGenerate: boolean;
-  isGenerating: boolean;
-  onGenerate: () => void;
-  generateDisabledReason?: string;
 }
 
 export const SessionInfoBar = ({
@@ -48,37 +37,12 @@ export const SessionInfoBar = ({
   onModeChange,
   onToggleRecording,
   onUploadAudio,
-  canGenerate,
-  isGenerating,
-  onGenerate,
-  generateDisabledReason,
 }: SessionInfoBarProps) => {
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-
-  const generateButton = (
-    <Button
-      onClick={onGenerate}
-      disabled={!canGenerate || isGenerating}
-      className="gap-2 bg-orange-500 hover:bg-orange-600 text-white disabled:bg-orange-300 disabled:opacity-70"
-    >
-      {isGenerating ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Generating...
-        </>
-      ) : (
-        <>
-          <ArrowRight className="h-4 w-4" />
-          Generate
-          <ChevronDown className="h-4 w-4 ml-1" />
-        </>
-      )}
-    </Button>
-  );
 
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
@@ -96,7 +60,7 @@ export const SessionInfoBar = ({
         />
       </div>
 
-      {/* Right side: Timer, Mic, Record button, Generate button */}
+      {/* Right side: Timer, Mic, Record button */}
       <div className="flex items-center gap-4">
         <span className="font-mono text-lg font-medium tabular-nums">
           {formatDuration(recordingDuration)}
@@ -106,29 +70,13 @@ export const SessionInfoBar = ({
           onDeviceChange={onMicrophoneChange}
           audioLevel={audioLevel}
         />
-        <div className="flex flex-col gap-2 items-end">
-          <RecordingModeButton
-            mode={recordingMode}
-            isRecording={isRecording}
-            onModeChange={onModeChange}
-            onToggleRecording={onToggleRecording}
-            onUploadAudio={onUploadAudio}
-          />
-          {!canGenerate && generateDisabledReason ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  {generateButton}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{generateDisabledReason}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            generateButton
-          )}
-        </div>
+        <RecordingModeButton
+          mode={recordingMode}
+          isRecording={isRecording}
+          onModeChange={onModeChange}
+          onToggleRecording={onToggleRecording}
+          onUploadAudio={onUploadAudio}
+        />
       </div>
     </div>
   );
