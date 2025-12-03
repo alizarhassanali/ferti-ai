@@ -6,6 +6,7 @@ import { MainTabsContainer } from '@/components/newSession/MainTabsContainer';
 import { AskAIInput } from '@/components/newSession/AskAIInput';
 import { Patient, RecordingMode, MainTab, NoteTab } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
+import { DEMO_NOTES, TEMPLATES } from '@/data/demoContent';
 
 const NewSession = () => {
   const { toast } = useToast();
@@ -43,6 +44,8 @@ const NewSession = () => {
     { id: '1', title: 'Untitled 1', templateId: '', content: '' },
   ]);
   const [activeNoteTabId, setActiveNoteTabId] = useState('1');
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const [sessionDate] = useState(new Date());
 
@@ -148,6 +151,44 @@ const NewSession = () => {
     });
   };
 
+  // Generation logic
+  const hasContent = contextContent.trim().length > 0 || 
+    transcriptContent.trim().length > 0 || 
+    dictationContent.trim().length > 0;
+  
+  const canGenerate = selectedTemplateId !== '' && hasContent;
+  
+  const getGenerateDisabledReason = () => {
+    if (!selectedTemplateId) return 'Please select a template first';
+    if (!hasContent) return 'Please add content in Context or record a transcript first';
+    return undefined;
+  };
+
+  const handleGenerate = useCallback(() => {
+    if (!canGenerate) return;
+    
+    setIsGenerating(true);
+    
+    setTimeout(() => {
+      const template = TEMPLATES.find(t => t.id === selectedTemplateId);
+      const generatedContent = DEMO_NOTES[selectedTemplateId] || 'Generated note content will appear here...';
+      
+      const newTabs = noteTabs.map(t =>
+        t.id === activeNoteTabId
+          ? { ...t, templateId: selectedTemplateId, title: template?.name || t.title, content: generatedContent }
+          : t
+      );
+      setNoteTabs(newTabs);
+      setIsGenerating(false);
+      setActiveMainTab('note');
+      
+      toast({
+        title: 'Note generated',
+        description: `${template?.name} has been created.`,
+      });
+    }, 2000);
+  }, [canGenerate, selectedTemplateId, noteTabs, activeNoteTabId, toast]);
+
   return (
     <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
@@ -179,6 +220,10 @@ const NewSession = () => {
           onModeChange={handleModeChange}
           onToggleRecording={handleToggleRecording}
           onUploadAudio={handleUploadAudio}
+          canGenerate={canGenerate}
+          isGenerating={isGenerating}
+          onGenerate={handleGenerate}
+          generateDisabledReason={getGenerateDisabledReason()}
         />
 
         {/* Main Tabs Content */}
@@ -200,6 +245,9 @@ const NewSession = () => {
             activeNoteTabId={activeNoteTabId}
             onNoteTabsChange={setNoteTabs}
             onActiveNoteTabChange={setActiveNoteTabId}
+            selectedTemplateId={selectedTemplateId}
+            onTemplateChange={setSelectedTemplateId}
+            isGenerating={isGenerating}
           />
         </div>
 
