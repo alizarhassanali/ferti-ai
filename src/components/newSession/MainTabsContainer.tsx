@@ -23,9 +23,10 @@ interface MainTabsContainerProps {
   activeNoteTabId: string;
   onNoteTabsChange: (tabs: NoteTabType[]) => void;
   onActiveNoteTabChange: (tabId: string) => void;
-  hasContent?: boolean;
-  onSessionComplete?: () => void;
   onLoadDemoContext?: () => void;
+  selectedTemplateId: string;
+  onTemplateChange: (templateId: string) => void;
+  isGenerating: boolean;
 }
 
 export const MainTabsContainer = ({
@@ -45,9 +46,10 @@ export const MainTabsContainer = ({
   activeNoteTabId,
   onNoteTabsChange,
   onActiveNoteTabChange,
-  hasContent = false,
-  onSessionComplete,
   onLoadDemoContext,
+  selectedTemplateId,
+  onTemplateChange,
+  isGenerating,
 }: MainTabsContainerProps) => {
   const isTranscribe = recordingMode === 'transcribe';
   const accentColor = isTranscribe ? 'text-emerald-600' : 'text-violet-600';
@@ -123,8 +125,9 @@ export const MainTabsContainer = ({
             activeTabId={activeNoteTabId}
             onTabsChange={onNoteTabsChange}
             onActiveTabChange={onActiveNoteTabChange}
-            hasContent={hasContent}
-            onSessionComplete={onSessionComplete}
+            selectedTemplateId={selectedTemplateId}
+            onTemplateChange={onTemplateChange}
+            isGenerating={isGenerating}
           />
         )}
       </div>
