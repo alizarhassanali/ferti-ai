@@ -155,17 +155,9 @@ const NewSession = () => {
   const hasContent = contextContent.trim().length > 0 || 
     transcriptContent.trim().length > 0 || 
     dictationContent.trim().length > 0;
-  
-  const canGenerate = selectedTemplateId !== '' && hasContent;
-  
-  const getGenerateDisabledReason = () => {
-    if (!selectedTemplateId) return 'Please select a template first';
-    if (!hasContent) return 'Please add content in Context or record a transcript first';
-    return undefined;
-  };
 
   const handleGenerate = useCallback(() => {
-    if (!canGenerate) return;
+    if (!selectedTemplateId || !hasContent) return;
     
     setIsGenerating(true);
     
@@ -186,8 +178,8 @@ const NewSession = () => {
         title: 'Note generated',
         description: `${template?.name} has been created.`,
       });
-    }, 2000);
-  }, [canGenerate, selectedTemplateId, noteTabs, activeNoteTabId, toast]);
+    }, 1500);
+  }, [selectedTemplateId, hasContent, noteTabs, activeNoteTabId, toast]);
 
   return (
     <AppLayout>
@@ -220,10 +212,6 @@ const NewSession = () => {
           onModeChange={handleModeChange}
           onToggleRecording={handleToggleRecording}
           onUploadAudio={handleUploadAudio}
-          canGenerate={canGenerate}
-          isGenerating={isGenerating}
-          onGenerate={handleGenerate}
-          generateDisabledReason={getGenerateDisabledReason()}
         />
 
         {/* Main Tabs Content */}
@@ -248,6 +236,8 @@ const NewSession = () => {
             selectedTemplateId={selectedTemplateId}
             onTemplateChange={setSelectedTemplateId}
             isGenerating={isGenerating}
+            hasContent={hasContent}
+            onGenerate={handleGenerate}
           />
         </div>
 
