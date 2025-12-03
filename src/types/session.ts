@@ -15,6 +15,25 @@ export interface Session {
   notes?: NoteData[];
 }
 
+export interface Patient {
+  id: string;
+  name: string;
+  identifier?: string;
+  additionalContext?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface NoteTab {
+  id: string;
+  title: string;
+  templateId: string;
+  content: string;
+}
+
+export type RecordingMode = 'transcribe' | 'dictate';
+export type MainTab = 'context' | 'transcript' | 'dictation' | 'note';
+
 export interface TranscriptData {
   segments: {
     timestamp: string;

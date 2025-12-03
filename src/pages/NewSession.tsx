@@ -1,132 +1,211 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { SessionDetailsHeader } from '@/components/newSession/SessionDetailsHeader';
-import { TranscriptPanel } from '@/components/newSession/TranscriptPanel';
-import { MedicalContextPanel } from '@/components/newSession/MedicalContextPanel';
-import { RecordingControlsBar } from '@/components/newSession/RecordingControlsBar';
-import { GeneratedNoteFullscreen } from '@/components/newSession/GeneratedNoteFullscreen';
-import { AIAssistant } from '@/components/session/AIAssistant';
-import { AlertTriangle } from 'lucide-react';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-
-interface GeneratedNote {
-  template: string;
-  sections: {
-    name: string;
-    content: string;
-  }[];
-}
+import { PatientSelector } from '@/components/newSession/PatientSelector';
+import { SessionInfoBar } from '@/components/newSession/SessionInfoBar';
+import { MainTabsContainer } from '@/components/newSession/MainTabsContainer';
+import { AskAIInput } from '@/components/newSession/AskAIInput';
+import { Patient, RecordingMode, MainTab, NoteTab } from '@/types/session';
+import { useToast } from '@/hooks/use-toast';
 
 const NewSession = () => {
+  const { toast } = useToast();
+  
+  // Patient state
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([
+    { id: '1', name: 'John Smith', identifier: 'JS-001', additionalContext: 'Type 2 Diabetes, Hypertension', createdAt: new Date(), updatedAt: new Date() },
+    { id: '2', name: 'Sarah Johnson', identifier: 'SJ-002', createdAt: new Date(), updatedAt: new Date() },
+    { id: '3', name: 'Michael Chen', identifier: 'MC-003', additionalContext: 'Asthma, Allergies to penicillin', createdAt: new Date(), updatedAt: new Date() },
+  ]);
+
+  // Recording state
+  const [recordingMode, setRecordingMode] = useState<RecordingMode>('transcribe');
   const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState('');
-  const [medicalContext, setMedicalContext] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState('SOAP Note (Standard)');
-  const [generatedNote, setGeneratedNote] = useState<GeneratedNote | null>(null);
-  const [showResults, setShowResults] = useState(false);
-  const [patientDetails, setPatientDetails] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('english');
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [selectedMicrophoneId, setSelectedMicrophoneId] = useState('');
+  const [audioLevel, setAudioLevel] = useState(0);
+
+  // Language state
+  const [inputLanguage, setInputLanguage] = useState('en');
+  const [outputLanguage, setOutputLanguage] = useState('en');
+
+  // Tab state
+  const [activeMainTab, setActiveMainTab] = useState<MainTab>('context');
+
+  // Content state
+  const [contextContent, setContextContent] = useState('');
+  const [transcriptContent, setTranscriptContent] = useState('');
+  const [dictationContent, setDictationContent] = useState('');
+  const [smartDictation, setSmartDictation] = useState(true);
+
+  // Note tabs state
+  const [noteTabs, setNoteTabs] = useState<NoteTab[]>([
+    { id: '1', title: 'Untitled 1', templateId: '', content: '' },
+  ]);
+  const [activeNoteTabId, setActiveNoteTabId] = useState('1');
+
   const [sessionDate] = useState(new Date());
 
-  const handleNewSession = () => {
-    setTranscript('');
-    setMedicalContext('');
-    setGeneratedNote(null);
-    setShowResults(false);
-    setIsRecording(false);
+  // Recording timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
+  // Simulated audio level animation when recording
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setAudioLevel(Math.random() * 100);
+      }, 100);
+    } else {
+      setAudioLevel(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
+  const handleToggleRecording = useCallback(() => {
+    if (!isRecording) {
+      setRecordingDuration(0);
+      // Switch to appropriate tab when starting recording
+      if (recordingMode === 'transcribe') {
+        setActiveMainTab('transcript');
+      } else {
+        setActiveMainTab('dictation');
+      }
+    }
+    setIsRecording(!isRecording);
+    toast({
+      title: isRecording ? 'Recording stopped' : 'Recording started',
+      description: isRecording 
+        ? 'Your recording has been saved.' 
+        : `${recordingMode === 'transcribe' ? 'Transcribing' : 'Dictating'}...`,
+    });
+  }, [isRecording, recordingMode, toast]);
+
+  const handleModeChange = (mode: RecordingMode) => {
+    setRecordingMode(mode);
+    // Switch to appropriate tab
+    if (mode === 'transcribe') {
+      if (activeMainTab === 'dictation') setActiveMainTab('transcript');
+    } else {
+      if (activeMainTab === 'transcript') setActiveMainTab('dictation');
+    }
   };
 
-  const handleGenerate = () => {
-    // Mock generation - in real app, this would call AI service
-    const mockNote: GeneratedNote = {
-      template: selectedTemplate,
-      sections: [
-        {
-          name: 'Subjective',
-          content: 'Patient presents with complaints of headaches for the past week, described as right-sided, behind the eye, rated 6-7/10. Reports photophobia during episodes. Associated with work stress and poor sleep.'
-        },
-        {
-          name: 'Objective',
-          content: 'Vitals: BP 128/82, HR 76, Temp 98.6F\nGeneral: Alert and oriented, appears uncomfortable\nNeuro: CN II-XII intact, no focal deficits'
-        },
-        {
-          name: 'Assessment',
-          content: '1. Tension-type headache with migrainous features\n2. Work-related stress\n3. Insomnia'
-        },
-        {
-          name: 'Plan',
-          content: '1. Start Sumatriptan 50mg PRN for acute episodes\n2. Lifestyle modifications discussed\n3. Follow-up in 2 weeks'
-        }
-      ]
+  const handleUploadAudio = () => {
+    toast({
+      title: 'Upload audio',
+      description: 'Audio upload feature coming soon.',
+    });
+  };
+
+  const handleCreatePatient = (name: string) => {
+    const newPatient: Patient = {
+      id: crypto.randomUUID(),
+      name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-    setGeneratedNote(mockNote);
-    setShowResults(true);
+    setPatients(prev => [newPatient, ...prev]);
+    setSelectedPatient(newPatient);
+    toast({
+      title: 'Patient created',
+      description: `${name} has been added.`,
+    });
+  };
+
+  const handleUpdatePatient = (patient: Patient) => {
+    setPatients(prev => prev.map(p => p.id === patient.id ? { ...patient, updatedAt: new Date() } : p));
+    if (selectedPatient?.id === patient.id) {
+      setSelectedPatient(patient);
+    }
+    toast({
+      title: 'Patient updated',
+      description: 'Changes have been saved.',
+    });
+  };
+
+  const handleDeletePatient = (patientId: string) => {
+    setPatients(prev => prev.filter(p => p.id !== patientId));
+    toast({
+      title: 'Patient deleted',
+      description: 'Patient and linked sessions have been removed.',
+      variant: 'destructive',
+    });
+  };
+
+  const handleAISubmit = (prompt: string) => {
+    toast({
+      title: 'Processing...',
+      description: `AI is working on: "${prompt}"`,
+    });
   };
 
   return (
     <AppLayout>
-      {showResults ? (
-        <GeneratedNoteFullscreen
-          generatedNote={generatedNote}
-          medicalContext={medicalContext}
-          onBack={() => setShowResults(false)}
-        />
-      ) : (
-        <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full px-4 md:px-0 pt-16 md:pt-0">
-          {/* Unified Header */}
-          <SessionDetailsHeader
-            patientDetails={patientDetails}
-            onPatientDetailsChange={setPatientDetails}
-            sessionDate={sessionDate}
-            selectedLanguage={selectedLanguage}
-            onLanguageChange={setSelectedLanguage}
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={setSelectedTemplate}
-            onNewSession={handleNewSession}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
+        {/* Patient Header */}
+        <div className="px-6 py-4 border-b border-border">
+          <PatientSelector
+            selectedPatient={selectedPatient}
+            patients={patients}
+            onSelectPatient={setSelectedPatient}
+            onCreatePatient={handleCreatePatient}
+            onUpdatePatient={handleUpdatePatient}
+            onDeletePatient={handleDeletePatient}
           />
-
-          {/* Two Column Resizable Layout */}
-          <ResizablePanelGroup direction="horizontal" className="flex-1 overflow-hidden w-full">
-            {/* Left: Transcript */}
-            <ResizablePanel defaultSize={60} minSize={30}>
-              <TranscriptPanel
-                transcript={transcript}
-                onTranscriptChange={setTranscript}
-              />
-            </ResizablePanel>
-
-            <ResizableHandle withHandle />
-
-            {/* Right: Medical Context */}
-            <ResizablePanel defaultSize={40} minSize={25}>
-              <MedicalContextPanel
-                medicalContext={medicalContext}
-                onMedicalContextChange={setMedicalContext}
-              />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-
-          {/* Recording Controls Bar */}
-          <RecordingControlsBar
-            isRecording={isRecording}
-            onToggleRecording={() => setIsRecording(!isRecording)}
-            onGenerate={handleGenerate}
-          />
-
-          {/* AI Assistant Input */}
-          <div className="border-t border-border p-4 touch-manipulation">
-            <AIAssistant />
-          </div>
-
-          {/* Footer Warning */}
-          <div className="border-t border-border bg-muted/30 px-6 py-3">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-              <span>Review your note before use to ensure it accurately represents the visit</span>
-            </div>
-          </div>
         </div>
-      )}
+
+        {/* Session Info Bar */}
+        <SessionInfoBar
+          sessionDate={sessionDate}
+          inputLanguage={inputLanguage}
+          outputLanguage={outputLanguage}
+          onInputLanguageChange={setInputLanguage}
+          onOutputLanguageChange={setOutputLanguage}
+          recordingDuration={recordingDuration}
+          selectedMicrophoneId={selectedMicrophoneId}
+          onMicrophoneChange={setSelectedMicrophoneId}
+          audioLevel={audioLevel}
+          recordingMode={recordingMode}
+          isRecording={isRecording}
+          onModeChange={handleModeChange}
+          onToggleRecording={handleToggleRecording}
+          onUploadAudio={handleUploadAudio}
+        />
+
+        {/* Main Tabs Content */}
+        <div className="flex-1 overflow-hidden">
+          <MainTabsContainer
+            recordingMode={recordingMode}
+            activeTab={activeMainTab}
+            onTabChange={setActiveMainTab}
+            contextContent={contextContent}
+            onContextChange={setContextContent}
+            transcriptContent={transcriptContent}
+            onTranscriptChange={setTranscriptContent}
+            dictationContent={dictationContent}
+            onDictationChange={setDictationContent}
+            isRecording={isRecording}
+            smartDictation={smartDictation}
+            onSmartDictationChange={setSmartDictation}
+            noteTabs={noteTabs}
+            activeNoteTabId={activeNoteTabId}
+            onNoteTabsChange={setNoteTabs}
+            onActiveNoteTabChange={setActiveNoteTabId}
+          />
+        </div>
+
+        {/* Ask AI Input */}
+        <AskAIInput onSubmit={handleAISubmit} />
+      </div>
     </AppLayout>
   );
 };
