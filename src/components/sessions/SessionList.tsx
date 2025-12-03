@@ -8,15 +8,7 @@ import { SessionFilters } from './SessionFilters';
 import { SessionSort } from './SessionSort';
 import { ScheduledMeetingCard } from './ScheduledMeetingCard';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
-import { demoSessions } from '@/types/session';
-
-interface Session {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  status: 'complete' | 'draft' | 'review';
-}
+import { useSessions } from '@/contexts/SessionsContext';
 
 interface ScheduledMeeting {
   id: string;
@@ -28,7 +20,6 @@ interface ScheduledMeeting {
   meetingType: 'teams' | 'zoom' | 'in-person';
   meetingLink?: string;
 }
-
 
 const demoMeetings: ScheduledMeeting[] = [
   {
@@ -55,15 +46,16 @@ const demoMeetings: ScheduledMeeting[] = [
 
 export const SessionList = () => {
   const { selectedSessionId, setSelectedSessionId } = useSessionsLayout();
+  const { sessions } = useSessions();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
 
-  const groupSessionsByDate = (sessions: typeof demoSessions) => {
-    const grouped: Record<string, typeof demoSessions> = {};
-    sessions.forEach((session) => {
-      const dateKey = session.date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+  const groupSessionsByDate = (sessionsList: typeof sessions) => {
+    const grouped: Record<string, typeof sessions> = {};
+    sessionsList.forEach((session) => {
+      const dateKey = new Date(session.date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
@@ -72,8 +64,9 @@ export const SessionList = () => {
     return grouped;
   };
 
-  const filteredSessions = demoSessions.filter((session) =>
-    session.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredSessions = sessions.filter((session) =>
+    session.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    session.patientName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const groupedSessions = groupSessionsByDate(filteredSessions);
@@ -140,7 +133,7 @@ export const SessionList = () => {
             Schedule
           </TabsTrigger>
           <TabsTrigger value="past" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">
-            Current
+            Past
           </TabsTrigger>
         </TabsList>
 
@@ -162,31 +155,37 @@ export const SessionList = () => {
         </TabsContent>
 
         <TabsContent value="past" className="flex-1 overflow-y-auto m-0 p-4 space-y-6">
-          {Object.entries(groupedSessions).map(([date, sessions]) => (
-            <div key={date} className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground px-2">
-                📅 {date}
-              </div>
-              <div className="space-y-2">
-                {sessions.map((session) => (
-                  <SessionCard
-                    key={session.id}
-                    session={{
-                      id: session.id,
-                      title: session.title,
-                      date: session.date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
-                      time: session.time,
-                      status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft'
-                    }}
-                    isSelected={selectedSessions.includes(session.id)}
-                    isActive={selectedSessionId === session.id}
-                    onSelect={() => handleSelectSession(session.id)}
-                    onClick={() => handleSessionClick(session.id)}
-                  />
-                ))}
-              </div>
+          {Object.entries(groupedSessions).length === 0 ? (
+            <div className="text-center text-muted-foreground py-8">
+              No sessions found
             </div>
-          ))}
+          ) : (
+            Object.entries(groupedSessions).map(([date, sessionGroup]) => (
+              <div key={date} className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground px-2">
+                  📅 {date}
+                </div>
+                <div className="space-y-2">
+                  {sessionGroup.map((session) => (
+                    <SessionCard
+                      key={session.id}
+                      session={{
+                        id: session.id,
+                        title: session.title,
+                        date: new Date(session.date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
+                        time: session.time,
+                        status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft'
+                      }}
+                      isSelected={selectedSessions.includes(session.id)}
+                      isActive={selectedSessionId === session.id}
+                      onSelect={() => handleSelectSession(session.id)}
+                      onClick={() => handleSessionClick(session.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
         </TabsContent>
       </Tabs>
 
