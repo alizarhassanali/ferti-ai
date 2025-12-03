@@ -24,11 +24,9 @@ interface MainTabsContainerProps {
   onNoteTabsChange: (tabs: NoteTabType[]) => void;
   onActiveNoteTabChange: (tabId: string) => void;
   onLoadDemoContext?: () => void;
-  selectedTemplateId: string;
-  onTemplateChange: (templateId: string) => void;
   isGenerating: boolean;
   hasContent: boolean;
-  onGenerate: () => void;
+  onGenerate: (templateId: string) => void;
 }
 
 export const MainTabsContainer = ({
@@ -49,8 +47,6 @@ export const MainTabsContainer = ({
   onNoteTabsChange,
   onActiveNoteTabChange,
   onLoadDemoContext,
-  selectedTemplateId,
-  onTemplateChange,
   isGenerating,
   hasContent,
   onGenerate,
@@ -129,8 +125,6 @@ export const MainTabsContainer = ({
             activeTabId={activeNoteTabId}
             onTabsChange={onNoteTabsChange}
             onActiveTabChange={onActiveNoteTabChange}
-            selectedTemplateId={selectedTemplateId}
-            onTemplateChange={onTemplateChange}
             isGenerating={isGenerating}
             hasContent={hasContent}
             onGenerate={onGenerate}
