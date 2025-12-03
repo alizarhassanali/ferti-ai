@@ -1,18 +1,27 @@
 export interface Session {
   id: string;
   title: string;
+  patientId?: string;
   patientName?: string;
   patientDetails?: string;
   date: Date;
   time: string;
   language: string;
   duration: number; // in seconds
-  status: 'empty' | 'recording' | 'processing' | 'complete' | 'error';
+  status: 'empty' | 'recording' | 'processing' | 'complete' | 'error' | 'draft';
   hasTranscript: boolean;
   hasNotes: boolean;
   transcript?: TranscriptData;
   dictation?: string;
   notes?: NoteData[];
+  mode: RecordingMode;
+  contextContent: string;
+  transcriptContent: string;
+  dictationContent: string;
+  inputLanguage: string;
+  outputLanguage: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Patient {
@@ -58,82 +67,93 @@ export const demoSessions: Session[] = [
     time: "10:45PM",
     language: "English",
     duration: 0,
-    status: "empty",
+    status: "draft",
     hasTranscript: false,
-    hasNotes: false
+    hasNotes: false,
+    mode: 'transcribe',
+    contextContent: '',
+    transcriptContent: '',
+    dictationContent: '',
+    inputLanguage: 'en',
+    outputLanguage: 'en'
   },
   {
     id: "2",
-    title: "Unknown Session",
+    title: "John Smith - Follow-up",
+    patientName: "John Smith",
     date: new Date("2025-11-27T17:36:00"),
     time: "5:36PM",
     language: "English",
-    duration: 11,
+    duration: 312,
     status: "complete",
     hasTranscript: true,
     hasNotes: true,
+    mode: 'transcribe',
+    contextContent: 'Patient: 45-year-old male\nOccupation: Accountant',
+    transcriptContent: "Patient is a 45-year-old male presenting with complaints of persistent lower back pain.",
+    dictationContent: '',
+    inputLanguage: 'en',
+    outputLanguage: 'en',
     transcript: {
       segments: [
-        { timestamp: "0:00", text: "And as you can see, like it doesn't really tell you the dictation or anything like that, right? But when I stop it," }
+        { timestamp: "0:00", text: "Patient is a 45-year-old male presenting with complaints of persistent lower back pain." }
       ],
-      fullText: "And as you can see, like it doesn't really tell you the dictation or anything like that, right? But when I stop it,"
+      fullText: "Patient is a 45-year-old male presenting with complaints of persistent lower back pain."
     },
-    dictation: "As you can see, it doesn't really tell you the dictation or anything like that. But when I stop it...",
     notes: [
       {
         id: "n1",
         type: "clinical_note",
-        title: "Clinical Note",
-        content: "As you can see, it doesn't really tell you the dictation or anything like that. But when I stop it..",
-        isClosable: true
-      },
-      {
-        id: "n2",
-        type: "custom",
-        title: "Infection Risks.",
-        content: "...",
+        title: "SOAP Note",
+        content: "SUBJECTIVE:\n45-year-old male presenting with persistent lower back pain...",
         isClosable: true
       }
     ]
   },
   {
     id: "3",
-    title: "Test Patient",
-    patientName: "Test Patient",
-    patientDetails: "Fertility Care Perspective",
+    title: "Sarah Johnson",
+    patientName: "Sarah Johnson",
+    patientDetails: "New patient consultation",
     date: new Date("2025-11-26T02:59:00"),
     time: "2:59AM",
     language: "English",
-    duration: 22,
+    duration: 422,
     status: "complete",
     hasTranscript: true,
     hasNotes: true,
-    transcript: {
-      segments: [
-        { timestamp: "", text: "Within this patient came to me to see uh um me from a fertility care perspective uh not a good diagnosis. They were rude to me. I was not good to them. blah. Let's see how well you did on the dictation." }
-      ],
-      fullText: "Within this patient came to me to see uh um me from a fertility care perspective uh not a good diagnosis. They were rude to me. I was not good to them. blah. Let's see how well you did on the dictation."
-    },
-    dictation: "This patient came to see me from a fertility care perspective. Not a good diagnosis. They were rude to me. I was not good to them.",
+    mode: 'dictate',
+    contextContent: '',
+    transcriptContent: '',
+    dictationContent: "This patient came to see me for an initial consultation...",
+    inputLanguage: 'en',
+    outputLanguage: 'en',
     notes: [
       {
         id: "n1",
         type: "letter_to_gp",
-        title: "Letter to GP",
-        content: "GP Address\n\nDear Doctor\n\nRe: Test Patient, DOB: [DOB]\n\nThis patient presented to me from a fertility care perspective.\n\nThe patient presented for fertility care and received a poor diagnosis.\n\nOn examination,\n\nDuring the consultation, we discussed the diagnosis.",
+        title: "GP Referral Letter",
+        content: "Dear Doctor,\n\nRe: Sarah Johnson\n\nI am writing to refer the above patient...",
         isClosable: true
       }
     ]
   },
   {
     id: "4",
-    title: "Dsflkdsh;lfd",
+    title: "Michael Chen",
+    patientName: "Michael Chen",
     date: new Date("2025-11-27T17:34:00"),
     time: "5:34PM",
     language: "English",
     duration: 0,
-    status: "empty",
+    status: "draft",
     hasTranscript: false,
-    hasNotes: false
+    hasNotes: false,
+    mode: 'transcribe',
+    contextContent: '',
+    transcriptContent: '',
+    dictationContent: '',
+    inputLanguage: 'en',
+    outputLanguage: 'en'
   }
 ];

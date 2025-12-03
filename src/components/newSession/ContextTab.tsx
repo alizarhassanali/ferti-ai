@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Bold, Italic, List, Paperclip, X, FileText } from 'lucide-react';
+import { Bold, Italic, List, Paperclip, X, FileText, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface ContextTabProps {
   content: string;
   onContentChange: (content: string) => void;
+  onLoadDemo?: () => void;
 }
 
 interface AttachedFile {
@@ -15,7 +16,7 @@ interface AttachedFile {
   size: number;
 }
 
-export const ContextTab = ({ content, onContentChange }: ContextTabProps) => {
+export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabProps) => {
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,6 +58,18 @@ export const ContextTab = ({ content, onContentChange }: ContextTabProps) => {
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
           <List className="h-4 w-4" />
         </Button>
+        
+        {onLoadDemo && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="ml-auto gap-2"
+            onClick={onLoadDemo}
+          >
+            <Wand2 className="h-4 w-4" />
+            Load demo context
+          </Button>
+        )}
       </div>
 
       {/* Text Area */}
