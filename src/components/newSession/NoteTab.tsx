@@ -116,30 +116,28 @@ export const NoteTab = ({
   return (
     <div className="flex flex-col h-full">
       {/* Sub-tabs */}
-      <div className="flex items-center border-b border-border px-2 bg-muted/30">
-        <div className="flex items-center overflow-x-auto flex-1">
-          {tabs.map(tab => (
+      <div className="flex items-center border-b border-border px-2 bg-muted/30 overflow-x-auto">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => onActiveTabChange(tab.id)}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
+              tab.id === activeTabId
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            <span>{tab.title}</span>
             <button
-              key={tab.id}
-              onClick={() => onActiveTabChange(tab.id)}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
-                tab.id === activeTabId
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
+              onClick={(e) => closeTab(tab.id, e)}
+              className="ml-1 p-0.5 rounded hover:bg-muted"
             >
-              <FileText className="h-3.5 w-3.5" />
-              <span>{tab.title}</span>
-              <button
-                onClick={(e) => closeTab(tab.id, e)}
-                className="ml-1 p-0.5 rounded hover:bg-muted"
-              >
-                <X className="h-3 w-3" />
-              </button>
+              <X className="h-3 w-3" />
             </button>
-          ))}
-        </div>
+          </button>
+        ))}
         <Button
           variant="ghost"
           size="sm"
