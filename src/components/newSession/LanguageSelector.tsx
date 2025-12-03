@@ -50,7 +50,7 @@ export const LanguageSelector = ({
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
           <Languages className="h-4 w-4" />
-          <span className="text-sm">文A {languages.find(l => l.code === inputLanguage)?.name || 'English'}</span>
+          <span className="text-sm">{languages.find(l => l.code === inputLanguage)?.name || 'English'}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="start">
