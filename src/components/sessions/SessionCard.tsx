@@ -70,7 +70,6 @@ export const SessionCard = ({
       {/* Checkbox */}
       <Checkbox
         checked={isSelected}
-        onCheckedChange={onSelect}
         className="mt-0.5"
         onClick={(e) => {
           e.stopPropagation();
