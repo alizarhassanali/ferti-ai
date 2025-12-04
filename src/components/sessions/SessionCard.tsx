@@ -57,9 +57,13 @@ export const SessionCard = ({
   const cardContent = (
     <div
       className={`
-        group relative flex items-start gap-3 p-3 rounded-lg border border-border
-        hover:bg-accent cursor-pointer transition-colors
-        ${isActive ? 'bg-accent border-primary' : 'bg-card'}
+        group relative flex items-start gap-3 p-3 rounded-lg border transition-colors cursor-pointer
+        ${isSelected 
+          ? 'bg-primary/5 border-primary/30' 
+          : isActive 
+            ? 'bg-accent border-primary' 
+            : 'bg-card border-border hover:bg-accent'
+        }
       `}
       onClick={onClick}
     >

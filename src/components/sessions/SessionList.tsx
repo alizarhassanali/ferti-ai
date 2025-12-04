@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Filter, ArrowUpDown, RefreshCw, Plug } from 'lucide-react';
+import { Search, Filter, ArrowUpDown, RefreshCw, Plug, Trash2, CheckSquare, X } from 'lucide-react';
 import { SessionCard } from './SessionCard';
 import { SessionFilters } from './SessionFilters';
 import { SessionSort } from './SessionSort';
@@ -10,6 +10,16 @@ import { ScheduledMeetingCard } from './ScheduledMeetingCard';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { useSessions } from '@/contexts/SessionsContext';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface ScheduledMeeting {
   id: string;
@@ -53,6 +63,7 @@ export const SessionList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const groupSessionsByDate = (sessionsList: typeof sessions) => {
     const grouped: Record<string, typeof sessions> = {};
@@ -98,8 +109,31 @@ export const SessionList = () => {
     setSelectedSessionId(id);
   };
 
+  const handleCancelSelection = () => {
+    setSelectedSessions([]);
+  };
+
+  const handleDeleteSelected = () => {
+    selectedSessions.forEach(id => deleteSession(id));
+    const count = selectedSessions.length;
+    setSelectedSessions([]);
+    setShowDeleteDialog(false);
+    
+    // Clear selected session if it was deleted
+    if (selectedSessionId && selectedSessions.includes(selectedSessionId)) {
+      setSelectedSessionId(null);
+    }
+    
+    toast({
+      title: 'Sessions deleted',
+      description: `${count} session${count !== 1 ? 's' : ''} deleted.`,
+    });
+  };
+
+  const selectedCount = selectedSessions.length;
+
   return (
-    <div className="h-full flex flex-col bg-card border-r border-border w-96">
+    <div className="h-full flex flex-col bg-card border-r border-border w-96 relative">
       {/* Search & Controls */}
       <div className="p-4 border-b border-border space-y-3">
         <div className="relative">
@@ -171,7 +205,7 @@ export const SessionList = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="past" className="flex-1 overflow-y-auto m-0 p-4 space-y-6">
+        <TabsContent value="past" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
           {Object.entries(groupedSessions).length === 0 ? (
             <div className="text-center text-muted-foreground py-8">
               No sessions found
@@ -215,14 +249,60 @@ export const SessionList = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Tidy Up Button */}
-      {selectedSessions.length > 0 && (
-        <div className="border-t border-border p-4">
-          <Button variant="outline" className="w-full gap-2">
-            🧹 Tidy up ({selectedSessions.length} selected)
-          </Button>
+      {/* Bottom Action Bar */}
+      {selectedCount > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 bg-card border-t border-border p-3 flex items-center justify-between shadow-lg z-10">
+          <div className="flex items-center gap-2 text-sm">
+            <CheckSquare className="h-4 w-4 text-primary" />
+            <span className="font-medium">
+              {selectedCount} session{selectedCount !== 1 ? 's' : ''} selected
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCancelSelection}
+              className="gap-1"
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setShowDeleteDialog(true)}
+              className="gap-1"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete
+            </Button>
+          </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Delete Session{selectedCount !== 1 ? 's' : ''}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {selectedCount} session{selectedCount !== 1 ? 's' : ''}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteSelected}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
