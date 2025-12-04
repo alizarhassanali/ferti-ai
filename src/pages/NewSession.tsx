@@ -1,23 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PatientSelector } from '@/components/newSession/PatientSelector';
 import { SessionInfoBar } from '@/components/newSession/SessionInfoBar';
 import { MainTabsContainer } from '@/components/newSession/MainTabsContainer';
 import { AskAIInput } from '@/components/newSession/AskAIInput';
-import { Patient, RecordingMode, MainTab, NoteTab } from '@/types/session';
+import { Patient, RecordingMode, MainTab, NoteTab, Session } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
+import { useSessions } from '@/contexts/SessionsContext';
+import { usePatients } from '@/contexts/PatientsContext';
 import { DEMO_NOTES, TEMPLATES } from '@/data/demoContent';
+import { format } from 'date-fns';
 
 const NewSession = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { addSession, updateSession, getSession } = useSessions();
+  const { patients, addPatient, updatePatient: updatePatientInContext, deletePatient: deletePatientInContext } = usePatients();
+  
+  // Current session ID - either from URL or newly created
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(() => {
+    return searchParams.get('id');
+  });
   
   // Patient state
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [patients, setPatients] = useState<Patient[]>([
-    { id: '1', name: 'John Smith', identifier: 'JS-001', additionalContext: 'Type 2 Diabetes, Hypertension', createdAt: new Date(), updatedAt: new Date() },
-    { id: '2', name: 'Sarah Johnson', identifier: 'SJ-002', createdAt: new Date(), updatedAt: new Date() },
-    { id: '3', name: 'Michael Chen', identifier: 'MC-003', additionalContext: 'Asthma, Allergies to penicillin', createdAt: new Date(), updatedAt: new Date() },
-  ]);
 
   // Recording state
   const [recordingMode, setRecordingMode] = useState<RecordingMode>('transcribe');
@@ -47,6 +55,98 @@ const NewSession = () => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [sessionDate] = useState(new Date());
+
+  // Create a new session when component mounts without an ID
+  useEffect(() => {
+    if (!currentSessionId) {
+      const newId = `session-${Date.now()}`;
+      const now = new Date();
+      const newSession: Session = {
+        id: newId,
+        title: 'Untitled session',
+        date: now,
+        time: format(now, 'h:mma'),
+        language: 'English',
+        duration: 0,
+        status: 'draft',
+        hasTranscript: false,
+        hasNotes: false,
+        mode: 'transcribe',
+        contextContent: '',
+        transcriptContent: '',
+        dictationContent: '',
+        inputLanguage: 'en',
+        outputLanguage: 'en',
+        notes: [],
+      };
+      addSession(newSession);
+      setCurrentSessionId(newId);
+    }
+  }, [currentSessionId, addSession]);
+
+  // Load existing session data if editing
+  useEffect(() => {
+    if (currentSessionId) {
+      const existingSession = getSession(currentSessionId);
+      if (existingSession) {
+        setContextContent(existingSession.contextContent || '');
+        setTranscriptContent(existingSession.transcriptContent || '');
+        setDictationContent(existingSession.dictationContent || '');
+        setRecordingMode(existingSession.mode || 'transcribe');
+        setInputLanguage(existingSession.inputLanguage || 'en');
+        setOutputLanguage(existingSession.outputLanguage || 'en');
+        
+        if (existingSession.patientId) {
+          const patient = patients.find(p => p.id === existingSession.patientId);
+          if (patient) {
+            setSelectedPatient(patient);
+          }
+        }
+        
+        if (existingSession.notes && existingSession.notes.length > 0) {
+          setNoteTabs(existingSession.notes.map(n => ({
+            id: n.id,
+            title: n.title,
+            templateId: n.type,
+            content: n.content,
+          })));
+        }
+      }
+    }
+  }, [currentSessionId, getSession, patients]);
+
+  // Save session changes
+  const saveSessionChanges = useCallback(() => {
+    if (!currentSessionId) return;
+    
+    updateSession(currentSessionId, {
+      contextContent,
+      transcriptContent,
+      dictationContent,
+      mode: recordingMode,
+      inputLanguage,
+      outputLanguage,
+      patientId: selectedPatient?.id,
+      patientName: selectedPatient?.name,
+      title: selectedPatient?.name || 'Untitled session',
+      hasTranscript: transcriptContent.trim().length > 0,
+      notes: noteTabs.map(t => ({
+        id: t.id,
+        type: t.templateId as any || 'custom',
+        title: t.title,
+        content: t.content,
+        isClosable: true,
+      })),
+    });
+  }, [currentSessionId, updateSession, contextContent, transcriptContent, dictationContent, recordingMode, inputLanguage, outputLanguage, selectedPatient, noteTabs]);
+
+  // Auto-save on content changes
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      saveSessionChanges();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [saveSessionChanges]);
 
   // Recording timer
   useEffect(() => {
@@ -108,6 +208,23 @@ const NewSession = () => {
     });
   };
 
+  const handleSelectPatient = (patient: Patient | null) => {
+    setSelectedPatient(patient);
+    if (currentSessionId && patient) {
+      updateSession(currentSessionId, {
+        patientId: patient.id,
+        patientName: patient.name,
+        title: patient.name,
+      });
+    } else if (currentSessionId) {
+      updateSession(currentSessionId, {
+        patientId: undefined,
+        patientName: undefined,
+        title: 'Untitled session',
+      });
+    }
+  };
+
   const handleCreatePatient = (name: string) => {
     const newPatient: Patient = {
       id: crypto.randomUUID(),
@@ -115,8 +232,8 @@ const NewSession = () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    setPatients(prev => [newPatient, ...prev]);
-    setSelectedPatient(newPatient);
+    addPatient(newPatient);
+    handleSelectPatient(newPatient);
     toast({
       title: 'Patient created',
       description: `${name} has been added.`,
@@ -124,7 +241,7 @@ const NewSession = () => {
   };
 
   const handleUpdatePatient = (patient: Patient) => {
-    setPatients(prev => prev.map(p => p.id === patient.id ? { ...patient, updatedAt: new Date() } : p));
+    updatePatientInContext(patient.id, patient);
     if (selectedPatient?.id === patient.id) {
       setSelectedPatient(patient);
     }
@@ -135,10 +252,13 @@ const NewSession = () => {
   };
 
   const handleDeletePatient = (patientId: string) => {
-    setPatients(prev => prev.filter(p => p.id !== patientId));
+    deletePatientInContext(patientId);
+    if (selectedPatient?.id === patientId) {
+      setSelectedPatient(null);
+    }
     toast({
       title: 'Patient deleted',
-      description: 'Patient and linked sessions have been removed.',
+      description: 'Patient has been removed.',
       variant: 'destructive',
     });
   };
@@ -173,12 +293,20 @@ const NewSession = () => {
       setIsGenerating(false);
       setActiveMainTab('note');
       
+      // Update session status to complete when note is generated
+      if (currentSessionId) {
+        updateSession(currentSessionId, {
+          status: 'complete',
+          hasNotes: true,
+        });
+      }
+      
       toast({
         title: 'Note generated',
         description: `${template?.name} has been created.`,
       });
     }, 1500);
-  }, [hasContent, noteTabs, activeNoteTabId, toast]);
+  }, [hasContent, noteTabs, activeNoteTabId, toast, currentSessionId, updateSession]);
 
   return (
     <AppLayout>
@@ -188,7 +316,7 @@ const NewSession = () => {
           <PatientSelector
             selectedPatient={selectedPatient}
             patients={patients}
-            onSelectPatient={setSelectedPatient}
+            onSelectPatient={handleSelectPatient}
             onCreatePatient={handleCreatePatient}
             onUpdatePatient={handleUpdatePatient}
             onDeletePatient={handleDeletePatient}
