@@ -9,6 +9,7 @@ import { SessionSort } from './SessionSort';
 import { ScheduledMeetingCard } from './ScheduledMeetingCard';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { useSessions } from '@/contexts/SessionsContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface ScheduledMeeting {
   id: string;
@@ -46,7 +47,8 @@ const demoMeetings: ScheduledMeeting[] = [
 
 export const SessionList = () => {
   const { selectedSessionId, setSelectedSessionId } = useSessionsLayout();
-  const { sessions } = useSessions();
+  const { sessions, deleteSession } = useSessions();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
@@ -62,6 +64,21 @@ export const SessionList = () => {
       grouped[dateKey].push(session);
     });
     return grouped;
+  };
+
+  const getSessionsForPatient = (patientId: string | undefined) => {
+    if (!patientId) return [];
+    return sessions.filter(s => s.patientId === patientId);
+  };
+
+  const handleDeleteAllPatientSessions = (patientId: string, patientName: string) => {
+    const patientSessions = sessions.filter(s => s.patientId === patientId);
+    patientSessions.forEach(s => deleteSession(s.id));
+    toast({
+      title: 'Sessions deleted',
+      description: `All sessions for ${patientName} have been deleted.`,
+      variant: 'destructive',
+    });
   };
 
   const filteredSessions = sessions.filter((session) =>
@@ -174,12 +191,21 @@ export const SessionList = () => {
                         title: session.title,
                         date: new Date(session.date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }),
                         time: session.time,
-                        status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft'
+                        status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft',
+                        patientId: session.patientId,
+                        patientName: session.patientName,
                       }}
                       isSelected={selectedSessions.includes(session.id)}
                       isActive={selectedSessionId === session.id}
                       onSelect={() => handleSelectSession(session.id)}
                       onClick={() => handleSessionClick(session.id)}
+                      patientSessions={getSessionsForPatient(session.patientId)}
+                      onSessionClick={handleSessionClick}
+                      onDeleteAllPatientSessions={() => {
+                        if (session.patientId && session.patientName) {
+                          handleDeleteAllPatientSessions(session.patientId, session.patientName);
+                        }
+                      }}
                     />
                   ))}
                 </div>

@@ -1,21 +1,26 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, AlertCircle, FileText } from 'lucide-react';
-
-interface Session {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  status: 'complete' | 'draft' | 'review';
-}
+import { CheckCircle2, AlertCircle, FileText, ChevronRight } from 'lucide-react';
+import { Session } from '@/types/session';
+import { PatientSessionsPopover } from './PatientSessionsPopover';
 
 interface SessionCardProps {
-  session: Session;
+  session: {
+    id: string;
+    title: string;
+    date: string;
+    time: string;
+    status: 'complete' | 'draft' | 'review';
+    patientId?: string;
+    patientName?: string;
+  };
   isSelected: boolean;
   isActive?: boolean;
   onSelect: () => void;
   onClick?: () => void;
+  patientSessions?: Session[];
+  onSessionClick?: (sessionId: string) => void;
+  onDeleteAllPatientSessions?: () => void;
 }
 
 const statusConfig = {
@@ -36,10 +41,20 @@ const statusConfig = {
   },
 };
 
-export const SessionCard = ({ session, isSelected, isActive, onSelect, onClick }: SessionCardProps) => {
+export const SessionCard = ({ 
+  session, 
+  isSelected, 
+  isActive, 
+  onSelect, 
+  onClick,
+  patientSessions = [],
+  onSessionClick,
+  onDeleteAllPatientSessions,
+}: SessionCardProps) => {
   const StatusIcon = statusConfig[session.status].icon;
+  const hasLinkedPatient = session.patientId && patientSessions.length >= 2;
 
-  return (
+  const cardContent = (
     <div
       className={`
         group relative flex items-start gap-3 p-3 rounded-lg border border-border
@@ -75,6 +90,27 @@ export const SessionCard = ({ session, isSelected, isActive, onSelect, onClick }
           </Badge>
         )}
       </div>
+
+      {/* Indicator for linked patient sessions */}
+      {hasLinkedPatient && (
+        <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+      )}
     </div>
   );
+
+  if (hasLinkedPatient && onSessionClick && onDeleteAllPatientSessions) {
+    return (
+      <PatientSessionsPopover
+        sessions={patientSessions}
+        patientName={session.patientName || 'Patient'}
+        currentSessionId={session.id}
+        onSessionClick={onSessionClick}
+        onDeleteAll={onDeleteAllPatientSessions}
+      >
+        {cardContent}
+      </PatientSessionsPopover>
+    );
+  }
+
+  return cardContent;
 };

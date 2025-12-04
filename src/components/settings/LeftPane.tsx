@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -76,6 +76,8 @@ export const LeftPane = () => {
     { type: 'separator' },
     { icon: FileCode, label: 'Chart Prep', id: 'chart-prep' },
     { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant' },
+    { type: 'separator' },
+    { icon: Users, label: 'Team', id: 'team', route: '/team' },
     { type: 'separator' },
     { label: 'Templates', type: 'header' },
     { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
