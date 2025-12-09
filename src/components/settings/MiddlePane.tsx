@@ -27,9 +27,9 @@ export const MiddlePane = () => {
   });
 
   return (
-    <div className="w-75 h-screen bg-neutral-warm-100 border-r border-border">
+    <div className="w-75 h-screen bg-nav border-r border-nav-border">
       <div className="p-6">
-        <h2 className="text-2xl font-semibold text-foreground mb-1">Settings</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Settings</h2>
         <p className="text-sm text-muted-foreground">Manage your account and preferences</p>
       </div>
 
@@ -44,11 +44,11 @@ export const MiddlePane = () => {
                 <button
                   onClick={() => setSelectedCategory(category.id)}
                   className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
+                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium
                     transition-all duration-200
                     ${isActive
-                      ? 'bg-neutral-blue-100 text-primary border-l-[3px] border-primary font-semibold shadow-cnp-sm'
-                      : 'text-foreground hover:bg-neutral-blue-50'
+                      ? 'bg-primary-light text-primary border-l-3 border-primary font-semibold shadow-sm'
+                      : 'text-foreground hover:bg-nav-hover'
                     }
                   `}
                 >

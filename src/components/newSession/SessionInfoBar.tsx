@@ -45,7 +45,7 @@ export const SessionInfoBar = ({
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-white">
+    <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
       {/* Left side: Date and Language */}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -62,7 +62,7 @@ export const SessionInfoBar = ({
 
       {/* Right side: Timer, Mic, Record button */}
       <div className="flex items-center gap-4">
-        <span className="font-mono text-lg font-medium tabular-nums text-foreground">
+        <span className="font-mono text-lg font-medium tabular-nums">
           {formatDuration(recordingDuration)}
         </span>
         <MicrophoneSelector

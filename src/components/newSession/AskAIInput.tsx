@@ -17,7 +17,7 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
   };
 
   return (
-    <div className="border-t border-border bg-white">
+    <div className="border-t border-border bg-background">
       <div className="px-4 py-3">
         <div className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-primary shrink-0" />
@@ -49,9 +49,9 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
           </div>
         </div>
       </div>
-      <div className="px-4 py-2 bg-neutral-warm-50 border-t border-border">
+      <div className="px-4 py-2 bg-muted/30 border-t border-border">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
           <span>Review your note before use to ensure it accurately represents the visit</span>
         </div>
       </div>
