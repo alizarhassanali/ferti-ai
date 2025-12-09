@@ -26,8 +26,8 @@ const mockUser: UserProfile = {
   lastName: 'Saya',
   title: 'Dr.',
   specialty: 'Fertility Specialist',
-  organisation: 'Fertility Partners',
-  companySize: '11-50',
+  clinicName: 'Fertility Partners',
+  country: 'Canada',
 };
 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {

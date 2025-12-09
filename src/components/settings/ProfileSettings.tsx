@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload } from 'lucide-react';
+import { Upload, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { UserRole } from '@/types/user';
 
 export const ProfileSettings = () => {
   const { user, updateProfile, isSaving } = useSettings();
@@ -17,9 +18,8 @@ export const ProfileSettings = () => {
     firstName: user.firstName,
     lastName: user.lastName,
     specialty: user.specialty || 'Fertility Specialist',
-    organisation: user.organisation || '',
-    companySize: user.companySize || 'Just me',
-    role: user.role,
+    clinicName: user.clinicName || user.clinic || '',
+    role: user.role as UserRole,
   });
 
   const [imagePreview, setImagePreview] = useState<string | undefined>(user.profileImage);
@@ -98,7 +98,7 @@ export const ProfileSettings = () => {
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Upload JPG or PNG up to 5MB
+                  Upload a JPG or PNG image up to 5MB. Shows in the template community.
                 </p>
                 <label htmlFor="image-upload">
                   <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
@@ -173,40 +173,65 @@ export const ProfileSettings = () => {
             </Select>
           </div>
 
-          {/* Organisation, Company Size, Role */}
-          <div className="grid grid-cols-3 gap-4">
+          {/* Clinic Name and Role */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <Label htmlFor="organisation" className="text-sm font-medium mb-2 block">Organisation</Label>
+              <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
               <Input
-                id="organisation"
-                value={formData.organisation}
-                onChange={(e) => setFormData({ ...formData, organisation: e.target.value })}
+                id="clinicName"
+                value={formData.clinicName}
+                onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
+                placeholder="Enter your clinic name"
               />
-            </div>
-            <div>
-              <Label htmlFor="companySize" className="text-sm font-medium mb-2 block">Company size</Label>
-              <Select value={formData.companySize} onValueChange={(value) => setFormData({ ...formData, companySize: value })}>
-                <SelectTrigger id="companySize">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Just me">Just me</SelectItem>
-                  <SelectItem value="2-10">2-10</SelectItem>
-                  <SelectItem value="11-50">11-50</SelectItem>
-                  <SelectItem value="51-200">51-200</SelectItem>
-                  <SelectItem value="201+">201+</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             <div>
               <Label htmlFor="role" className="text-sm font-medium mb-2 block">Your role</Label>
-              <Input
-                id="role"
-                value={formData.role}
-                disabled
-                className="bg-muted"
-              />
+              <Select 
+                value={formData.role} 
+                onValueChange={(value) => setFormData({ ...formData, role: value as UserRole })}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Individual clinician">Individual clinician</SelectItem>
+                  <SelectItem value="Physician">Physician</SelectItem>
+                  <SelectItem value="Nurse">Nurse</SelectItem>
+                  <SelectItem value="Specialist">Specialist</SelectItem>
+                  <SelectItem value="Administrator">Administrator</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+          </div>
+
+          {/* Country Field */}
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <Label className="text-sm font-medium">Country</Label>
+              <button 
+                type="button" 
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => toast({
+                  title: "Country setting",
+                  description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
+                })}
+              >
+                Why can't I change this?
+              </button>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md px-4 py-3">
+              <span className="text-sm text-foreground">{user.country || 'Canada'}</span>
+            </div>
+            <a 
+              href="https://www.example.com/privacy" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-2 text-xs text-primary hover:underline"
+            >
+              Privacy Policy for my country
+              <ExternalLink className="h-3 w-3" />
+            </a>
           </div>
         </div>
 

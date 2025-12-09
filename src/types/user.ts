@@ -1,4 +1,4 @@
-export type UserRole = 'Physician' | 'Nurse' | 'Admin' | 'General Admin' | 'Super Admin';
+export type UserRole = 'Individual clinician' | 'Physician' | 'Nurse' | 'Specialist' | 'Administrator' | 'Other' | 'Admin' | 'General Admin' | 'Super Admin';
 
 export interface UserProfile {
   id: string;
@@ -11,8 +11,8 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   specialty?: string;
-  organisation?: string;
-  companySize?: string;
+  clinicName?: string;
+  country?: string;
 }
 
 export interface ProfileFormData {
@@ -21,14 +21,21 @@ export interface ProfileFormData {
   firstName: string;
   lastName: string;
   specialty: string;
-  organisation: string;
-  companySize: string;
-  role: string;
+  clinicName: string;
+  role: UserRole;
 }
 
 export interface SecuritySettings {
   twoFactorEnabled: boolean;
   sessionTimeout: string;
+}
+
+export interface MemoryAISettings {
+  displayLanguage: 'English' | 'French';
+  dateFormat: 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
+  detailLevel: 'Concise' | 'Default' | 'Detailed';
+  voice: '1st Person' | 'Default' | '3rd Person';
+  format: 'Bullet Point' | 'Default' | 'Narrative';
 }
 
 export interface PasswordChangeData {

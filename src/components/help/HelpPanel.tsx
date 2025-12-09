@@ -6,10 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+
 interface HelpPanelProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
 export const HelpPanel = ({
   open,
   onOpenChange
@@ -18,12 +20,15 @@ export const HelpPanel = ({
   const [chatStarted, setChatStarted] = useState(false);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+
   const handleStartChat = () => {
     setChatStarted(true);
   };
+
   const handleBackToStart = () => {
     setChatStarted(false);
   };
+
   const handleSendEmail = () => {
     if (email) {
       toast({
@@ -32,6 +37,7 @@ export const HelpPanel = ({
       });
     }
   };
+
   const handleSendMessage = () => {
     if (message) {
       toast({
@@ -41,13 +47,14 @@ export const HelpPanel = ({
       setMessage('');
     }
   };
-  return <Sheet open={open} onOpenChange={onOpenChange}>
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[350px] sm:w-[400px] p-0 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div className="flex items-center gap-2">
-            
-            <span className="font-semibold text-lg">NotesAI</span>
+            <span className="font-semibold text-lg">FertiAI</span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -70,20 +77,23 @@ export const HelpPanel = ({
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {activeTab === 'home' && <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+          {activeTab === 'home' && (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                 <Book className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">NotesAI Guides</h3>
+              <h3 className="text-xl font-semibold mb-2">FertiAI Guides</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Detailed courses to help you get the most out of NotesAI.
+                Detailed courses to help you get the most out of FertiAI.
               </p>
               <Badge variant="secondary" className="text-xs">
                 Coming Soon
               </Badge>
-            </div>}
+            </div>
+          )}
 
-          {activeTab === 'messages' && !chatStarted && <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+          {activeTab === 'messages' && !chatStarted && (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                 <MessageSquare className="h-8 w-8 text-muted-foreground" />
               </div>
@@ -95,9 +105,11 @@ export const HelpPanel = ({
                 Send us a message
                 <ArrowLeft className="h-4 w-4 rotate-180" />
               </Button>
-            </div>}
+            </div>
+          )}
 
-          {activeTab === 'messages' && chatStarted && <div className="flex flex-col h-full">
+          {activeTab === 'messages' && chatStarted && (
+            <div className="flex flex-col h-full">
               {/* Chat Header */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleBackToStart}>
@@ -136,7 +148,13 @@ export const HelpPanel = ({
                 {/* Email Collection Card */}
                 <div className="bg-muted rounded-lg p-4 space-y-3">
                   <label className="text-sm font-medium">Email</label>
-                  <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className="bg-background" />
+                  <Input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)} 
+                    className="bg-background" 
+                  />
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">1 of 1</span>
                     <Button size="sm" onClick={handleSendEmail}>
@@ -152,7 +170,13 @@ export const HelpPanel = ({
                   <Button variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0">
                     <Paperclip className="h-4 w-4" />
                   </Button>
-                  <Input placeholder="Type a message..." value={message} onChange={e => setMessage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSendMessage()} className="flex-1" />
+                  <Input 
+                    placeholder="Type a message..." 
+                    value={message} 
+                    onChange={e => setMessage(e.target.value)} 
+                    onKeyDown={e => e.key === 'Enter' && handleSendMessage()} 
+                    className="flex-1" 
+                  />
                   <Button variant="ghost" size="icon" className="h-9 w-9 flex-shrink-0" onClick={handleSendMessage}>
                     <Send className="h-4 w-4" />
                   </Button>
@@ -163,22 +187,32 @@ export const HelpPanel = ({
               <div className="py-2 text-center border-t border-border">
                 <span className="text-xs text-muted-foreground">Built with Zendesk</span>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
 
         {/* Bottom Navigation - Only show when not in chat */}
-        {!(activeTab === 'messages' && chatStarted) && <div className="border-t border-border">
+        {!(activeTab === 'messages' && chatStarted) && (
+          <div className="border-t border-border">
             <div className="grid grid-cols-2">
-              <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center gap-1 py-3 transition-colors ${activeTab === 'home' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
+              <button 
+                onClick={() => setActiveTab('home')} 
+                className={`flex flex-col items-center gap-1 py-3 transition-colors ${activeTab === 'home' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              >
                 <Home className="h-5 w-5" />
                 <span className="text-xs font-medium">Home</span>
               </button>
-              <button onClick={() => setActiveTab('messages')} className={`flex flex-col items-center gap-1 py-3 transition-colors ${activeTab === 'messages' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
+              <button 
+                onClick={() => setActiveTab('messages')} 
+                className={`flex flex-col items-center gap-1 py-3 transition-colors ${activeTab === 'messages' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              >
                 <MessageSquare className="h-5 w-5" />
                 <span className="text-xs font-medium">Messages</span>
               </button>
             </div>
-          </div>}
+          </div>
+        )}
       </SheetContent>
-    </Sheet>;
+    </Sheet>
+  );
 };
