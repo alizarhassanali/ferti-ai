@@ -18,38 +18,35 @@ interface TemplateRowProps {
 
 export const TemplateRow = ({ template, onToggleFavorite, onDelete }: TemplateRowProps) => {
   return (
-    <TableRow className="group border-b border-[hsl(35_20%_94%)] hover:bg-[hsl(40_30%_98%)] transition-colors">
-      <TableCell className="py-3.5">
+    <TableRow className="group">
+      <TableCell className="py-4">
         <div className="flex items-center gap-2.5">
-          <span className="font-medium text-[15px] text-[hsl(25_30%_25%)]">{template.name}</span>
-          <Badge 
-            variant="secondary" 
-            className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[hsl(40_25%_93%)] text-[hsl(25_25%_45%)] border border-[hsl(35_20%_88%)]"
-          >
+          <span className="font-medium text-[15px] text-foreground">{template.name}</span>
+          <Badge variant="secondary">
             {template.type}
           </Badge>
         </div>
       </TableCell>
       
-      <TableCell className="text-center text-sm text-[hsl(25_15%_50%)] py-3.5">{template.uses}</TableCell>
+      <TableCell className="text-center text-sm text-muted-foreground py-4">{template.uses}</TableCell>
       
-      <TableCell className="text-sm text-[hsl(25_15%_50%)] py-3.5">{template.lastUsed || '-'}</TableCell>
+      <TableCell className="text-sm text-muted-foreground py-4">{template.lastUsed || '-'}</TableCell>
       
-      <TableCell className="text-sm text-[hsl(25_15%_50%)] py-3.5">{template.creator}</TableCell>
+      <TableCell className="text-sm text-muted-foreground py-4">{template.creator}</TableCell>
       
-      <TableCell className="py-3.5">
-        <div className="flex items-center gap-1.5 text-[hsl(25_15%_55%)]">
+      <TableCell className="py-4">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
           <User className="h-3.5 w-3.5" />
           <span className="text-sm">{template.visibility}</span>
         </div>
       </TableCell>
       
-      <TableCell className="py-3.5">
+      <TableCell className="py-4">
         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
+            className="h-8 w-8 text-foreground/60 hover:text-foreground hover:bg-neutral-blue-50 rounded-lg"
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -57,11 +54,11 @@ export const TemplateRow = ({ template, onToggleFavorite, onDelete }: TemplateRo
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 hover:bg-[hsl(40_25%_92%)] rounded-lg"
+            className="h-8 w-8 hover:bg-neutral-blue-50 rounded-lg"
             onClick={() => onToggleFavorite(template.id)}
           >
             <Star
-              className={`h-4 w-4 ${template.isFavorite ? 'fill-[hsl(35_60%_50%)] text-[hsl(35_60%_50%)]' : 'text-[hsl(25_20%_45%)]'}`}
+              className={`h-4 w-4 ${template.isFavorite ? 'fill-warning text-warning' : 'text-foreground/60'}`}
             />
           </Button>
           
@@ -70,20 +67,20 @@ export const TemplateRow = ({ template, onToggleFavorite, onDelete }: TemplateRo
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
+                className="h-8 w-8 text-foreground/60 hover:text-foreground hover:bg-neutral-blue-50 rounded-lg"
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white border-[hsl(35_20%_88%)] rounded-xl shadow-lg">
-              <DropdownMenuItem className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer">
+            <DropdownMenuContent align="end" className="bg-white border-border rounded-2xl shadow-cnp-lg">
+              <DropdownMenuItem className="text-foreground hover:bg-neutral-blue-50 rounded-lg cursor-pointer">
                 Duplicate
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer">
+              <DropdownMenuItem className="text-foreground hover:bg-neutral-blue-50 rounded-lg cursor-pointer">
                 Share
               </DropdownMenuItem>
               <DropdownMenuItem 
-                className="text-[hsl(0_60%_45%)] hover:bg-[hsl(0_60%_96%)] rounded-lg cursor-pointer"
+                className="text-destructive hover:bg-destructive/10 rounded-lg cursor-pointer"
                 onClick={() => onDelete(template.id)}
               >
                 Delete

@@ -37,10 +37,10 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
         <button
           className={cn(
             "inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all",
-            "border shadow-pill hover:shadow-md",
+            "border shadow-cnp-sm hover:shadow-cnp-md",
             hasActiveFilter
-              ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-              : "bg-white text-[hsl(220_15%_35%)] border-[hsl(220_15%_88%)] hover:bg-[hsl(220_20%_96%)] hover:border-[hsl(220_15%_80%)]"
+              ? "bg-primary text-primary-foreground border-primary hover:brightness-95"
+              : "bg-white text-foreground border-border hover:bg-neutral-blue-50 hover:border-foreground/20"
           )}
         >
           {icon}
@@ -49,7 +49,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
             "text-xs px-1.5 py-0.5 rounded-md",
             hasActiveFilter
               ? "bg-white/20 text-primary-foreground"
-              : "bg-[hsl(220_20%_95%)] text-[hsl(220_15%_45%)]"
+              : "bg-neutral-blue-100 text-foreground"
           )}>
             {value}
           </span>
@@ -58,7 +58,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="min-w-[160px] bg-white border border-[hsl(220_15%_90%)] shadow-lg rounded-xl p-1.5 z-50"
+        className="min-w-[160px] bg-white border border-border shadow-cnp-lg rounded-2xl p-1.5 z-50"
       >
         {options.map((option) => (
           <DropdownMenuItem 
@@ -68,7 +68,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
               "px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors",
               value === option 
                 ? "bg-primary/10 text-primary font-medium" 
-                : "text-[hsl(220_15%_30%)] hover:bg-[hsl(220_20%_96%)]"
+                : "text-foreground hover:bg-neutral-blue-50"
             )}
           >
             {option}

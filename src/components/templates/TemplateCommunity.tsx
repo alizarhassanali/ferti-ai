@@ -44,21 +44,21 @@ export const TemplateCommunity = () => {
   }, [searchQuery, sortBy, location, specialty, category]);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[hsl(40_20%_98%)]">
+    <div className="flex-1 overflow-y-auto">
       <div className="mx-auto px-8 lg:px-16 py-6 max-w-7xl">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <h1 className="text-3xl lg:text-4xl font-serif font-semibold text-[hsl(220_25%_10%)] tracking-tight">
+          <h1 className="text-3xl lg:text-4xl font-serif font-semibold text-foreground tracking-tight">
             Template Hub
           </h1>
           <div className="relative w-full sm:w-80">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[hsl(220_10%_55%)]" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search for a template..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 pl-11 pr-4 rounded-xl bg-white border border-[hsl(220_15%_90%)] shadow-input text-sm placeholder:text-[hsl(220_10%_60%)] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full h-11 pl-11 pr-4 rounded-xl bg-white border border-foreground/20 shadow-cnp-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground focus:ring-[3px] focus:ring-foreground/15 transition-all"
             />
           </div>
         </div>
