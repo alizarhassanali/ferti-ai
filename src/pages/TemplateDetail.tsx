@@ -36,26 +36,26 @@ const TemplateDetail = () => {
 
   return (
     <AppLayout>
-      <div className="flex-1 overflow-y-auto bg-background">
-        <div className="mx-auto px-8 lg:px-12 py-8 max-w-6xl">
+      <div className="flex-1 overflow-y-auto bg-[hsl(210_20%_98%)]">
+        <div className="mx-auto px-10 lg:px-12 py-8 max-w-[1100px]">
           {/* Back Navigation */}
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => navigate('/template-hub')}
-            className="mb-8 gap-2 bg-card hover:bg-muted border-border text-foreground font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-[hsl(215_16%_35%)] bg-card border border-[hsl(214_20%_90%)] hover:bg-[hsl(210_20%_98%)] hover:border-[hsl(214_20%_80%)] transition-all"
           >
             <LayoutGrid className="h-4 w-4" />
             Template Hub
-          </Button>
+          </button>
 
           {/* Header */}
-          <div className="flex items-start justify-between mb-6">
-            <h1 className="text-3xl font-bold text-foreground tracking-tight">{template.title}</h1>
+          <div className="flex items-start justify-between mt-6 mb-4">
+            <h1 className="text-[28px] font-bold text-[hsl(222_47%_11%)] tracking-tight leading-tight">
+              {template.title}
+            </h1>
             <Button 
               onClick={handleAddToLibrary} 
               disabled={isAdded}
-              className="gap-2 shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+              className="gap-2 bg-[hsl(217_91%_60%)] hover:bg-[hsl(217_91%_50%)] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[hsl(217_91%_60%)/30%] transition-all"
             >
               <Upload className="h-4 w-4" />
               {isAdded ? 'Added ✓' : 'Add to my library'}
@@ -63,48 +63,48 @@ const TemplateDetail = () => {
           </div>
 
           {/* Metadata Row */}
-          <div className="flex items-center gap-12 pb-6 mb-8 border-b border-border">
+          <div className="flex items-center gap-10 pb-6 mb-6 border-b border-[hsl(214_20%_90%)]">
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Created by</span>
-              <span className="text-sm font-medium text-foreground">{template.author.name}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(215_16%_60%)]">Created by</span>
+              <span className="text-sm font-medium text-[hsl(215_25%_27%)]">{template.author.name}</span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Specialty</span>
-              <span className="text-sm font-medium text-foreground">{template.author.specialty}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(215_16%_60%)]">Specialty</span>
+              <span className="text-sm font-medium text-[hsl(215_25%_27%)]">{template.author.specialty}</span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Last edited</span>
-              <span className="text-sm font-medium text-foreground">{template.lastEdited}</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(215_16%_60%)]">Last edited</span>
+              <span className="text-sm font-medium text-[hsl(215_25%_27%)]">{template.lastEdited}</span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Uses</span>
-              <span className="text-sm font-medium text-foreground">{template.usageCount.toLocaleString()} times</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[hsl(215_16%_60%)]">Uses</span>
+              <span className="text-sm font-medium text-[hsl(215_25%_27%)]">{template.usageCount.toLocaleString()} times</span>
             </div>
           </div>
 
           {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
+          <div className="flex gap-12">
             {/* Main Content - Left Column */}
-            <div className="space-y-8">
+            <div className="flex-1 max-w-[70%] space-y-6">
               {/* About Section */}
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-3">About this template</h2>
-                <p className="text-[15px] text-muted-foreground leading-relaxed">{template.about}</p>
+                <h2 className="text-base font-semibold text-[hsl(215_25%_15%)] mb-3">About this template</h2>
+                <p className="text-sm leading-7 text-[hsl(215_16%_47%)]">{template.about}</p>
               </div>
 
               {/* Preview Section */}
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-4">Preview template</h2>
+                <h2 className="text-base font-semibold text-[hsl(215_25%_15%)] mb-4">Preview template</h2>
                 
-                {/* Pill Toggle Tabs */}
-                <div className="bg-muted/60 rounded-xl p-1.5 flex gap-1">
+                {/* Pill Toggle Tabs - Gray Container */}
+                <div className="bg-[hsl(210_20%_96%)] rounded-[10px] p-1 flex gap-1">
                   <button
                     onClick={() => setActiveTab('example')}
                     className={cn(
-                      "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all",
+                      "flex-1 flex items-center justify-center gap-2 py-2.5 px-5 rounded-lg text-sm transition-all cursor-pointer",
                       activeTab === 'example' 
-                        ? "bg-card text-foreground shadow-sm" 
-                        : "text-muted-foreground hover:bg-muted"
+                        ? "bg-white text-[hsl(215_25%_15%)] font-medium shadow-sm" 
+                        : "bg-transparent text-[hsl(215_16%_50%)] font-normal hover:bg-[hsl(214_20%_90%)]"
                     )}
                   >
                     <FileText className="h-4 w-4" />
@@ -113,10 +113,10 @@ const TemplateDetail = () => {
                   <button
                     onClick={() => setActiveTab('structure')}
                     className={cn(
-                      "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all",
+                      "flex-1 flex items-center justify-center gap-2 py-2.5 px-5 rounded-lg text-sm transition-all cursor-pointer",
                       activeTab === 'structure' 
-                        ? "bg-card text-foreground shadow-sm" 
-                        : "text-muted-foreground hover:bg-muted"
+                        ? "bg-white text-[hsl(215_25%_15%)] font-medium shadow-sm" 
+                        : "bg-transparent text-[hsl(215_16%_50%)] font-normal hover:bg-[hsl(214_20%_90%)]"
                     )}
                   >
                     <Layers className="h-4 w-4" />
@@ -124,13 +124,10 @@ const TemplateDetail = () => {
                   </button>
                 </div>
 
-                {/* Content Card */}
-                <div className="mt-4 bg-card border border-border rounded-xl shadow-sm max-h-[500px] overflow-y-auto">
+                {/* Content Card - Clean border, no accent */}
+                <div className="mt-4 bg-white border border-[hsl(214_20%_90%)] rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.05)] max-h-[450px] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-[hsl(210_20%_96%)] [&::-webkit-scrollbar-track]:rounded [&::-webkit-scrollbar-thumb]:bg-[hsl(214_20%_80%)] [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb:hover]:bg-[hsl(215_16%_60%)]">
                   <div className="p-6">
-                    <pre className={cn(
-                      "whitespace-pre-wrap text-sm font-mono leading-7",
-                      activeTab === 'example' ? "text-foreground" : "text-muted-foreground"
-                    )}>
+                    <pre className="whitespace-pre-wrap text-[13px] font-mono leading-7 text-[hsl(215_25%_27%)]">
                       {activeTab === 'example' ? template.exampleNote : template.templateStructure}
                     </pre>
                   </div>
@@ -139,13 +136,13 @@ const TemplateDetail = () => {
             </div>
 
             {/* Sidebar - Right Column */}
-            <div className="lg:sticky lg:top-8 lg:self-start">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Tags</h3>
+            <div className="w-[200px] flex-shrink-0 sticky top-6 self-start">
+              <h3 className="text-[13px] font-semibold text-[hsl(215_16%_35%)] mb-3">Tags</h3>
               <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors cursor-pointer">
+                <span className="inline-block px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-[hsl(210_20%_96%)] text-[hsl(215_16%_35%)] border border-[hsl(214_20%_90%)] hover:bg-[hsl(214_20%_90%)] hover:border-[hsl(214_20%_80%)] transition-colors cursor-pointer">
                   {template.author.specialty}
                 </span>
-                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-muted text-muted-foreground border border-border hover:bg-muted/80 transition-colors cursor-pointer">
+                <span className="inline-block px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-[hsl(210_20%_96%)] text-[hsl(215_16%_35%)] border border-[hsl(214_20%_90%)] hover:bg-[hsl(214_20%_90%)] hover:border-[hsl(214_20%_80%)] transition-colors cursor-pointer">
                   {template.type}
                 </span>
               </div>
@@ -153,12 +150,12 @@ const TemplateDetail = () => {
           </div>
 
           {/* Bottom CTA */}
-          <div className="mt-12">
+          <div className="mt-8">
             <Button 
               onClick={handleAddToLibrary} 
               disabled={isAdded}
               size="lg"
-              className="w-full gap-2 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
+              className="w-full gap-2 py-3.5 text-[15px] rounded-[10px] bg-[hsl(217_91%_60%)] hover:bg-[hsl(217_91%_50%)] transition-all"
             >
               <Upload className="h-5 w-5" />
               {isAdded ? 'Added to your library ✓' : 'Add to my library'}
