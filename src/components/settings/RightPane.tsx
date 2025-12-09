@@ -1,6 +1,8 @@
 import { useSettings } from '@/contexts/SettingsContext';
 import { ProfileSettings } from './ProfileSettings';
 import { SecuritySettings } from './SecuritySettings';
+import { UsageSettings } from './UsageSettings';
+import { MemoryAISettings } from './MemoryAISettings';
 
 export const RightPane = () => {
   const { selectedCategory } = useSettings();
@@ -9,6 +11,10 @@ export const RightPane = () => {
     switch (selectedCategory) {
       case 'profile':
         return <ProfileSettings />;
+      case 'usage':
+        return <UsageSettings />;
+      case 'memory-ai':
+        return <MemoryAISettings />;
       case 'security':
         return <SecuritySettings />;
       case 'integrations':
