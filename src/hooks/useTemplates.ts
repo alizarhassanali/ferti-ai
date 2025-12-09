@@ -3,15 +3,15 @@ import { Template, TemplatesState, CreateModalStep, TemplateCreationType } from 
 
 const mockTemplates: Template[] = [
   { id: '1', name: "Letter to GP", type: "Document", uses: 2, lastUsed: "1 day ago", creator: "Community", visibility: "Just me" },
-  { id: '2', name: "Patient Explainer Letter", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '3', name: "Follow-Up", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '4', name: "Generic Referral Letter", type: "Document", uses: 1, lastUsed: "1 day ago", creator: "NotesAI", visibility: "Just me" },
-  { id: '5', name: "H & P", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '6', name: "H & P (Including Issues)", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '7', name: "Initial Assessment", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '8', name: "Issues List", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '9', name: "Nurse's Note", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
-  { id: '10', name: "Nursing Handover", type: "Note", uses: 0, lastUsed: null, creator: "NotesAI", visibility: "Just me" },
+  { id: '2', name: "Patient Explainer Letter", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '3', name: "Follow-Up", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '4', name: "Generic Referral Letter", type: "Document", uses: 1, lastUsed: "1 day ago", creator: "FertiAI", visibility: "Just me" },
+  { id: '5', name: "H & P", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '6', name: "H & P (Including Issues)", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '7', name: "Initial Assessment", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '8', name: "Issues List", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '9', name: "Nurse's Note", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
+  { id: '10', name: "Nursing Handover", type: "Note", uses: 0, lastUsed: null, creator: "FertiAI", visibility: "Just me" },
 ];
 
 export const useTemplates = () => {
