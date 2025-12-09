@@ -17,36 +17,42 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
   return (
     <div 
       onClick={handleClick}
-      className="border border-border rounded-lg p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer bg-card"
+      className="group border border-border rounded-xl p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer bg-card"
     >
-      <div className="flex flex-col gap-4">
-        <div>
-          <p className="text-xs text-muted-foreground mb-2">{template.type}</p>
-          <h3 className="font-semibold text-foreground text-lg leading-tight">{template.title}</h3>
-        </div>
+      <div className="flex flex-col h-full">
+        {/* Category Badge */}
+        <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+          {template.type}
+        </p>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9">
+        {/* Title */}
+        <h3 className="font-semibold text-foreground text-base leading-tight mb-4 group-hover:text-primary transition-colors">
+          {template.title}
+        </h3>
+        
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
+          <div className="flex items-center gap-2.5">
+            <Avatar className="h-8 w-8 border border-border">
               <AvatarImage src={template.author.avatar} alt={template.author.name} />
-              <AvatarFallback className="text-xs">
+              <AvatarFallback className="text-xs bg-muted text-muted-foreground font-medium">
                 {template.author.name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-medium">{template.author.name}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-foreground leading-tight">{template.author.name}</span>
                 {template.author.verified && (
-                  <CheckCircle className="h-4 w-4 text-primary fill-primary/20" />
+                  <CheckCircle className="h-3.5 w-3.5 text-primary fill-primary/20" />
                 )}
               </div>
-              <span className="text-xs text-muted-foreground">{template.author.specialty}</span>
+              <span className="text-xs text-muted-foreground leading-tight">{template.author.specialty}</span>
             </div>
           </div>
           
-          <div className="flex items-center gap-1.5 text-muted-foreground">
-            <Users className="h-4 w-4" />
-            <span className="text-sm font-medium">{template.usageCount.toLocaleString()}</span>
+          <div className="flex items-center gap-1 text-muted-foreground/70">
+            <Users className="h-3.5 w-3.5" />
+            <span className="text-xs font-medium">{template.usageCount.toLocaleString()}</span>
           </div>
         </div>
       </div>

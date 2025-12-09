@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Building2, Upload, FileText, Layers } from 'lucide-react';
+import { LayoutGrid, Upload, FileText, Layers } from 'lucide-react';
 import { hubTemplates } from '@/data/hubTemplates';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const TemplateDetail = () => {
   const { templateId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isAdded, setIsAdded] = useState(false);
+  const [activeTab, setActiveTab] = useState<'example' | 'structure'>('example');
 
   const template = hubTemplates.find((t) => t.id === templateId);
 
@@ -37,116 +37,128 @@ const TemplateDetail = () => {
   return (
     <AppLayout>
       <div className="flex-1 overflow-y-auto bg-background">
-        <div className="container mx-auto px-6 py-8 max-w-5xl">
+        <div className="mx-auto px-8 lg:px-12 py-8 max-w-6xl">
           {/* Back Navigation */}
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate('/template-hub')}
-            className="mb-6 gap-2"
+            className="mb-8 gap-2 bg-card hover:bg-muted border-border text-foreground font-medium"
           >
-            <Building2 className="h-4 w-4" />
+            <LayoutGrid className="h-4 w-4" />
             Template Hub
           </Button>
 
           {/* Header */}
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-serif font-medium mb-4">{template.title}</h1>
-              <div className="flex items-center gap-8 text-sm text-muted-foreground">
-                <div>
-                  <span className="block text-xs uppercase tracking-wide mb-1">Created by</span>
-                  <span className="text-foreground font-medium">{template.author.name}</span>
-                </div>
-                <div>
-                  <span className="block text-xs uppercase tracking-wide mb-1">Specialty</span>
-                  <span className="text-foreground font-medium">{template.author.specialty}</span>
-                </div>
-                <div>
-                  <span className="block text-xs uppercase tracking-wide mb-1">Last edited</span>
-                  <span className="text-foreground font-medium">{template.lastEdited}</span>
-                </div>
-                <div>
-                  <span className="block text-xs uppercase tracking-wide mb-1">Uses</span>
-                  <span className="text-foreground font-medium">{template.usageCount.toLocaleString()} times</span>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-start justify-between mb-6">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">{template.title}</h1>
             <Button 
               onClick={handleAddToLibrary} 
               disabled={isAdded}
-              className="gap-2"
+              className="gap-2 shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
             >
               <Upload className="h-4 w-4" />
               {isAdded ? 'Added ✓' : 'Add to my library'}
             </Button>
           </div>
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-3 gap-8">
-            {/* About Section */}
-            <div className="col-span-2">
-              <h2 className="text-lg font-semibold mb-3">About this template</h2>
-              <p className="text-muted-foreground leading-relaxed">{template.about}</p>
+          {/* Metadata Row */}
+          <div className="flex items-center gap-12 pb-6 mb-8 border-b border-border">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Created by</span>
+              <span className="text-sm font-medium text-foreground">{template.author.name}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Specialty</span>
+              <span className="text-sm font-medium text-foreground">{template.author.specialty}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Last edited</span>
+              <span className="text-sm font-medium text-foreground">{template.lastEdited}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Uses</span>
+              <span className="text-sm font-medium text-foreground">{template.usageCount.toLocaleString()} times</span>
+            </div>
+          </div>
+
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
+            {/* Main Content - Left Column */}
+            <div className="space-y-8">
+              {/* About Section */}
+              <div>
+                <h2 className="text-lg font-semibold text-foreground mb-3">About this template</h2>
+                <p className="text-[15px] text-muted-foreground leading-relaxed">{template.about}</p>
+              </div>
+
+              {/* Preview Section */}
+              <div>
+                <h2 className="text-lg font-semibold text-foreground mb-4">Preview template</h2>
+                
+                {/* Pill Toggle Tabs */}
+                <div className="bg-muted/60 rounded-xl p-1.5 flex gap-1">
+                  <button
+                    onClick={() => setActiveTab('example')}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all",
+                      activeTab === 'example' 
+                        ? "bg-card text-foreground shadow-sm" 
+                        : "text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    <FileText className="h-4 w-4" />
+                    Example note
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('structure')}
+                    className={cn(
+                      "flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all",
+                      activeTab === 'structure' 
+                        ? "bg-card text-foreground shadow-sm" 
+                        : "text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    <Layers className="h-4 w-4" />
+                    Template structure
+                  </button>
+                </div>
+
+                {/* Content Card */}
+                <div className="mt-4 bg-card border border-border rounded-xl shadow-sm max-h-[500px] overflow-y-auto">
+                  <div className="p-6">
+                    <pre className={cn(
+                      "whitespace-pre-wrap text-sm font-mono leading-7",
+                      activeTab === 'example' ? "text-foreground" : "text-muted-foreground"
+                    )}>
+                      {activeTab === 'example' ? template.exampleNote : template.templateStructure}
+                    </pre>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Tags Section */}
-            <div>
-              <h2 className="text-lg font-semibold mb-3">Tags</h2>
-              <div className="flex flex-col gap-2">
-                <Badge variant="secondary" className="w-fit px-3 py-1.5 text-sm">
+            {/* Sidebar - Right Column */}
+            <div className="lg:sticky lg:top-8 lg:self-start">
+              <h3 className="text-sm font-semibold text-foreground mb-3">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors cursor-pointer">
                   {template.author.specialty}
-                </Badge>
-                <Badge variant="outline" className="w-fit px-3 py-1.5 text-sm">
+                </span>
+                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-muted text-muted-foreground border border-border hover:bg-muted/80 transition-colors cursor-pointer">
                   {template.type}
-                </Badge>
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Preview Section */}
-          <div className="mt-10">
-            <Tabs defaultValue="example" className="w-full">
-              <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
-                <TabsTrigger 
-                  value="example" 
-                  className="gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-                >
-                  <FileText className="h-4 w-4" />
-                  Example note
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="structure"
-                  className="gap-2 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-                >
-                  <Layers className="h-4 w-4" />
-                  Template structure
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="example" className="mt-6">
-                <div className="bg-muted/50 rounded-lg p-6 border">
-                  <pre className="whitespace-pre-wrap text-sm font-mono leading-relaxed text-foreground">
-                    {template.exampleNote}
-                  </pre>
-                </div>
-              </TabsContent>
-              <TabsContent value="structure" className="mt-6">
-                <div className="bg-muted/50 rounded-lg p-6 border">
-                  <pre className="whitespace-pre-wrap text-sm font-mono leading-relaxed text-muted-foreground">
-                    {template.templateStructure}
-                  </pre>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-
           {/* Bottom CTA */}
-          <div className="mt-10">
+          <div className="mt-12">
             <Button 
               onClick={handleAddToLibrary} 
               disabled={isAdded}
               size="lg"
-              className="w-full gap-2"
+              className="w-full gap-2 shadow-sm hover:shadow-md transition-all active:scale-[0.99]"
             >
               <Upload className="h-5 w-5" />
               {isAdded ? 'Added to your library ✓' : 'Add to my library'}
