@@ -150,7 +150,7 @@ const TemplateDetail = () => {
           </div>
 
           {/* Bottom CTA */}
-          <div className="mt-8">
+          <div className="mt-8 max-w-[70%]">
             <Button 
               onClick={handleAddToLibrary} 
               disabled={isAdded}
