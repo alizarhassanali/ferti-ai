@@ -22,6 +22,10 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 100%;
     --primary-light: 214 100% 97%;
     
+    /* Brand accent - warm burgundy */
+    --brand: 12 45% 35%;
+    --brand-foreground: 0 0% 100%;
+    
     /* Success green for positive actions */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -45,21 +49,23 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    /* Navigation panes */
-    --nav-background: 215 20% 97%;
-    --nav-border: 214 32% 91%;
-    --nav-active: 214 100% 97%;
-    --nav-hover: 210 40% 98%;
+    /* Navigation panes - warm beige tones */
+    --nav-background: 38 35% 96%;
+    --nav-border: 35 20% 90%;
+    --nav-active: 35 40% 93%;
+    --nav-hover: 38 30% 94%;
 
-    /* Sidebar tokens */
-    --sidebar-background: 215 20% 97%;
-    --sidebar-foreground: 215 25% 27%;
-    --sidebar-primary: 217 91% 60%;
+    /* Sidebar tokens - warm premium palette */
+    --sidebar-background: 38 35% 96%;
+    --sidebar-foreground: 25 30% 25%;
+    --sidebar-primary: 12 45% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 98%;
-    --sidebar-accent-foreground: 215 25% 27%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-accent: 38 30% 92%;
+    --sidebar-accent-foreground: 25 30% 25%;
+    --sidebar-border: 35 20% 88%;
+    --sidebar-ring: 12 45% 35%;
+    --sidebar-muted: 25 15% 55%;
+    --sidebar-header: 25 20% 45%;
   }
 
   .dark {
@@ -75,6 +81,9 @@ All colors MUST be HSL.
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-light: 217 50% 15%;
+
+    --brand: 12 45% 45%;
+    --brand-foreground: 0 0% 100%;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -101,14 +110,16 @@ All colors MUST be HSL.
     --nav-active: 217 50% 15%;
     --nav-hover: 216 34% 17%;
 
-    --sidebar-background: 224 71% 4%;
+    --sidebar-background: 224 71% 6%;
     --sidebar-foreground: 213 31% 91%;
-    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary: 12 45% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 216 34% 17%;
     --sidebar-accent-foreground: 213 31% 91%;
     --sidebar-border: 215 28% 17%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-ring: 12 45% 45%;
+    --sidebar-muted: 215 20% 65%;
+    --sidebar-header: 215 20% 55%;
   }
 }
 
@@ -123,6 +134,6 @@ All colors MUST be HSL.
 
   /* Smooth transitions for interactive elements */
   button, a, [role="button"] {
-    @apply transition-colors duration-200;
+    @apply transition-all duration-200 ease-out;
   }
 }
