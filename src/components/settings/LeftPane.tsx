@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, Gift } from 'lucide-react';
+import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -87,7 +87,6 @@ export const LeftPane = () => {
   const footerItems = [
     { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
     { icon: HelpCircle, label: 'Help', id: 'help' },
-    { icon: Gift, label: 'Earn $50', id: 'referral' },
   ];
 
   return (
@@ -324,7 +323,6 @@ export const LeftPane = () => {
             {footerItems.map((item) => {
               const Icon = item.icon;
               const isActive = item.route ? location.pathname === item.route : false;
-              const isReferral = item.id === 'referral';
 
               const handleClick = () => {
                 setIsMobileMenuOpen(false);
@@ -346,20 +344,15 @@ export const LeftPane = () => {
                             className={`
                               w-full flex items-center justify-center p-2.5 rounded-xl text-sm
                               transition-all duration-200 group
-                              ${isReferral
-                                ? 'text-[hsl(142_60%_35%)]'
-                                : isActive
-                                  ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)]'
-                                  : 'text-[hsl(25_15%_55%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_40%)]'
+                              ${isActive
+                                ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)]'
+                                : 'text-[hsl(25_15%_55%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_40%)]'
                               }
                             `}
                           >
                             <div className={`
                               flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
-                              ${isReferral
-                                ? 'bg-[hsl(142_50%_94%)] group-hover:bg-[hsl(142_50%_88%)]'
-                                : 'bg-[hsl(38_25%_94%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105'
-                              }
+                              bg-[hsl(38_25%_94%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105
                             `}>
                               <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                             </div>
@@ -376,11 +369,9 @@ export const LeftPane = () => {
                       className={`
                         w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                         transition-all duration-200 group
-                        ${isReferral
-                          ? 'text-[hsl(142_60%_32%)] hover:bg-[hsl(142_50%_94%)] font-medium'
-                          : isActive
-                            ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] font-semibold'
-                            : 'text-[hsl(25_15%_50%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_35%)] font-medium'
+                        ${isActive
+                          ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] font-semibold'
+                          : 'text-[hsl(25_15%_50%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_35%)] font-medium'
                         }
                       `}
                     >
