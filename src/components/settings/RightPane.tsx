@@ -3,6 +3,7 @@ import { ProfileSettings } from './ProfileSettings';
 import { SecuritySettings } from './SecuritySettings';
 import { UsageSettings } from './UsageSettings';
 import { MemoryAISettings } from './MemoryAISettings';
+import { DisplayControlsSettings } from './DisplayControlsSettings';
 
 export const RightPane = () => {
   const { selectedCategory } = useSettings();
@@ -15,33 +16,14 @@ export const RightPane = () => {
         return <UsageSettings />;
       case 'memory-ai':
         return <MemoryAISettings />;
+      case 'display-controls':
+        return <DisplayControlsSettings />;
       case 'security':
         return <SecuritySettings />;
-      case 'integrations':
-        return (
-          <div>
-            <h3 className="text-lg font-semibold">Integrations</h3>
-            <p className="text-muted-foreground mt-2">Coming soon...</p>
-          </div>
-        );
       case 'data-settings':
         return (
           <div>
             <h3 className="text-lg font-semibold">Data Settings</h3>
-            <p className="text-muted-foreground mt-2">Coming soon...</p>
-          </div>
-        );
-      case 'preferences':
-        return (
-          <div>
-            <h3 className="text-lg font-semibold">Preferences</h3>
-            <p className="text-muted-foreground mt-2">Coming soon...</p>
-          </div>
-        );
-      case 'groups':
-        return (
-          <div>
-            <h3 className="text-lg font-semibold">Groups</h3>
             <p className="text-muted-foreground mt-2">Coming soon...</p>
           </div>
         );
