@@ -42,57 +42,55 @@ export const TemplatesTable = ({
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-[hsl(35_20%_88%)] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-b border-[hsl(35_20%_92%)] bg-[hsl(40_25%_98%)] hover:bg-[hsl(40_25%_98%)]">
-              <TableHead className="h-12">
-                <Button
-                  variant="ghost"
-                  className="font-medium text-[hsl(25_20%_45%)] hover:text-[hsl(25_25%_30%)] hover:bg-transparent px-0"
-                  onClick={() => onSort('name')}
-                >
-                  Template name
-                  <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
-                </Button>
-              </TableHead>
-              <TableHead className="text-center h-12">
-                <Button
-                  variant="ghost"
-                  className="font-medium text-[hsl(25_20%_45%)] hover:text-[hsl(25_25%_30%)] hover:bg-transparent px-0"
-                  onClick={() => onSort('uses')}
-                >
-                  Uses
-                  <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
-                </Button>
-              </TableHead>
-              <TableHead className="h-12">
-                <Button
-                  variant="ghost"
-                  className="font-medium text-[hsl(25_20%_45%)] hover:text-[hsl(25_25%_30%)] hover:bg-transparent px-0"
-                  onClick={() => onSort('lastUsed')}
-                >
-                  Last used
-                  <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
-                </Button>
-              </TableHead>
-              <TableHead className="font-medium text-[hsl(25_20%_45%)] h-12">Creator</TableHead>
-              <TableHead className="font-medium text-[hsl(25_20%_45%)] h-12">Visibility</TableHead>
-              <TableHead className="w-[120px] h-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedTemplates.map((template) => (
-              <TemplateRow
-                key={template.id}
-                template={template}
-                onToggleFavorite={onToggleFavorite}
-                onDelete={onDelete}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-neutral-blue-100">
+            <TableHead>
+              <Button
+                variant="ghost"
+                className="font-semibold text-foreground hover:text-foreground hover:bg-transparent px-0"
+                onClick={() => onSort('name')}
+              >
+                Template name
+                <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
+              </Button>
+            </TableHead>
+            <TableHead className="text-center">
+              <Button
+                variant="ghost"
+                className="font-semibold text-foreground hover:text-foreground hover:bg-transparent px-0"
+                onClick={() => onSort('uses')}
+              >
+                Uses
+                <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
+              </Button>
+            </TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                className="font-semibold text-foreground hover:text-foreground hover:bg-transparent px-0"
+                onClick={() => onSort('lastUsed')}
+              >
+                Last used
+                <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
+              </Button>
+            </TableHead>
+            <TableHead className="font-semibold text-foreground">Creator</TableHead>
+            <TableHead className="font-semibold text-foreground">Visibility</TableHead>
+            <TableHead className="w-[120px]"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedTemplates.map((template) => (
+            <TemplateRow
+              key={template.id}
+              template={template}
+              onToggleFavorite={onToggleFavorite}
+              onDelete={onDelete}
+            />
+          ))}
+        </TableBody>
+      </Table>
 
       {totalPages > 1 && (
         <Pagination className="mt-6">
@@ -100,7 +98,7 @@ export const TemplatesTable = ({
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                className={`rounded-xl border-[hsl(35_20%_88%)] hover:bg-[hsl(40_25%_96%)] ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+                className={`rounded-full border-border hover:bg-neutral-blue-50 ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
               />
             </PaginationItem>
             
@@ -109,7 +107,7 @@ export const TemplatesTable = ({
                 <PaginationLink
                   onClick={() => onPageChange(page)}
                   isActive={currentPage === page}
-                  className={`cursor-pointer rounded-xl ${currentPage === page ? 'bg-[hsl(12_45%_35%)] text-white border-[hsl(12_45%_35%)]' : 'border-[hsl(35_20%_88%)] hover:bg-[hsl(40_25%_96%)]'}`}
+                  className={`cursor-pointer rounded-full ${currentPage === page ? 'bg-primary text-primary-foreground border-primary' : 'border-border hover:bg-neutral-blue-50'}`}
                 >
                   {page}
                 </PaginationLink>
@@ -119,7 +117,7 @@ export const TemplatesTable = ({
             <PaginationItem>
               <PaginationNext
                 onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                className={`rounded-xl border-[hsl(35_20%_88%)] hover:bg-[hsl(40_25%_96%)] ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+                className={`rounded-full border-border hover:bg-neutral-blue-50 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
               />
             </PaginationItem>
           </PaginationContent>
