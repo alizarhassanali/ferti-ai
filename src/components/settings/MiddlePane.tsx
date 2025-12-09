@@ -15,7 +15,7 @@ const settingsCategories: SettingsCategory[] = [
   { id: 'memory-ai', label: 'Memory & AI Settings', icon: Brain, roles: 'all' },
   { id: 'display-controls', label: 'Display Controls', icon: Monitor, roles: 'all' },
   { id: 'security', label: 'Security', icon: Shield, roles: 'all' },
-  { id: 'data-settings', label: 'Data Settings', icon: Database, roles: 'all' },
+  { id: 'data-settings', label: 'Data Management', icon: Database, roles: 'all' },
 ];
 
 export const MiddlePane = () => {
