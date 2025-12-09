@@ -8,22 +8,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Upload, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
-
 export const ProfileSettings = () => {
-  const { user, updateProfile, isSaving } = useSettings();
-  const { toast } = useToast();
-
+  const {
+    user,
+    updateProfile,
+    isSaving
+  } = useSettings();
+  const {
+    toast
+  } = useToast();
   const [formData, setFormData] = useState({
     title: user.title || 'Dr.',
     firstName: user.firstName,
     lastName: user.lastName,
     specialty: user.specialty || 'Fertility Specialist',
     clinicName: user.clinicName || user.clinic || '',
-    role: user.role as UserRole,
+    role: user.role as UserRole
   });
-
   const [imagePreview, setImagePreview] = useState<string | undefined>(user.profileImage);
-
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -31,7 +33,7 @@ export const ProfileSettings = () => {
         toast({
           title: 'File too large',
           description: 'Please upload an image under 5MB',
-          variant: 'destructive',
+          variant: 'destructive'
         });
         return;
       }
@@ -42,30 +44,26 @@ export const ProfileSettings = () => {
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await updateProfile(formData);
       toast({
         title: 'Profile updated',
-        description: 'Your profile has been successfully updated.',
+        description: 'Your profile has been successfully updated.'
       });
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   };
-
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName[0]}${lastName[0]}`.toUpperCase();
   };
-
-  return (
-    <div className="max-w-3xl">
+  return <div className="max-w-3xl">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">Personal</h3>
         <p className="text-sm text-muted-foreground">Manage your personal information and profile</p>
@@ -108,13 +106,7 @@ export const ProfileSettings = () => {
                     </span>
                   </Button>
                 </label>
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
+                <input id="image-upload" type="file" accept="image/jpeg,image/png" onChange={handleImageUpload} className="hidden" />
               </div>
             </div>
           </div>
@@ -123,7 +115,10 @@ export const ProfileSettings = () => {
           <div className="grid grid-cols-[120px_1fr_1fr] gap-4 mb-4">
             <div>
               <Label htmlFor="title" className="text-sm font-medium mb-2 block">Title</Label>
-              <Select value={formData.title} onValueChange={(value) => setFormData({ ...formData, title: value })}>
+              <Select value={formData.title} onValueChange={value => setFormData({
+              ...formData,
+              title: value
+            })}>
                 <SelectTrigger id="title">
                   <SelectValue />
                 </SelectTrigger>
@@ -138,28 +133,27 @@ export const ProfileSettings = () => {
             </div>
             <div>
               <Label htmlFor="firstName" className="text-sm font-medium mb-2 block">First name</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                required
-              />
+              <Input id="firstName" value={formData.firstName} onChange={e => setFormData({
+              ...formData,
+              firstName: e.target.value
+            })} required />
             </div>
             <div>
               <Label htmlFor="lastName" className="text-sm font-medium mb-2 block">Last name</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                required
-              />
+              <Input id="lastName" value={formData.lastName} onChange={e => setFormData({
+              ...formData,
+              lastName: e.target.value
+            })} required />
             </div>
           </div>
 
           {/* Specialty */}
           <div className="mb-4">
             <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
-            <Select value={formData.specialty} onValueChange={(value) => setFormData({ ...formData, specialty: value })}>
+            <Select value={formData.specialty} onValueChange={value => setFormData({
+            ...formData,
+            specialty: value
+          })}>
               <SelectTrigger id="specialty">
                 <SelectValue />
               </SelectTrigger>
@@ -177,19 +171,17 @@ export const ProfileSettings = () => {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
-              <Input
-                id="clinicName"
-                value={formData.clinicName}
-                onChange={(e) => setFormData({ ...formData, clinicName: e.target.value })}
-                placeholder="Enter your clinic name"
-              />
+              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({
+              ...formData,
+              clinicName: e.target.value
+            })} placeholder="Enter your clinic name" />
             </div>
             <div>
               <Label htmlFor="role" className="text-sm font-medium mb-2 block">Your role</Label>
-              <Select 
-                value={formData.role} 
-                onValueChange={(value) => setFormData({ ...formData, role: value as UserRole })}
-              >
+              <Select value={formData.role} onValueChange={value => setFormData({
+              ...formData,
+              role: value as UserRole
+            })}>
                 <SelectTrigger id="role">
                   <SelectValue />
                 </SelectTrigger>
@@ -209,29 +201,17 @@ export const ProfileSettings = () => {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Country</Label>
-              <button 
-                type="button" 
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => toast({
-                  title: "Country setting",
-                  description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
-                })}
-              >
+              <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors" onClick={() => toast({
+              title: "Country setting",
+              description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
+            })}>
                 Why can't I change this?
               </button>
             </div>
             <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md px-4 py-3">
               <span className="text-sm text-foreground">{user.country || 'Canada'}</span>
             </div>
-            <a 
-              href="https://www.example.com/privacy" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-2 text-xs text-primary hover:underline"
-            >
-              Privacy Policy for my country
-              <ExternalLink className="h-3 w-3" />
-            </a>
+            
           </div>
         </div>
 
@@ -242,6 +222,5 @@ export const ProfileSettings = () => {
           </Button>
         </div>
       </form>
-    </div>
-  );
+    </div>;
 };
