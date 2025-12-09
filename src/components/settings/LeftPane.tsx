@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, Gift } from 'lucide-react';
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -82,10 +82,12 @@ export const LeftPane = () => {
     { label: 'Templates', type: 'header' },
     { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
     { icon: Store, label: 'Template Hub', id: 'template-hub', route: '/template-hub' },
-    { type: 'separator' },
+  ];
+
+  const footerItems = [
     { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
-    { type: 'separator' },
     { icon: HelpCircle, label: 'Help', id: 'help' },
+    { icon: Gift, label: 'Earn $50', id: 'referral' },
   ];
 
   return (
@@ -93,189 +95,304 @@ export const LeftPane = () => {
       {/* Mobile Hamburger Button */}
       <button
         onClick={() => setIsMobileMenuOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-40 p-2 rounded-md bg-nav text-foreground hover:bg-nav-hover shadow-lg"
+        className="md:hidden fixed top-4 left-4 z-40 p-2.5 rounded-xl bg-[hsl(38_35%_96%)] text-[hsl(25_30%_35%)] hover:bg-[hsl(38_30%_92%)] shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all"
         aria-label="Open menu"
       >
-        <Menu className="h-6 w-6" />
+        <Menu className="h-5 w-5" />
       </button>
 
       {/* Mobile Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+          className="md:hidden fixed inset-0 bg-[hsl(25_30%_15%)/40] backdrop-blur-sm z-40 transition-opacity duration-300"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div className={`
-        h-screen bg-nav border-r border-nav-border flex flex-col transition-all duration-300
-        ${isCollapsed ? 'w-16' : 'w-60'}
+        h-screen bg-[hsl(38_35%_96%)] flex flex-col transition-all duration-[250ms] ease-out
+        shadow-[2px_0_12px_rgba(0,0,0,0.04)] rounded-r-2xl
+        ${isCollapsed ? 'w-[72px]' : 'w-64'}
         hidden md:flex
-        ${isMobileMenuOpen ? '!flex fixed inset-y-0 left-0 z-50 w-60' : ''}
+        ${isMobileMenuOpen ? '!flex fixed inset-y-0 left-0 z-50 w-64 rounded-r-2xl' : ''}
       `}>
-      {/* Mobile Close Button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(false)}
-        className="md:hidden absolute top-4 right-4 z-10 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground"
-        aria-label="Close menu"
-      >
-        <X className="h-5 w-5" />
-      </button>
+        {/* Mobile Close Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="md:hidden absolute top-5 right-4 z-10 p-2 rounded-xl hover:bg-[hsl(38_30%_90%)] text-[hsl(25_20%_50%)] hover:text-[hsl(25_30%_30%)] transition-all"
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-b border-nav-border relative overflow-hidden">
-        <div className={`flex items-center mb-2 ${isCollapsed ? 'justify-center' : 'justify-between pr-8'}`}>
-          {!isCollapsed && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-nav-hover cursor-pointer group">
-                  <Avatar className="h-10 w-10 flex-shrink-0">
-                    <AvatarImage src={user.profileImage} />
-                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                      {getInitials(user.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 text-left min-w-0 overflow-hidden">
-                    <div className="font-semibold text-sm text-foreground truncate">{user.name}</div>
-                    <div className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</div>
-                    <div className="text-xs text-muted-foreground mt-0.5 truncate">{user.clinic}</div>
+        {/* User Profile Section */}
+        <div className={`border-b border-[hsl(35_20%_90%)] relative ${isCollapsed ? 'px-3 py-5' : 'px-5 py-6'}`}>
+          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+            {!isCollapsed && (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex-1 min-w-0 focus:outline-none">
+                  <div className="flex items-center gap-3 p-2 -m-2 rounded-xl hover:bg-[hsl(38_30%_92%)] cursor-pointer group transition-all duration-200">
+                    <Avatar className="h-10 w-10 flex-shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.1)] ring-2 ring-white">
+                      <AvatarImage src={user.profileImage} />
+                      <AvatarFallback className="bg-[hsl(12_45%_35%)] text-white font-semibold text-sm">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 text-left min-w-0 overflow-hidden">
+                      <div className="font-semibold text-sm text-[hsl(25_30%_22%)] truncate">{user.name}</div>
+                      <div className="text-xs text-[hsl(25_15%_55%)] truncate max-w-[140px]">{user.email}</div>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-[hsl(25_15%_60%)] group-hover:text-[hsl(25_25%_40%)] flex-shrink-0 transition-colors" />
                   </div>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-foreground flex-shrink-0" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuItem disabled className="opacity-50">
-                  <span className="text-xs">Switch Clinic (Coming Soon)</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  <span>Logout</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          {isCollapsed && (
-            <div className="flex items-center justify-center w-full">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user.profileImage} />
-                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56 bg-white border-[hsl(35_20%_88%)] rounded-xl shadow-lg">
+                  <DropdownMenuItem disabled className="opacity-50 text-[hsl(25_15%_50%)]">
+                    <span className="text-xs">Switch Clinic (Coming Soon)</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-[hsl(35_20%_92%)]" />
+                  <DropdownMenuItem className="text-[hsl(25_25%_35%)] hover:bg-[hsl(38_30%_95%)] rounded-lg cursor-pointer">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            {isCollapsed && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-center">
+                      <Avatar className="h-10 w-10 shadow-[0_2px_8px_rgba(0,0,0,0.1)] ring-2 ring-white cursor-pointer hover:scale-105 transition-transform">
+                        <AvatarImage src={user.profileImage} />
+                        <AvatarFallback className="bg-[hsl(12_45%_35%)] text-white font-semibold text-sm">
+                          {getInitials(user.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg">
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-xs text-[hsl(25_15%_55%)]">{user.email}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+          
+          {/* Collapse Toggle Button */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={toggleSidebar}
-                  className="hidden md:block absolute top-2 right-2 p-1.5 rounded-md hover:bg-nav-hover text-muted-foreground hover:text-foreground transition-colors"
+                  className={`
+                    hidden md:flex absolute items-center justify-center
+                    w-7 h-7 rounded-full bg-white border border-[hsl(35_20%_88%)]
+                    shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]
+                    text-[hsl(25_20%_50%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(38_30%_98%)]
+                    transition-all duration-200 hover:scale-105
+                    ${isCollapsed ? '-right-3.5 top-6' : '-right-3.5 top-7'}
+                  `}
                   aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
                 >
-                  <ChevronDown className={`h-4 w-4 transition-transform ${isCollapsed ? '-rotate-90' : 'rotate-90'}`} />
+                  {isCollapsed ? (
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                  )}
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right">
+              <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg">
                 <p>{isCollapsed ? "Expand sidebar" : "Minimise sidebar"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
-      </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 p-3 overflow-y-auto">
-        <ul className="space-y-0.5">
-          {navItems.map((item, index) => {
-            if (item.type === 'separator') {
-              return <li key={`sep-${index}`} className="h-px bg-nav-border my-2" />;
-            }
-
-            if (item.type === 'header') {
-              return !isCollapsed ? (
-                <li key={item.label} className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  {item.label}
-                </li>
-              ) : (
-                <li key={item.label} className="h-px bg-nav-border my-2" />
-              );
-            }
-
-            const Icon = item.icon!;
-            const isActive = item.route ? location.pathname === item.route : false;
-
-            // Determine label and arrow for toggleable items (View sessions)
-            const displayLabel = item.isToggleable && isSessionsPage
-              ? (isSessionsListVisible ? 'Hide sessions' : 'View sessions')
-              : item.label;
-            
-            const ArrowIcon = item.isToggleable && isSessionsPage
-              ? (isSessionsListVisible ? ChevronLeft : ChevronRight)
-              : null;
-
-            const handleClick = () => {
-              // Close mobile menu when navigating
-              setIsMobileMenuOpen(false);
-              
-              if (item.id === 'help') {
-                setHelpPanelOpen(true);
-              } else if (item.id === 'sessions' && isSessionsPage && sessionsLayout) {
-                // Toggle sessions list if we're already on the sessions page
-                sessionsLayout.toggleSessionsList();
-              } else if (item.route) {
-                navigate(item.route);
+        {/* Navigation Items */}
+        <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
+          <ul className="space-y-1">
+            {navItems.map((item, index) => {
+              if (item.type === 'separator') {
+                return <li key={`sep-${index}`} className="h-px bg-[hsl(35_20%_90%)] my-3 mx-2" />;
               }
-            };
 
-            return (
-              <li key={item.id}>
-                {isCollapsed ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={handleClick}
-                          className={`
-                            w-full flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium
-                            transition-colors
-                            ${isActive
-                              ? 'bg-nav-active text-primary border-l-3 border-primary font-semibold'
-                              : 'text-foreground hover:bg-nav-hover'
-                            }
-                          `}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent side="right">
-                        <p>{displayLabel}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+              if (item.type === 'header') {
+                return !isCollapsed ? (
+                  <li key={item.label} className="px-3 pt-4 pb-2 text-[10px] font-semibold text-[hsl(25_20%_55%)] uppercase tracking-[0.1em]">
+                    {item.label}
+                  </li>
                 ) : (
-                  <button
-                    onClick={handleClick}
-                    className={`
-                      w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium
-                      transition-colors
-                      ${isActive
-                        ? 'bg-nav-active text-primary border-l-3 border-primary font-semibold'
-                        : 'text-foreground hover:bg-nav-hover'
-                      }
-                    `}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="flex-1 text-left">{displayLabel}</span>
-                    {ArrowIcon && <ArrowIcon className="h-4 w-4 text-muted-foreground" />}
-                  </button>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+                  <li key={item.label} className="h-px bg-[hsl(35_20%_90%)] my-3" />
+                );
+              }
+
+              const Icon = item.icon!;
+              const isActive = item.route ? location.pathname === item.route : false;
+
+              // Determine label and arrow for toggleable items (View sessions)
+              const displayLabel = item.isToggleable && isSessionsPage
+                ? (isSessionsListVisible ? 'Hide sessions' : 'View sessions')
+                : item.label;
+              
+              const ArrowIcon = item.isToggleable && isSessionsPage
+                ? (isSessionsListVisible ? ChevronLeft : ChevronRight)
+                : null;
+
+              const handleClick = () => {
+                // Close mobile menu when navigating
+                setIsMobileMenuOpen(false);
+                
+                if (item.id === 'help') {
+                  setHelpPanelOpen(true);
+                } else if (item.id === 'sessions' && isSessionsPage && sessionsLayout) {
+                  // Toggle sessions list if we're already on the sessions page
+                  sessionsLayout.toggleSessionsList();
+                } else if (item.route) {
+                  navigate(item.route);
+                }
+              };
+
+              return (
+                <li key={item.id}>
+                  {isCollapsed ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={handleClick}
+                            className={`
+                              w-full flex items-center justify-center p-2.5 rounded-xl text-sm
+                              transition-all duration-200 group
+                              ${isActive
+                                ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] shadow-[0_2px_6px_rgba(0,0,0,0.06)]'
+                                : 'text-[hsl(25_20%_40%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_30%_25%)]'
+                              }
+                            `}
+                          >
+                            <div className={`
+                              flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
+                              ${isActive 
+                                ? 'bg-[hsl(12_45%_35%)] text-white shadow-[0_2px_8px_rgba(139,69,61,0.25)]' 
+                                : 'bg-[hsl(38_25%_93%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105'
+                              }
+                            `}>
+                              <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
+                            </div>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg font-medium">
+                          <p>{displayLabel}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <button
+                      onClick={handleClick}
+                      className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
+                        transition-all duration-200 group
+                        ${isActive
+                          ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] font-semibold shadow-[0_2px_6px_rgba(0,0,0,0.06)]'
+                          : 'text-[hsl(25_20%_40%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_30%_25%)] font-medium'
+                        }
+                      `}
+                    >
+                      <div className={`
+                        flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
+                        ${isActive 
+                          ? 'bg-[hsl(12_45%_35%)] text-white shadow-[0_2px_8px_rgba(139,69,61,0.25)]' 
+                          : 'bg-transparent group-hover:scale-105'
+                        }
+                      `}>
+                        <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
+                      </div>
+                      <span className="flex-1 text-left transition-all duration-200">{displayLabel}</span>
+                      {ArrowIcon && <ArrowIcon className="h-4 w-4 text-[hsl(25_15%_60%)]" />}
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Footer Section */}
+        <div className={`border-t border-[hsl(35_20%_90%)] ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
+          <ul className="space-y-1">
+            {footerItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.route ? location.pathname === item.route : false;
+              const isReferral = item.id === 'referral';
+
+              const handleClick = () => {
+                setIsMobileMenuOpen(false);
+                if (item.id === 'help') {
+                  setHelpPanelOpen(true);
+                } else if (item.route) {
+                  navigate(item.route);
+                }
+              };
+
+              return (
+                <li key={item.id}>
+                  {isCollapsed ? (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={handleClick}
+                            className={`
+                              w-full flex items-center justify-center p-2.5 rounded-xl text-sm
+                              transition-all duration-200 group
+                              ${isReferral
+                                ? 'text-[hsl(142_60%_35%)]'
+                                : isActive
+                                  ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)]'
+                                  : 'text-[hsl(25_15%_55%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_40%)]'
+                              }
+                            `}
+                          >
+                            <div className={`
+                              flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
+                              ${isReferral
+                                ? 'bg-[hsl(142_50%_94%)] group-hover:bg-[hsl(142_50%_88%)]'
+                                : 'bg-[hsl(38_25%_94%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105'
+                              }
+                            `}>
+                              <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                            </div>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg font-medium">
+                          <p>{item.label}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ) : (
+                    <button
+                      onClick={handleClick}
+                      className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
+                        transition-all duration-200 group
+                        ${isReferral
+                          ? 'text-[hsl(142_60%_32%)] hover:bg-[hsl(142_50%_94%)] font-medium'
+                          : isActive
+                            ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] font-semibold'
+                            : 'text-[hsl(25_15%_50%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_35%)] font-medium'
+                        }
+                      `}
+                    >
+                      <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                      <span className="flex-1 text-left">{item.label}</span>
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
       
       <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
