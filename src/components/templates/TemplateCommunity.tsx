@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { hubTemplates } from '@/data/hubTemplates';
 import { TemplateCard } from './hub/TemplateCard';
@@ -45,24 +44,27 @@ export const TemplateCommunity = () => {
   }, [searchQuery, sortBy, location, specialty, category]);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-background">
-      <div className="container mx-auto px-6 py-8 max-w-7xl">
+    <div className="flex-1 overflow-y-auto bg-[hsl(40_20%_98%)]">
+      <div className="mx-auto px-8 lg:px-16 py-6 max-w-7xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-serif font-medium">Template Hub</h1>
-          <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search for a template"
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <h1 className="text-3xl lg:text-4xl font-serif font-semibold text-[hsl(220_25%_10%)] tracking-tight">
+            Template Hub
+          </h1>
+          <div className="relative w-full sm:w-80">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[hsl(220_10%_55%)]" />
+            <input
+              type="text"
+              placeholder="Search for a template..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="w-full h-11 pl-11 pr-4 rounded-xl bg-white border border-[hsl(220_15%_90%)] shadow-input text-sm placeholder:text-[hsl(220_10%_60%)] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             />
           </div>
         </div>
 
         {/* Filters */}
-        <div className="mb-8">
+        <div className="flex justify-center mb-10">
           <TemplateFilters
             sortBy={sortBy}
             location={location}
@@ -76,15 +78,15 @@ export const TemplateCommunity = () => {
         </div>
 
         {/* Template Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
           {filteredAndSortedTemplates.map((template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
         </div>
 
         {filteredAndSortedTemplates.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <p>No templates found matching your criteria.</p>
+          <div className="text-center py-16 text-muted-foreground">
+            <p className="text-lg">No templates found matching your criteria.</p>
           </div>
         )}
       </div>
