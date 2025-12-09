@@ -155,7 +155,7 @@ const TemplateDetail = () => {
               onClick={handleAddToLibrary} 
               disabled={isAdded}
               size="lg"
-              className="w-full gap-2 py-3.5 text-[15px] rounded-[10px] bg-[hsl(217_91%_60%)] hover:bg-[hsl(217_91%_50%)] transition-all"
+              className="w-full gap-2 py-4 text-[15px] rounded-[10px] bg-[hsl(217_91%_60%)] hover:bg-[hsl(217_91%_50%)] transition-all"
             >
               <Upload className="h-5 w-5" />
               {isAdded ? 'Added to your library ✓' : 'Add to my library'}
