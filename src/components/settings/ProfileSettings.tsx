@@ -63,7 +63,7 @@ export const ProfileSettings = () => {
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName[0]}${lastName[0]}`.toUpperCase();
   };
-  return <div className="max-w-4xl">
+  return <div className="w-full">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">Personal</h3>
         <p className="text-sm text-muted-foreground">Manage your personal information and profile</p>

@@ -6,7 +6,7 @@ export const DisplayControlsSettings = () => {
   const [showConsentPopup, setShowConsentPopup] = useState(false);
 
   return (
-    <div className="max-w-4xl space-y-8">
+    <div className="w-full space-y-8">
       <div>
         <h3 className="text-lg font-semibold text-foreground mb-1">Display Controls</h3>
         <p className="text-sm text-muted-foreground">Manage display settings for your sessions</p>
