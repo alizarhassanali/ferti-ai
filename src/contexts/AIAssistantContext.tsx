@@ -22,9 +22,12 @@ interface AIAssistantContextType {
   createNewChat: () => void;
   selectConversation: (id: string) => void;
   sendMessage: (content: string) => void;
+  renameConversation: (id: string, newTitle: string) => void;
+  deleteConversation: (id: string) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filteredConversations: Conversation[];
+  isLoading: boolean;
 }
 
 const AIAssistantContext = createContext<AIAssistantContextType | undefined>(undefined);
@@ -84,6 +87,7 @@ export const AIAssistantProvider = ({ children }: { children: ReactNode }) => {
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || null;
 
@@ -112,6 +116,32 @@ export const AIAssistantProvider = ({ children }: { children: ReactNode }) => {
     setSelectedConversationId(id);
   };
 
+  const renameConversation = (id: string, newTitle: string) => {
+    setConversations(prev =>
+      prev.map(conv =>
+        conv.id === id ? { ...conv, title: newTitle.trim() || 'Untitled' } : conv
+      )
+    );
+  };
+
+  const deleteConversation = (id: string) => {
+    const currentIndex = conversations.findIndex(c => c.id === id);
+    
+    setConversations(prev => prev.filter(conv => conv.id !== id));
+    
+    // If deleting the selected conversation, select the next one
+    if (selectedConversationId === id) {
+      const remainingConversations = conversations.filter(c => c.id !== id);
+      if (remainingConversations.length > 0) {
+        // Select the next conversation or the previous one if we deleted the last
+        const nextIndex = Math.min(currentIndex, remainingConversations.length - 1);
+        setSelectedConversationId(remainingConversations[nextIndex].id);
+      } else {
+        setSelectedConversationId(null);
+      }
+    }
+  };
+
   const sendMessage = (content: string) => {
     if (!selectedConversationId || !content.trim()) return;
 
@@ -122,19 +152,11 @@ export const AIAssistantProvider = ({ children }: { children: ReactNode }) => {
       createdAt: new Date(),
     };
 
-    // Stub AI response
-    const aiMessage: Message = {
-      id: `msg-${Date.now() + 1}`,
-      role: 'assistant',
-      content: `Thank you for your question about "${content.trim().slice(0, 50)}${content.length > 50 ? '...' : ''}". I'm here to help with clinical, workflow, or product questions. How can I assist you further?`,
-      createdAt: new Date(),
-    };
-
+    // Add user message immediately
     setConversations(prev =>
       prev.map(conv => {
         if (conv.id !== selectedConversationId) return conv;
         
-        const updatedMessages = [...conv.messages, userMessage, aiMessage];
         const isNewChat = conv.title === 'New chat' && conv.messages.length === 0;
         
         return {
@@ -142,10 +164,34 @@ export const AIAssistantProvider = ({ children }: { children: ReactNode }) => {
           title: isNewChat ? content.trim().slice(0, 30) + (content.length > 30 ? '...' : '') : conv.title,
           lastMessagePreview: content.trim(),
           updatedAt: new Date(),
-          messages: updatedMessages,
+          messages: [...conv.messages, userMessage],
         };
       })
     );
+
+    // Show loading state
+    setIsLoading(true);
+
+    // Simulate AI response delay
+    setTimeout(() => {
+      const aiMessage: Message = {
+        id: `msg-${Date.now() + 1}`,
+        role: 'assistant',
+        content: `Thank you for your question about "${content.trim().slice(0, 50)}${content.length > 50 ? '...' : ''}". I'm here to help with clinical, workflow, or product questions. How can I assist you further?`,
+        createdAt: new Date(),
+      };
+
+      setConversations(prev =>
+        prev.map(conv => {
+          if (conv.id !== selectedConversationId) return conv;
+          return {
+            ...conv,
+            messages: [...conv.messages, aiMessage],
+          };
+        })
+      );
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
@@ -157,9 +203,12 @@ export const AIAssistantProvider = ({ children }: { children: ReactNode }) => {
         createNewChat,
         selectConversation,
         sendMessage,
+        renameConversation,
+        deleteConversation,
         searchQuery,
         setSearchQuery,
         filteredConversations,
+        isLoading,
       }}
     >
       {children}
