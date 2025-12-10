@@ -13,7 +13,7 @@ export const UsageSettings = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl">
+    <div className="w-full">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">Usage</h3>
         <p className="text-sm text-muted-foreground">Monitor your usage and limits</p>

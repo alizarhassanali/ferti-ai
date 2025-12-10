@@ -7,8 +7,10 @@ const Settings = () => {
   return (
     <AppLayout>
       <SettingsProvider>
-        <MiddlePane />
-        <RightPane />
+        <div className="flex flex-1 min-w-0">
+          <MiddlePane />
+          <RightPane />
+        </div>
       </SettingsProvider>
     </AppLayout>
   );
