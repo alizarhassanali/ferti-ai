@@ -1,13 +1,16 @@
 import { useState, useRef } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, PenLine } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
@@ -21,6 +24,8 @@ interface AttachedFile {
 }
 
 interface RightColumnPanelProps {
+  activeView: 'context' | 'note';
+  onViewChange: (view: 'context' | 'note') => void;
   contextContent: string;
   onContextChange: (content: string) => void;
   noteTabs: NoteTabType[];
@@ -33,6 +38,8 @@ interface RightColumnPanelProps {
 }
 
 export const RightColumnPanel = ({
+  activeView,
+  onViewChange,
   contextContent,
   onContextChange,
   noteTabs,
@@ -44,7 +51,6 @@ export const RightColumnPanel = ({
   onGenerate,
 }: RightColumnPanelProps) => {
   const { toast } = useToast();
-  const [activeView, setActiveView] = useState<'context' | 'note'>('context');
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,7 +98,7 @@ export const RightColumnPanel = ({
     }
     setShowNoContentWarning(false);
     // Trigger generation with this template
-    setTimeout(() => onGenerate(templateId), 100);
+    onGenerate(templateId);
   };
 
   const addNewTab = () => {
@@ -130,132 +136,193 @@ export const RightColumnPanel = ({
     onNoteTabsChange(newTabs);
   };
 
-  const handleCopy = () => {
+  const handleCopyAll = () => {
     if (activeTab?.content) {
       navigator.clipboard.writeText(activeTab.content);
       toast({
-        title: "Copied",
-        description: "Note content copied to clipboard.",
+        title: "Note copied to clipboard",
+        description: "The full note content has been copied.",
+      });
+    } else {
+      toast({
+        title: "Nothing to copy",
+        description: "The note is empty.",
+        variant: "destructive",
       });
     }
   };
 
+  const handleSendEmail = () => {
+    toast({
+      title: "Email sent (stub)",
+      description: "Email functionality will be available soon.",
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleExportPDF = () => {
+    toast({
+      title: "Exporting as PDF",
+      description: "PDF export functionality will be available soon.",
+    });
+  };
+
+  const handleExportWord = () => {
+    toast({
+      title: "Exporting as Word",
+      description: "Word document export functionality will be available soon.",
+    });
+  };
+
+  const handleSendToEMR = () => {
+    toast({
+      title: "Sent to EMR (stub)",
+      description: "EMR integration will be available soon.",
+    });
+  };
+
   return (
     <div className="flex flex-col h-full">
-      {/* Note Tabs Strip */}
-      <div className="flex items-center border-b border-border px-2 bg-muted/30">
-        <div className="flex items-center overflow-x-auto">
-          {noteTabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => onActiveNoteTabChange(tab.id)}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
-                tab.id === activeNoteTabId
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <FileText className="h-3.5 w-3.5" />
-              <span>{tab.title}</span>
+      {/* Note Tabs Strip - Only show when in Note view */}
+      {activeView === 'note' && (
+        <div className="flex items-center border-b border-border px-2 bg-muted/30">
+          <div className="flex items-center overflow-x-auto">
+            {noteTabs.map(tab => (
               <button
-                onClick={(e) => closeTab(tab.id, e)}
-                className="ml-1 p-0.5 rounded hover:bg-muted"
+                key={tab.id}
+                onClick={() => onActiveNoteTabChange(tab.id)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
+                  tab.id === activeNoteTabId
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
               >
-                <X className="h-3 w-3" />
+                <FileText className="h-3.5 w-3.5" />
+                <span>{tab.title}</span>
+                <button
+                  onClick={(e) => closeTab(tab.id, e)}
+                  className="ml-1 p-0.5 rounded hover:bg-muted"
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </button>
-            </button>
-          ))}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 shrink-0"
-            onClick={addNewTab}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 shrink-0"
+              onClick={addNewTab}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Context / Note Toggle Row */}
-      <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
-        <Tabs value={activeView} onValueChange={(v) => setActiveView(v as 'context' | 'note')}>
-          <TabsList className="h-8">
-            <TabsTrigger value="context" className="text-xs px-3 h-7">
-              <FileText className="h-3.5 w-3.5 mr-1.5" />
-              Context
-            </TabsTrigger>
-            <TabsTrigger value="note" className="text-xs px-3 h-7">
-              <PenLine className="h-3.5 w-3.5 mr-1.5" />
-              Note
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      {/* Template Selection and Actions Row - Only in Note view */}
+      {activeView === 'note' && (
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 h-8" disabled={isGenerating}>
+                {selectedTemplate ? (
+                  <>
+                    <span>{selectedTemplate.icon}</span>
+                    {selectedTemplate.name}
+                    <ChevronDown className="h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    Select a template
+                    <ChevronDown className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64">
+              {availableTemplates.map(template => (
+                <DropdownMenuItem
+                  key={template.id}
+                  onClick={() => handleTemplateSelect(template.id)}
+                  className="flex items-center gap-2"
+                >
+                  <span>{template.icon}</span>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{template.name}</span>
+                    <span className="text-xs text-muted-foreground">{template.type}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-        {/* Template dropdown and actions - only show in Note view */}
-        {activeView === 'note' && (
-          <>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 h-8" disabled={isGenerating}>
-                  {selectedTemplate ? (
-                    <>
-                      <span>{selectedTemplate.icon}</span>
-                      {selectedTemplate.name}
-                      <ChevronDown className="h-4 w-4" />
-                    </>
-                  ) : (
-                    <>
-                      Select a template
-                      <ChevronDown className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64">
-                {availableTemplates.map(template => (
-                  <DropdownMenuItem
-                    key={template.id}
-                    onClick={() => handleTemplateSelect(template.id)}
-                    className="flex items-center gap-2"
-                  >
-                    <span>{template.icon}</span>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{template.name}</span>
-                      <span className="text-xs text-muted-foreground">{template.type}</span>
-                    </div>
+          {/* Actions Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem onClick={handleCopyAll}>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy all text
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSendEmail}>
+                <Mail className="h-4 w-4 mr-2" />
+                Send as email
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handlePrint}>
+                <Printer className="h-4 w-4 mr-2" />
+                Print
+              </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Export as
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={handleExportPDF}>
+                    PDF
                   </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem onClick={handleExportWord}>
+                    Word document
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSendToEMR}>
+                <Send className="h-4 w-4 mr-2" />
+                Send to EMR
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Export as PDF</DropdownMenuItem>
-                <DropdownMenuItem>Send via email</DropdownMenuItem>
-                <DropdownMenuItem>Save to EHR</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <div className="ml-auto flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleCopy} disabled={!activeTab?.content}>
-                <Copy className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Undo className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Redo className="h-4 w-4" />
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
+          <div className="ml-auto flex items-center gap-1">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0" 
+              onClick={handleCopyAll} 
+              disabled={!activeTab?.content}
+              title="Copy note"
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Undo className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Redo className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Panel Content */}
       <div className="flex-1 overflow-auto">
@@ -288,7 +355,7 @@ export const RightColumnPanel = ({
               Ex: pt 35yoM, Hgb: 13.8, RBC: 4.5, WBC: 4,500
             </p>
 
-            {/* File attachment area - inside Context panel */}
+            {/* File attachment area - inside Context panel only */}
             <div className="mt-4 pt-4 border-t border-border">
               <div
                 className={cn(
@@ -382,7 +449,7 @@ export const RightColumnPanel = ({
                 value={activeTab?.content || ''}
                 onChange={(e) => updateTabContent(e.target.value)}
                 placeholder="Select a template above to generate a note"
-                className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed"
+                className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed whitespace-pre-wrap"
               />
             )}
           </div>

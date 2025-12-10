@@ -293,11 +293,76 @@ export function generateNoteFromTemplate(
     return 'Template not found.';
   }
   
-  // If we have example content and there's input, use the example
-  if (exampleContent && (transcript.trim() || context.trim())) {
+  const hasTranscript = transcript.trim().length > 0;
+  const hasContext = context.trim().length > 0;
+  
+  // If we have example content for this template and there's any input, use the example
+  if (exampleContent && (hasTranscript || hasContext)) {
     return formatTemplateSections(exampleContent);
   }
   
-  // Otherwise return empty template structure
+  // If we have input but no example content, generate placeholder content based on the template
+  if (hasTranscript || hasContext) {
+    const inputSummary = [
+      hasTranscript ? `Transcript: ${transcript.substring(0, 100)}...` : '',
+      hasContext ? `Context: ${context.substring(0, 100)}...` : ''
+    ].filter(Boolean).join('\n');
+    
+    // Generate content for each section based on the input
+    const generatedSections = template.sections.map(section => {
+      // For demo purposes, generate simple placeholder content
+      const sectionContent = generateSectionContent(section.name, transcript, context);
+      return {
+        ...section,
+        content: sectionContent || section.placeholder || 'Not Provided'
+      };
+    });
+    
+    return generatedSections
+      .map(section => `**${section.name}:**\n${section.content}`)
+      .join('\n\n');
+  }
+  
+  // No content - return empty template structure with placeholders
   return formatTemplateSections(template);
+}
+
+// Helper function to generate section content based on section name and input
+function generateSectionContent(sectionName: string, transcript: string, context: string): string {
+  const lowerName = sectionName.toLowerCase();
+  const input = `${transcript} ${context}`.toLowerCase();
+  
+  // Simple keyword-based content generation for demo
+  if (lowerName.includes('subjective') || lowerName.includes('chief complaint') || lowerName.includes('history')) {
+    if (input.includes('headache') || input.includes('pain')) {
+      return 'Patient reports symptoms as described in the transcript.';
+    }
+    if (transcript.trim()) {
+      return `Patient presentation: ${transcript.substring(0, 200)}${transcript.length > 200 ? '...' : ''}`;
+    }
+  }
+  
+  if (lowerName.includes('objective') || lowerName.includes('examination')) {
+    if (context.trim()) {
+      return `Clinical findings: ${context.substring(0, 200)}${context.length > 200 ? '...' : ''}`;
+    }
+    return 'Physical examination findings pending.';
+  }
+  
+  if (lowerName.includes('assessment') || lowerName.includes('impression')) {
+    return 'Assessment based on clinical presentation and examination findings.';
+  }
+  
+  if (lowerName.includes('plan')) {
+    return 'Follow-up and treatment plan to be determined.';
+  }
+  
+  if (lowerName.includes('dictation')) {
+    // For dictation template, just return the transcript
+    if (transcript.trim()) {
+      return transcript;
+    }
+  }
+  
+  return '';
 }
