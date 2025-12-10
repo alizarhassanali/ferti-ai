@@ -72,7 +72,7 @@ export const LeftPane = () => {
     },
     { type: 'separator' },
     { icon: FileCode, label: 'Chart Prep', id: 'chart-prep' },
-    { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant' },
+    { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant', route: '/ai-assistant' },
     { type: 'separator' },
     { icon: Users, label: 'Team', id: 'team', route: '/team' },
     { type: 'separator' },
