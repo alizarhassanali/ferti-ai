@@ -63,27 +63,26 @@ export const ConversationList = () => {
   return (
     <div className="h-full flex flex-col bg-[hsl(38_35%_97%)]">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[hsl(35_20%_90%)] bg-[hsl(38_35%_97%)]">
+      <div className="flex items-center justify-between gap-2.5 px-4 py-2 border-b border-[#eee2d7] bg-[#faf7f2]">
         {/* Search Bar */}
-        <div className="flex-1 flex items-center h-9 px-3 rounded-full border border-[hsl(35_15%_83%)] bg-white">
-          <Search className="h-4 w-4 text-muted-foreground mr-2 flex-shrink-0" />
+        <div className="flex-1 flex items-center">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search chats"
-            className="flex-1 border-none outline-none bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground"
+            className="w-full h-8 px-3 rounded-full border border-[#d9d2c6] bg-white text-[13px] text-[#444] placeholder:text-[#a29a8e] outline-none"
           />
         </div>
         
         {/* New Chat Button */}
-        <Button
+        <button
           onClick={createNewChat}
-          className="h-9 px-4 rounded-full bg-primary hover:bg-primary/90 active:bg-primary/80 text-primary-foreground text-[13px] font-medium shadow-sm inline-flex items-center justify-center gap-1.5"
+          className="inline-flex items-center justify-center gap-1.5 h-8 px-3.5 rounded-full border border-[#d9d2c6] bg-[#f6f1e9] text-[#4c3a2a] text-[13px] font-medium cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:bg-[#eee3d4] active:bg-[#e4d6c2]"
         >
-          <Plus className="h-4 w-4" />
-          New chat
-        </Button>
+          <Plus className="h-3.5 w-3.5" />
+          <span className="leading-none">New chat</span>
+        </button>
       </div>
 
       {/* Conversation List */}
