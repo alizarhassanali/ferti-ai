@@ -82,10 +82,11 @@ export const LeftPane = () => {
     { label: 'Templates', type: 'header' },
     { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
     { icon: Store, label: 'Template Hub', id: 'template-hub', route: '/template-hub' },
+    { type: 'separator' },
+    { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
   ];
 
   const footerItems = [
-    { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
     { icon: HelpCircle, label: 'Help', id: 'help' },
   ];
 
@@ -322,14 +323,11 @@ export const LeftPane = () => {
           <ul className="space-y-1">
             {footerItems.map((item) => {
               const Icon = item.icon;
-              const isActive = item.route ? location.pathname === item.route : false;
 
               const handleClick = () => {
                 setIsMobileMenuOpen(false);
                 if (item.id === 'help') {
                   setHelpPanelOpen(true);
-                } else if (item.route) {
-                  navigate(item.route);
                 }
               };
 
@@ -341,19 +339,9 @@ export const LeftPane = () => {
                         <TooltipTrigger asChild>
                           <button
                             onClick={handleClick}
-                            className={`
-                              w-full flex items-center justify-center p-2.5 rounded-xl text-sm
-                              transition-all duration-200 group
-                              ${isActive
-                                ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)]'
-                                : 'text-[hsl(25_15%_55%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_40%)]'
-                              }
-                            `}
+                            className="w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-[hsl(25_15%_55%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_40%)]"
                           >
-                            <div className={`
-                              flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
-                              bg-[hsl(38_25%_94%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105
-                            `}>
+                            <div className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 bg-[hsl(38_25%_94%)] group-hover:bg-[hsl(38_30%_88%)] group-hover:scale-105">
                               <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                             </div>
                           </button>
@@ -366,14 +354,7 @@ export const LeftPane = () => {
                   ) : (
                     <button
                       onClick={handleClick}
-                      className={`
-                        w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
-                        transition-all duration-200 group
-                        ${isActive
-                          ? 'bg-[hsl(35_40%_90%)] text-[hsl(12_45%_35%)] font-semibold'
-                          : 'text-[hsl(25_15%_50%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_35%)] font-medium'
-                        }
-                      `}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-[hsl(25_15%_50%)] hover:bg-[hsl(38_30%_92%)] hover:text-[hsl(25_25%_35%)] font-medium"
                     >
                       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                       <span className="flex-1 text-left">{item.label}</span>

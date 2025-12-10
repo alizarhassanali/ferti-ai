@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, ExternalLink } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
 export const ProfileSettings = () => {
@@ -211,7 +211,46 @@ export const ProfileSettings = () => {
             <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md px-4 py-3">
               <span className="text-sm text-foreground">{user.country || 'Canada'}</span>
             </div>
-            
+          </div>
+        </div>
+
+        {/* Language & Time Section */}
+        <div className="border border-border rounded-lg p-6 bg-card">
+          <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
+          <p className="text-sm text-muted-foreground mb-6">
+            Change the language used in the FertiAI interface.
+          </p>
+          
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">
+                Display language
+              </Label>
+              <Select defaultValue="English">
+                <SelectTrigger id="displayLanguage">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="French">French</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">
+                Date format
+              </Label>
+              <Select defaultValue="MM/DD/YYYY">
+                <SelectTrigger id="dateFormat">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
