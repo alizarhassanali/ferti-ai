@@ -63,24 +63,27 @@ export const ConversationList = () => {
   return (
     <div className="h-full flex flex-col bg-[hsl(38_35%_97%)]">
       {/* Header */}
-      <div className="p-3 space-y-2 border-b border-border">
-        <Button
-          onClick={createNewChat}
-          className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground text-sm"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New chat
-        </Button>
-        
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+      <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[hsl(35_20%_90%)] bg-[hsl(38_35%_97%)]">
+        {/* Search Bar */}
+        <div className="flex-1 flex items-center h-9 px-3 rounded-full border border-[hsl(35_15%_83%)] bg-white">
+          <Search className="h-4 w-4 text-muted-foreground mr-2 flex-shrink-0" />
+          <input
+            type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search chats"
-            className="pl-9 h-9 bg-white border-border/50 rounded-lg text-sm"
+            className="flex-1 border-none outline-none bg-transparent text-[13px] text-foreground placeholder:text-muted-foreground"
           />
         </div>
+        
+        {/* New Chat Button */}
+        <Button
+          onClick={createNewChat}
+          className="h-9 px-4 rounded-full bg-primary hover:bg-primary/90 active:bg-primary/80 text-primary-foreground text-[13px] font-medium shadow-sm inline-flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-4 w-4" />
+          New chat
+        </Button>
       </div>
 
       {/* Conversation List */}
