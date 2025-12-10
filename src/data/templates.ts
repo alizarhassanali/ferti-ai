@@ -296,21 +296,16 @@ export function generateNoteFromTemplate(
   const hasTranscript = transcript.trim().length > 0;
   const hasContext = context.trim().length > 0;
   
-  // If we have example content for this template and there's any input, use the example
-  if (exampleContent && (hasTranscript || hasContext)) {
+  // ALWAYS use demo content if available for templates that have examples
+  // This ensures demo works even without transcript/context
+  if (exampleContent) {
     return formatTemplateSections(exampleContent);
   }
   
-  // If we have input but no example content, generate placeholder content based on the template
+  // If we have input, generate content based on it
   if (hasTranscript || hasContext) {
-    const inputSummary = [
-      hasTranscript ? `Transcript: ${transcript.substring(0, 100)}...` : '',
-      hasContext ? `Context: ${context.substring(0, 100)}...` : ''
-    ].filter(Boolean).join('\n');
-    
     // Generate content for each section based on the input
     const generatedSections = template.sections.map(section => {
-      // For demo purposes, generate simple placeholder content
       const sectionContent = generateSectionContent(section.name, transcript, context);
       return {
         ...section,
@@ -323,7 +318,7 @@ export function generateNoteFromTemplate(
       .join('\n\n');
   }
   
-  // No content - return empty template structure with placeholders
+  // No demo content and no input - return template with placeholders
   return formatTemplateSections(template);
 }
 

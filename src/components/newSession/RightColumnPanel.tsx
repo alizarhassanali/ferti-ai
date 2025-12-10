@@ -91,13 +91,9 @@ export const RightColumnPanel = ({
       t.id === activeNoteTabId ? { ...t, templateId, title: template?.name || t.title } : t
     );
     onNoteTabsChange(newTabs);
-
-    if (!hasContent) {
-      setShowNoContentWarning(true);
-      return;
-    }
     setShowNoContentWarning(false);
-    // Trigger generation with this template
+    
+    // Always trigger generation - demo content will be used if no transcript/context
     onGenerate(templateId);
   };
 
