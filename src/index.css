@@ -8,22 +8,23 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
+    /* Brand Colors - Ocean, Salmon, Sky palette */
+    --background: 30 33% 98%; /* #FBF8F6 - Light Grey */
+    --foreground: 216 36% 28%; /* #263F6A - Ocean */
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 216 36% 28%; /* Ocean */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 216 36% 28%;
 
-    /* Medical trust blue */
-    --primary: 217 91% 60%;
+    /* Primary - Ocean blue for text, icons, borders */
+    --primary: 216 36% 28%; /* #263F6A */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 214 100% 97%;
+    --primary-light: 203 78% 81%; /* #9CCFF0 - Secondary Sky */
     
-    /* Brand accent - warm burgundy */
-    --brand: 12 45% 35%;
+    /* Brand accent - Salmon for CTAs */
+    --brand: 5 100% 74%; /* #FF887C */
     --brand-foreground: 0 0% 100%;
     
     /* Success green for positive actions */
@@ -31,41 +32,46 @@ All colors MUST be HSL.
     --success-foreground: 0 0% 100%;
     --success-light: 142 76% 96%;
 
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 215 25% 27%;
+    /* Secondary - Ocean with lighter opacity */
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 216 36% 28%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 203 56% 95%; /* #EAF4FB - Tertiary Light Sky */
+    --muted-foreground: 216 30% 45%;
 
-    --accent: 210 40% 98%;
-    --accent-foreground: 215 25% 27%;
+    --accent: 203 56% 95%; /* #EAF4FB */
+    --accent-foreground: 216 36% 28%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 60%;
+    /* Border colors using Ocean at low opacity */
+    --border: 216 20% 85%;
+    --input: 216 20% 85%;
+    --ring: 216 36% 28%;
 
     --radius: 0.5rem;
 
-    /* Navigation panes - warm beige tones */
-    --nav-background: 38 35% 96%;
-    --nav-border: 35 20% 90%;
-    --nav-active: 35 40% 93%;
-    --nav-hover: 38 30% 94%;
+    /* Link color */
+    --link: 215 58% 42%; /* #2E5DA8 */
 
-    /* Sidebar tokens - warm premium palette */
-    --sidebar-background: 38 35% 96%;
-    --sidebar-foreground: 25 30% 25%;
-    --sidebar-primary: 12 45% 35%;
+    /* Navigation panes - Light Sky tones */
+    --nav-background: 203 56% 95%; /* #EAF4FB */
+    --nav-border: 216 20% 85%;
+    --nav-active: 0 0% 100%;
+    --nav-hover: 203 56% 95%;
+
+    /* Sidebar tokens - Light Sky palette */
+    --sidebar-background: 203 56% 95%; /* #EAF4FB */
+    --sidebar-foreground: 216 36% 28%; /* Ocean */
+    --sidebar-primary: 5 100% 74%; /* Salmon */
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 38 30% 92%;
-    --sidebar-accent-foreground: 25 30% 25%;
-    --sidebar-border: 35 20% 88%;
-    --sidebar-ring: 12 45% 35%;
-    --sidebar-muted: 25 15% 55%;
-    --sidebar-header: 25 20% 45%;
+    --sidebar-accent: 0 0% 100%; /* White pill for active */
+    --sidebar-accent-foreground: 216 36% 28%;
+    --sidebar-border: 216 20% 85%;
+    --sidebar-ring: 216 36% 28%;
+    --sidebar-muted: 216 30% 55%;
+    --sidebar-header: 216 30% 40%;
   }
 
   .dark {
@@ -78,11 +84,11 @@ All colors MUST be HSL.
     --popover: 224 71% 4%;
     --popover-foreground: 213 31% 91%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 203 78% 81%;
+    --primary-foreground: 216 36% 15%;
     --primary-light: 217 50% 15%;
 
-    --brand: 12 45% 45%;
+    --brand: 5 100% 74%;
     --brand-foreground: 0 0% 100%;
 
     --success: 142 71% 45%;
@@ -103,7 +109,9 @@ All colors MUST be HSL.
 
     --border: 215 28% 17%;
     --input: 215 28% 17%;
-    --ring: 217 91% 60%;
+    --ring: 203 78% 81%;
+
+    --link: 203 78% 75%;
 
     --nav-background: 224 71% 4%;
     --nav-border: 215 28% 17%;
@@ -112,12 +120,12 @@ All colors MUST be HSL.
 
     --sidebar-background: 224 71% 6%;
     --sidebar-foreground: 213 31% 91%;
-    --sidebar-primary: 12 45% 45%;
+    --sidebar-primary: 5 100% 74%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 216 34% 17%;
     --sidebar-accent-foreground: 213 31% 91%;
     --sidebar-border: 215 28% 17%;
-    --sidebar-ring: 12 45% 45%;
+    --sidebar-ring: 5 100% 74%;
     --sidebar-muted: 215 20% 65%;
     --sidebar-header: 215 20% 55%;
   }
@@ -132,8 +140,52 @@ All colors MUST be HSL.
     @apply bg-background text-foreground font-sans antialiased;
   }
 
+  /* Root background gradient - Sky + Light Salmon radial */
+  #root {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top left, hsl(203 56% 95% / 0.8) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, hsl(5 69% 94% / 0.6) 0%, transparent 50%),
+                hsl(30 33% 98%);
+  }
+
   /* Smooth transitions for interactive elements */
   button, a, [role="button"] {
     @apply transition-all duration-200 ease-out;
+  }
+
+  /* Graphik font family simulation using sans-serif */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans tracking-tight;
+  }
+
+  h1 {
+    @apply text-3xl font-semibold;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-link {
+    color: hsl(var(--link));
+  }
+  
+  .bg-brand {
+    background-color: hsl(var(--brand));
+  }
+  
+  .text-brand {
+    color: hsl(var(--brand));
+  }
+  
+  .border-brand {
+    border-color: hsl(var(--brand));
   }
 }
