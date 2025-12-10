@@ -68,7 +68,6 @@ export const MicrophoneSelector = ({
 
   // Audio level bars (5 bars)
   const renderAudioLevels = () => {
-    const bars = 5;
     const activeThresholds = [10, 25, 45, 65, 85];
     
     return (
@@ -78,7 +77,7 @@ export const MicrophoneSelector = ({
             key={i}
             className={cn(
               "w-1 rounded-sm transition-all duration-75",
-              audioLevel >= threshold ? "bg-primary" : "bg-muted"
+              audioLevel >= threshold ? "bg-brand" : "bg-foreground/20"
             )}
             style={{ height: `${(i + 1) * 20}%` }}
           />
@@ -90,15 +89,19 @@ export const MicrophoneSelector = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 h-9">
-          <Mic className="h-4 w-4" />
-          <span className="max-w-[120px] truncate text-xs">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="gap-2 h-9 bg-white border-[hsl(216_20%_90%)] text-foreground hover:bg-sidebar hover:border-primary/30"
+        >
+          <Mic className="h-4 w-4 stroke-[1.5]" />
+          <span className="max-w-[120px] truncate text-xs font-medium">
             {truncateLabel(selectedLabel)}
           </span>
           {renderAudioLevels()}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-80">
+      <DropdownMenuContent align="end" className="w-80 bg-white border border-[hsl(216_20%_90%)]">
         {devices.map(device => (
           <DropdownMenuItem
             key={device.deviceId}
@@ -106,16 +109,16 @@ export const MicrophoneSelector = ({
               onDeviceChange(device.deviceId);
               setSelectedLabel(device.label);
             }}
-            className="flex items-center justify-between"
+            className="flex items-center justify-between text-foreground hover:bg-sidebar"
           >
             <span className="truncate pr-2">{device.label}</span>
             {device.deviceId === selectedDeviceId && (
-              <Check className="h-4 w-4 shrink-0" />
+              <Check className="h-4 w-4 shrink-0 text-foreground stroke-[1.5]" />
             )}
           </DropdownMenuItem>
         ))}
         {devices.length === 0 && (
-          <DropdownMenuItem disabled>
+          <DropdownMenuItem disabled className="text-foreground/60">
             No microphones found
           </DropdownMenuItem>
         )}

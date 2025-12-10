@@ -31,7 +31,7 @@ const statusConfig = {
   },
   draft: {
     icon: FileText,
-    color: 'text-muted-foreground',
+    color: 'text-foreground/60',
     label: 'Draft',
   },
   review: {
@@ -57,12 +57,12 @@ export const SessionCard = ({
   const cardContent = (
     <div
       className={`
-        group relative flex items-start gap-3 p-3 rounded-lg border transition-colors cursor-pointer
+        group relative flex items-start gap-3 p-3 px-4 rounded-xl border transition-all duration-200 cursor-pointer
         ${isSelected 
-          ? 'bg-primary/5 border-primary/30' 
+          ? 'bg-brand/5 border-brand/30' 
           : isActive 
-            ? 'bg-accent border-primary' 
-            : 'bg-card border-border hover:bg-accent'
+            ? 'bg-white border-primary shadow-sm' 
+            : 'bg-white border-[hsl(216_20%_90%)] hover:shadow-md hover:border-[hsl(216_20%_85%)]'
         }
       `}
       onClick={onClick}
@@ -80,15 +80,18 @@ export const SessionCard = ({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2">
-          <StatusIcon className={`h-4 w-4 mt-0.5 shrink-0 ${statusConfig[session.status].color}`} />
+          <StatusIcon className={`h-4 w-4 mt-0.5 shrink-0 stroke-[1.5] ${statusConfig[session.status].color}`} />
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-medium truncate">{session.title}</h4>
-            <p className="text-xs text-muted-foreground">{session.time}</p>
+            <h4 className="text-base font-medium text-foreground truncate">{session.title}</h4>
+            <p className="text-[13px] text-foreground/60">{session.time}</p>
           </div>
         </div>
         
         {session.status !== 'complete' && (
-          <Badge variant="secondary" className="mt-2 text-xs">
+          <Badge 
+            variant="secondary" 
+            className="mt-2 text-xs bg-sidebar text-foreground border-0 rounded-full px-3 py-0.5 font-medium"
+          >
             {statusConfig[session.status].label}
           </Badge>
         )}
@@ -96,7 +99,7 @@ export const SessionCard = ({
 
       {/* Indicator for linked patient sessions */}
       {hasLinkedPatient && (
-        <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        <ChevronRight className="h-4 w-4 text-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity stroke-[1.5]" />
       )}
     </div>
   );
