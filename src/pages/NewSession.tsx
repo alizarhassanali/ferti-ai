@@ -189,7 +189,7 @@ const NewSession = () => {
   const hasContent = contextContent.trim().length > 0 || transcriptContent.trim().length > 0 || dictationContent.trim().length > 0;
 
   const handleGenerate = useCallback((templateId: string) => {
-    if (!templateId || !hasContent) return;
+    if (!templateId) return;
     
     setIsGenerating(true);
     
@@ -210,8 +210,8 @@ const NewSession = () => {
       }
       
       toast({ title: 'Note generated', description: `${template?.name} has been created.` });
-    }, 1500);
-  }, [hasContent, noteTabs, activeNoteTabId, toast, currentSessionId, updateSession, transcriptContent, contextContent]);
+    }, 800);
+  }, [noteTabs, activeNoteTabId, toast, currentSessionId, updateSession, transcriptContent, contextContent]);
 
   return (
     <AppLayout>
