@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send, PenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -186,42 +186,77 @@ export const RightColumnPanel = ({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Note Tabs Strip - Only show when in Note view */}
-      {activeView === 'note' && (
-        <div className="flex items-center border-b border-border px-2 bg-muted/30">
-          <div className="flex items-center overflow-x-auto">
-            {noteTabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => onActiveNoteTabChange(tab.id)}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
-                  tab.id === activeNoteTabId
-                    ? "border-primary text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <FileText className="h-3.5 w-3.5" />
-                <span>{tab.title}</span>
-                <button
-                  onClick={(e) => closeTab(tab.id, e)}
-                  className="ml-1 p-0.5 rounded hover:bg-muted"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </button>
-            ))}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 shrink-0"
-              onClick={addNewTab}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
+      {/* Right Pane Header Row - Context/Note toggle + Template tabs */}
+      <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-muted/30">
+        {/* Context / Note Toggle */}
+        <div className="flex items-center gap-1 mr-3">
+          <button
+            onClick={() => onViewChange('context')}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all",
+              activeView === 'context'
+                ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                : "text-muted-foreground hover:bg-muted"
+            )}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            Context
+          </button>
+          <button
+            onClick={() => onViewChange('note')}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all",
+              activeView === 'note'
+                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400"
+                : "text-muted-foreground hover:bg-muted"
+            )}
+          >
+            <PenLine className="h-3.5 w-3.5" />
+            Note
+          </button>
         </div>
-      )}
+
+        {/* Divider */}
+        <div className="w-px h-5 bg-border" />
+
+        {/* Template Tabs - Always visible */}
+        <div className="flex items-center overflow-x-auto flex-1">
+          {noteTabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                onActiveNoteTabChange(tab.id);
+                if (activeView !== 'note') {
+                  onViewChange('note');
+                }
+              }}
+              className={cn(
+                "flex items-center gap-2 px-3 py-1.5 text-sm transition-colors whitespace-nowrap rounded-md mx-0.5",
+                tab.id === activeNoteTabId && activeView === 'note'
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              <FileText className="h-3.5 w-3.5" />
+              <span className="max-w-[120px] truncate">{tab.title}</span>
+              <button
+                onClick={(e) => closeTab(tab.id, e)}
+                className="ml-1 p-0.5 rounded hover:bg-muted"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </button>
+          ))}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 shrink-0"
+            onClick={addNewTab}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
 
       {/* Template Selection and Actions Row - Only in Note view */}
       {activeView === 'note' && (
@@ -243,7 +278,7 @@ export const RightColumnPanel = ({
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64">
+            <DropdownMenuContent className="w-64 bg-popover">
               {availableTemplates.map(template => (
                 <DropdownMenuItem
                   key={template.id}
@@ -267,7 +302,7 @@ export const RightColumnPanel = ({
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuContent align="start" className="w-48 bg-popover">
               <DropdownMenuItem onClick={handleCopyAll}>
                 <Copy className="h-4 w-4 mr-2" />
                 Copy all text
@@ -286,7 +321,7 @@ export const RightColumnPanel = ({
                   <FileDown className="h-4 w-4 mr-2" />
                   Export as
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
+                <DropdownMenuSubContent className="bg-popover">
                   <DropdownMenuItem onClick={handleExportPDF}>
                     PDF
                   </DropdownMenuItem>

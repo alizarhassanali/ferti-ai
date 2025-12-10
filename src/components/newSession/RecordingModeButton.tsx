@@ -1,10 +1,9 @@
-import { Mic, FileAudio, ChevronDown, Check, Square } from 'lucide-react';
+import { Mic, ChevronDown, Check, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { RecordingMode } from '@/types/session';
@@ -66,7 +65,7 @@ export const RecordingModeButton = ({
             <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" className="bg-popover">
           <DropdownMenuItem onClick={() => onModeChange('transcribe')}>
             <Check className={cn("mr-2 h-4 w-4", mode !== 'transcribe' && "opacity-0")} />
             Transcribing
@@ -74,11 +73,6 @@ export const RecordingModeButton = ({
           <DropdownMenuItem onClick={() => onModeChange('dictate')}>
             <Check className={cn("mr-2 h-4 w-4", mode !== 'dictate' && "opacity-0")} />
             Dictating
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={onUploadAudio}>
-            <FileAudio className="mr-2 h-4 w-4" />
-            Upload session audio
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
