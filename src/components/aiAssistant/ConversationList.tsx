@@ -111,83 +111,85 @@ export const ConversationList = () => {
                   <button
                     onClick={() => selectConversation(conversation.id)}
                     className={`
-                      w-full text-left px-3 py-2.5 rounded-lg transition-all duration-150 cursor-pointer
+                      w-full text-left px-3 py-2.5 rounded-lg transition-all duration-150 cursor-pointer overflow-hidden
                       ${isSelected
                         ? 'bg-primary/10 pl-4'
                         : 'hover:bg-muted/60'
                       }
                     `}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      {isEditing ? (
-                        <Input
-                          value={editingTitle}
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onBlur={handleFinishRename}
-                          onKeyDown={handleKeyDown}
-                          autoFocus
-                          className="h-6 text-sm font-medium px-1 py-0"
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      ) : (
-                        <span className={`
-                          font-medium text-sm truncate flex-1
-                          ${isSelected ? 'text-primary' : 'text-foreground'}
-                        `}>
-                          {conversation.title}
-                        </span>
-                      )}
-                      
-                      <div className="flex items-center gap-1">
-                        {!isEditing && (
-                          <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                            {formatTimestamp(conversation.updatedAt)}
+                    <div className="flex flex-col gap-0.5 w-full overflow-hidden">
+                      <div className="flex items-center justify-between gap-2 w-full">
+                        {isEditing ? (
+                          <Input
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onBlur={handleFinishRename}
+                            onKeyDown={handleKeyDown}
+                            autoFocus
+                            className="h-6 text-sm font-semibold px-1 py-0"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        ) : (
+                          <span className={`
+                            font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis flex-1 min-w-0
+                            ${isSelected ? 'text-primary' : 'text-foreground'}
+                          `}>
+                            {conversation.title}
                           </span>
                         )}
                         
-                        {/* Context menu */}
-                        {(isHovered || isSelected) && !isEditing && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 opacity-60 hover:opacity-100"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleStartRename(conversation.id, conversation.title);
-                                }}
-                              >
-                                <Pencil className="h-4 w-4 mr-2" />
-                                Rename chat
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  deleteConversation(conversation.id);
-                                }}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete chat
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          {!isEditing && (
+                            <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                              {formatTimestamp(conversation.updatedAt)}
+                            </span>
+                          )}
+                          
+                          {/* Context menu */}
+                          {(isHovered || isSelected) && !isEditing && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6 opacity-60 hover:opacity-100"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-40">
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleStartRename(conversation.id, conversation.title);
+                                  }}
+                                >
+                                  <Pencil className="h-4 w-4 mr-2" />
+                                  Rename chat
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteConversation(conversation.id);
+                                  }}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete chat
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                        </div>
                       </div>
+                      
+                      {conversation.lastMessagePreview && !isEditing && (
+                        <p className="text-[13px] text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis w-full">
+                          {conversation.lastMessagePreview}
+                        </p>
+                      )}
                     </div>
-                    
-                    {conversation.lastMessagePreview && !isEditing && (
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate pr-6">
-                        {conversation.lastMessagePreview}
-                      </p>
-                    )}
                   </button>
                 </div>
               );
