@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface SessionsPanelContextType {
   isSessionsPanelVisible: boolean;
+  sessionsPaneOpen: boolean;
   toggleSessionsPanel: () => void;
   showSessionsPanel: () => void;
   hideSessionsPanel: () => void;
@@ -18,44 +19,48 @@ const DISALLOWED_ROUTES = ['/settings'];
 
 export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
-  const [isSessionsPanelVisible, setIsSessionsPanelVisible] = useState(false);
+  
+  // Persist the open/closed state in localStorage
+  const [sessionsPaneOpen, setSessionsPaneOpen] = useState(() => {
+    const saved = localStorage.getItem('sessions-pane-open');
+    return saved === 'true';
+  });
+  
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [previousPath, setPreviousPath] = useState<string>(location.pathname);
 
   // Check if current route allows sessions panel
   const isSessionsPanelAllowed = !DISALLOWED_ROUTES.some(route => 
     location.pathname.startsWith(route)
   );
 
-  // Collapse sessions panel when navigating to a new allowed section
-  useEffect(() => {
-    if (previousPath !== location.pathname) {
-      // If navigating to a new page, collapse the sessions panel
-      if (isSessionsPanelVisible) {
-        setIsSessionsPanelVisible(false);
-      }
-      setPreviousPath(location.pathname);
-    }
-  }, [location.pathname, previousPath, isSessionsPanelVisible]);
+  // The actual visibility is: pane is open AND current route allows it
+  const isSessionsPanelVisible = sessionsPaneOpen && isSessionsPanelAllowed;
 
   const toggleSessionsPanel = useCallback(() => {
     if (!isSessionsPanelAllowed) return;
-    setIsSessionsPanelVisible(prev => !prev);
+    setSessionsPaneOpen(prev => {
+      const newValue = !prev;
+      localStorage.setItem('sessions-pane-open', String(newValue));
+      return newValue;
+    });
   }, [isSessionsPanelAllowed]);
 
   const showSessionsPanel = useCallback(() => {
     if (!isSessionsPanelAllowed) return;
-    setIsSessionsPanelVisible(true);
+    setSessionsPaneOpen(true);
+    localStorage.setItem('sessions-pane-open', 'true');
   }, [isSessionsPanelAllowed]);
 
   const hideSessionsPanel = useCallback(() => {
-    setIsSessionsPanelVisible(false);
+    setSessionsPaneOpen(false);
+    localStorage.setItem('sessions-pane-open', 'false');
   }, []);
 
   return (
     <SessionsPanelContext.Provider 
       value={{ 
-        isSessionsPanelVisible: isSessionsPanelAllowed && isSessionsPanelVisible,
+        isSessionsPanelVisible,
+        sessionsPaneOpen,
         toggleSessionsPanel,
         showSessionsPanel,
         hideSessionsPanel,

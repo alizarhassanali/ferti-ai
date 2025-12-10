@@ -40,7 +40,7 @@ export const LeftPane = () => {
 
   // Get global sessions panel context
   const { 
-    isSessionsPanelVisible, 
+    sessionsPaneOpen,
     toggleSessionsPanel, 
     isSessionsPanelAllowed 
   } = useSessionsPanel();
@@ -231,12 +231,12 @@ export const LeftPane = () => {
               // For toggleable items (View sessions), show different label when panel is open
               // and we're on an allowed page (not settings, not /sessions page itself)
               const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
-              const displayLabel = canToggle && isSessionsPanelVisible
+              const displayLabel = canToggle && sessionsPaneOpen
                 ? 'Hide sessions'
                 : item.label;
               
               const ArrowIcon = canToggle
-                ? (isSessionsPanelVisible ? ChevronLeft : ChevronRight)
+                ? (sessionsPaneOpen ? ChevronLeft : ChevronRight)
                 : null;
 
               const handleClick = () => {
