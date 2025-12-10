@@ -177,35 +177,37 @@ export const LeftPane = () => {
             )}
           </div>
           
-          {/* Collapse Toggle Button */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={toggleSidebar}
-                  className={`
-                    hidden md:flex absolute items-center justify-center
-                    w-7 h-7 rounded-full bg-white border border-[hsl(35_20%_88%)]
-                    shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]
-                    text-[hsl(25_20%_50%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(38_30%_98%)]
-                    transition-all duration-200 hover:scale-105
-                    ${isCollapsed ? '-right-3.5 top-6' : '-right-3.5 top-7'}
-                  `}
-                  aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
-                >
-                  {isCollapsed ? (
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  ) : (
-                    <ChevronLeft className="h-3.5 w-3.5" />
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg">
-                <p>{isCollapsed ? "Expand sidebar" : "Minimise sidebar"}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+      </div>
+
+      {/* Collapse Toggle Button - positioned outside the sidebar to ensure visibility */}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={toggleSidebar}
+              className={`
+                hidden md:flex fixed items-center justify-center z-50
+                w-7 h-7 rounded-full bg-white border border-[hsl(35_20%_88%)]
+                shadow-[0_2px_6px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]
+                text-[hsl(25_20%_50%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(38_30%_98%)]
+                transition-all duration-200 hover:scale-105
+                top-1/2 -translate-y-1/2
+                ${isCollapsed ? 'left-[58px]' : 'left-[248px]'}
+              `}
+              aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronLeft className="h-3.5 w-3.5" />
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="right" className="bg-white border-[hsl(35_20%_88%)] text-[hsl(25_30%_25%)] shadow-lg">
+            <p>{isCollapsed ? "Expand sidebar" : "Minimise sidebar"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
         {/* Navigation Items */}
         <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
