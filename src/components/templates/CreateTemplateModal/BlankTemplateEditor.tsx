@@ -68,8 +68,8 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Just me">Just me</SelectItem>
-                  <SelectItem value="My team">My team</SelectItem>
-                  <SelectItem value="Organization">Organization</SelectItem>
+                  <SelectItem value="My clinic">My clinic</SelectItem>
+                  <SelectItem value="Community">Community</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -83,6 +83,7 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
                 <SelectContent>
                   <SelectItem value="Note">Note</SelectItem>
                   <SelectItem value="Document">Document</SelectItem>
+                  <SelectItem value="Letter">Letter</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -102,7 +103,7 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
               onClick={onSave}
               className="bg-[hsl(25,35%,25%)] hover:bg-[hsl(25,35%,20%)] text-white"
             >
-              Save for Later
+              Save
             </Button>
           </div>
         </div>

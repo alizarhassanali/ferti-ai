@@ -78,9 +78,7 @@ export const CreateTemplateModal = ({
 
         {step === 'type' && (
           <TypeSelection
-            selectedType={selectedType}
-            onSelectType={onTypeSelect}
-            onContinue={handleContinue}
+            onSelectType={() => onStepChange('prompt')}
             onCancel={onClose}
           />
         )}
