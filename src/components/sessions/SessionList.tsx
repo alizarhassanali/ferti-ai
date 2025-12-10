@@ -7,7 +7,6 @@ import { SessionCard } from './SessionCard';
 import { SessionFilters } from './SessionFilters';
 import { SessionSort } from './SessionSort';
 import { ScheduledMeetingCard } from './ScheduledMeetingCard';
-import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { useSessions } from '@/contexts/SessionsContext';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -56,9 +55,9 @@ const demoMeetings: ScheduledMeeting[] = [
 ];
 
 export const SessionList = () => {
-  const { selectedSessionId, setSelectedSessionId } = useSessionsLayout();
   const { sessions, deleteSession } = useSessions();
   const { toast } = useToast();
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);

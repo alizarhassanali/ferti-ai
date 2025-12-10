@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Users, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
-import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
+import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -38,17 +38,14 @@ export const LeftPane = () => {
     return saved === 'true';
   });
 
-  // Try to get sessions layout context (only available on /sessions route)
-  let sessionsLayout;
-  try {
-    sessionsLayout = useSessionsLayout();
-  } catch {
-    // Not on sessions page, context not available
-    sessionsLayout = null;
-  }
+  // Get global sessions panel context
+  const { 
+    isSessionsPanelVisible, 
+    toggleSessionsPanel, 
+    isSessionsPanelAllowed 
+  } = useSessionsPanel();
 
   const isSessionsPage = location.pathname === '/sessions';
-  const isSessionsListVisible = sessionsLayout?.isSessionsListVisible ?? true;
 
   const toggleSidebar = () => {
     const newState = !isCollapsed;
@@ -68,7 +65,7 @@ export const LeftPane = () => {
     { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
     { 
       icon: FileText, 
-      label: isSessionsPage && !isSessionsListVisible ? 'View sessions' : 'View sessions', 
+      label: 'View sessions', 
       id: 'sessions', 
       route: '/sessions',
       isToggleable: true
@@ -231,13 +228,15 @@ export const LeftPane = () => {
               const Icon = item.icon!;
               const isActive = item.route ? location.pathname === item.route : false;
 
-              // Determine label and arrow for toggleable items (View sessions)
-              const displayLabel = item.isToggleable && isSessionsPage
-                ? (isSessionsListVisible ? 'Hide sessions' : 'View sessions')
+              // For toggleable items (View sessions), show different label when panel is open
+              // and we're on an allowed page (not settings, not /sessions page itself)
+              const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
+              const displayLabel = canToggle && isSessionsPanelVisible
+                ? 'Hide sessions'
                 : item.label;
               
-              const ArrowIcon = item.isToggleable && isSessionsPage
-                ? (isSessionsListVisible ? ChevronLeft : ChevronRight)
+              const ArrowIcon = canToggle
+                ? (isSessionsPanelVisible ? ChevronLeft : ChevronRight)
                 : null;
 
               const handleClick = () => {
@@ -246,9 +245,20 @@ export const LeftPane = () => {
                 
                 if (item.id === 'help') {
                   setHelpPanelOpen(true);
-                } else if (item.id === 'sessions' && isSessionsPage && sessionsLayout) {
-                  // Toggle sessions list if we're already on the sessions page
-                  sessionsLayout.toggleSessionsList();
+                } else if (item.id === 'sessions') {
+                  // If we're on /sessions page, navigate there
+                  // If we're on another allowed page, toggle the sessions panel
+                  // If we're on settings, just navigate to /sessions
+                  if (isSessionsPage) {
+                    // Already on sessions page, do nothing or could navigate
+                    navigate('/sessions');
+                  } else if (isSessionsPanelAllowed) {
+                    // On an allowed page, toggle the panel
+                    toggleSessionsPanel();
+                  } else {
+                    // On a disallowed page (settings), navigate to sessions
+                    navigate('/sessions');
+                  }
                 } else if (item.route) {
                   navigate(item.route);
                 }
