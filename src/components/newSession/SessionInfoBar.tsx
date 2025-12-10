@@ -1,4 +1,4 @@
-import { Calendar } from 'lucide-react';
+import { Calendar, Globe } from 'lucide-react';
 import { format } from 'date-fns';
 import { LanguageSelector } from './LanguageSelector';
 import { MicrophoneSelector } from './MicrophoneSelector';
@@ -46,12 +46,14 @@ export const SessionInfoBar = ({
 
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
-      {/* Left side: Date and Language */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
+      {/* Left side: Date and Language chips */}
+      <div className="flex items-center gap-3">
+        {/* Date chip */}
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sidebar text-foreground rounded-full text-[13px]">
+          <Calendar className="h-3.5 w-3.5 stroke-[1.5]" />
           <span>{format(sessionDate, "MMM d, yyyy h:mma")}</span>
         </div>
+        
         <LanguageSelector
           inputLanguage={inputLanguage}
           outputLanguage={outputLanguage}
@@ -60,16 +62,19 @@ export const SessionInfoBar = ({
         />
       </div>
 
-      {/* Right side: Timer, Mic, Record button */}
+      {/* Right side: Timer, Mic, Record button with mode selector */}
       <div className="flex items-center gap-4">
-        <span className="font-mono text-lg font-medium tabular-nums">
+        {/* Timer */}
+        <span className="font-medium text-[13px] text-foreground/80 tabular-nums">
           {formatDuration(recordingDuration)}
         </span>
+        
         <MicrophoneSelector
           selectedDeviceId={selectedMicrophoneId}
           onDeviceChange={onMicrophoneChange}
           audioLevel={audioLevel}
         />
+        
         <RecordingModeButton
           mode={recordingMode}
           isRecording={isRecording}

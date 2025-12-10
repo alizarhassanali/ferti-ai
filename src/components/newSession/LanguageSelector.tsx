@@ -1,4 +1,4 @@
-import { Languages } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -48,25 +48,26 @@ export const LanguageSelector = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-          <Languages className="h-4 w-4" />
-          <span className="text-sm">{languages.find(l => l.code === inputLanguage)?.name || 'English'}</span>
-        </Button>
+        {/* Language chip - pill style */}
+        <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-sidebar text-foreground rounded-full text-[13px] hover:bg-sidebar/80 transition-colors">
+          <Globe className="h-3.5 w-3.5 stroke-[1.5]" />
+          <span>{languages.find(l => l.code === inputLanguage)?.name || 'English'}</span>
+        </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80" align="start">
+      <PopoverContent className="w-80 bg-white border border-[hsl(216_20%_90%)]" align="start">
         <div className="space-y-4">
-          <h4 className="font-medium">Language settings</h4>
+          <h4 className="font-medium text-foreground">Language settings</h4>
           
           <div className="space-y-2">
-            <Label>Input language</Label>
-            <p className="text-xs text-muted-foreground">
+            <Label className="text-foreground">Input language</Label>
+            <p className="text-xs text-foreground/60">
               Used for transcripts, dictations and uploaded recordings.
             </p>
             <Select value={inputLanguage} onValueChange={onInputLanguageChange}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white border-[hsl(216_20%_90%)]">
                 <SelectValue>{getLanguageDisplay(inputLanguage)}</SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {languages.map(lang => (
                   <SelectItem key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}
@@ -77,15 +78,15 @@ export const LanguageSelector = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Output language</Label>
-            <p className="text-xs text-muted-foreground">
+            <Label className="text-foreground">Output language</Label>
+            <p className="text-xs text-foreground/60">
               Used for notes and documents.
             </p>
             <Select value={outputLanguage} onValueChange={onOutputLanguageChange}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white border-[hsl(216_20%_90%)]">
                 <SelectValue>{getLanguageDisplay(outputLanguage)}</SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {languages.map(lang => (
                   <SelectItem key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}

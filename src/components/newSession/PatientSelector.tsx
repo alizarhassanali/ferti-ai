@@ -86,50 +86,54 @@ export const PatientSelector = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-auto p-0 text-lg font-medium hover:bg-transparent">
+          {/* Patient selector styled as dropdown with border */}
+          <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[hsl(216_20%_90%)] rounded-xl text-sm hover:border-primary/30 transition-colors">
             {selectedPatient ? (
-              <span className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                {selectedPatient.name}
-              </span>
+              <>
+                <User className="h-4 w-4 text-foreground stroke-[1.5]" />
+                <span className="font-medium text-foreground">{selectedPatient.name}</span>
+              </>
             ) : (
-              <span className="text-muted-foreground">+ Add patient details</span>
+              <span className="text-foreground/80">+ Add patient details</span>
             )}
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
+            <ChevronDown className="h-4 w-4 text-foreground stroke-[1.5]" />
+          </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-72">
+        <DropdownMenuContent align="start" className="w-72 bg-white border border-[hsl(216_20%_90%)]">
           <div className="p-2">
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-foreground/60 stroke-[1.5]" />
               <Input
                 placeholder="Search patients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
+                className="pl-8 bg-white border-[hsl(216_20%_90%)]"
               />
             </div>
           </div>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setCreateModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
+          <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
+          <DropdownMenuItem 
+            onClick={() => setCreateModalOpen(true)}
+            className="text-foreground hover:bg-sidebar"
+          >
+            <Plus className="mr-2 h-4 w-4 stroke-[1.5]" />
             Create new patient
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
           {recentPatients.length > 0 && (
             <>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Suggested</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-foreground/60">Suggested</DropdownMenuLabel>
               {recentPatients.map(patient => (
                 <DropdownMenuItem
                   key={patient.id}
-                  className="flex justify-between"
+                  className="flex justify-between text-foreground hover:bg-sidebar"
                   onClick={() => onSelectPatient(patient)}
                 >
                   <span>{patient.name}</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2 text-xs"
+                    className="h-6 px-2 text-xs text-foreground/80 hover:text-foreground hover:bg-sidebar"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditPatient(patient);
@@ -139,23 +143,23 @@ export const PatientSelector = ({
                   </Button>
                 </DropdownMenuItem>
               ))}
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
             </>
           )}
           {filteredPatients.length > 0 && (
             <>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">All patients</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-foreground/60">All patients</DropdownMenuLabel>
               {filteredPatients.map(patient => (
                 <DropdownMenuItem
                   key={patient.id}
-                  className="flex justify-between"
+                  className="flex justify-between text-foreground hover:bg-sidebar"
                   onClick={() => onSelectPatient(patient)}
                 >
                   <span>{patient.name}</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2 text-xs"
+                    className="h-6 px-2 text-xs text-foreground/80 hover:text-foreground hover:bg-sidebar"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditPatient(patient);
@@ -169,8 +173,11 @@ export const PatientSelector = ({
           )}
           {selectedPatient && (
             <>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => onSelectPatient(null)}>
+              <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
+              <DropdownMenuItem 
+                onClick={() => onSelectPatient(null)}
+                className="text-foreground hover:bg-sidebar"
+              >
                 Clear selection
               </DropdownMenuItem>
             </>
@@ -180,21 +187,22 @@ export const PatientSelector = ({
 
       {/* Create Patient Modal */}
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white border border-[hsl(216_20%_90%)]">
           <DialogHeader>
-            <DialogTitle>Create new patient</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Create new patient</DialogTitle>
+            <DialogDescription className="text-foreground/60">
               Set up a patient profile in order to link multiple sessions together.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="patient-name">Patient name</Label>
+              <Label htmlFor="patient-name" className="text-foreground">Patient name</Label>
               <Input
                 id="patient-name"
                 value={newPatientName}
                 onChange={(e) => setNewPatientName(e.target.value)}
                 placeholder="Enter patient name"
+                className="bg-white border-[hsl(216_20%_90%)]"
               />
             </div>
           </div>
@@ -209,42 +217,43 @@ export const PatientSelector = ({
 
       {/* Edit Patient Modal */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-white border border-[hsl(216_20%_90%)]">
           <DialogHeader>
-            <DialogTitle>Edit patient profile</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Edit patient profile</DialogTitle>
+            <DialogDescription className="text-foreground/60">
               Changes will be reflected across all of this patient's linked sessions.
             </DialogDescription>
           </DialogHeader>
           {editingPatient && (
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-identifier">Patient identifier</Label>
+                <Label htmlFor="edit-identifier" className="text-foreground">Patient identifier</Label>
                 <Input
                   id="edit-identifier"
                   value={editingPatient.identifier || ''}
                   onChange={(e) => setEditingPatient({ ...editingPatient, identifier: e.target.value })}
                   placeholder="Enter patient identifier"
+                  className="bg-white border-[hsl(216_20%_90%)]"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-context">Additional patient context</Label>
+                <Label htmlFor="edit-context" className="text-foreground">Additional patient context</Label>
                 <Textarea
                   id="edit-context"
                   value={editingPatient.additionalContext || ''}
                   onChange={(e) => setEditingPatient({ ...editingPatient, additionalContext: e.target.value.slice(0, 1000) })}
                   placeholder="Enter additional patient context"
-                  className="min-h-[120px]"
+                  className="min-h-[120px] bg-white border-[hsl(216_20%_90%)]"
                   maxLength={1000}
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-foreground/60">
                   {editingPatient.additionalContext?.length || 0}/1000 characters
                 </p>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-foreground/60">
                 <span className="font-medium">Tip:</span> This information can be referenced when generating notes or documents for this patient.
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-foreground/60">
                 This information will not be shared with the patient and is for your reference only.
               </p>
             </div>

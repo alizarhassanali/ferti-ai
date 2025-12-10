@@ -1,11 +1,5 @@
-import { Mic, ChevronDown, Check, Square } from 'lucide-react';
+import { Mic, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { RecordingMode } from '@/types/session';
 import { cn } from '@/lib/utils';
 
@@ -25,26 +19,16 @@ export const RecordingModeButton = ({
   onUploadAudio,
 }: RecordingModeButtonProps) => {
   const isTranscribe = mode === 'transcribe';
-  
-  const buttonStyles = cn(
-    "gap-2 font-medium min-w-[140px]",
-    isRecording && "animate-pulse",
-    isTranscribe 
-      ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
-      : "bg-violet-600 hover:bg-violet-700 text-white"
-  );
-
-  const dropdownButtonStyles = cn(
-    "px-2 border-l",
-    isTranscribe 
-      ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500" 
-      : "bg-violet-600 hover:bg-violet-700 text-white border-violet-500"
-  );
 
   return (
-    <div className="flex">
+    <div className="flex items-center gap-2">
+      {/* Primary action button - Salmon CTA */}
       <Button
-        className={buttonStyles}
+        className={cn(
+          "gap-2 font-medium min-w-[120px] rounded-full",
+          "bg-brand hover:bg-[hsl(5_85%_68%)] text-brand-foreground",
+          isRecording && "animate-pulse"
+        )}
         onClick={onToggleRecording}
       >
         {isRecording ? (
@@ -54,28 +38,37 @@ export const RecordingModeButton = ({
           </>
         ) : (
           <>
-            <Mic className="h-4 w-4" />
+            <Mic className="h-4 w-4 stroke-[1.5]" />
             {isTranscribe ? 'Transcribe' : 'Dictate'}
           </>
         )}
       </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button className={dropdownButtonStyles}>
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-popover">
-          <DropdownMenuItem onClick={() => onModeChange('transcribe')}>
-            <Check className={cn("mr-2 h-4 w-4", mode !== 'transcribe' && "opacity-0")} />
-            Transcribing
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onModeChange('dictate')}>
-            <Check className={cn("mr-2 h-4 w-4", mode !== 'dictate' && "opacity-0")} />
-            Dictating
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+
+      {/* Segmented control for mode selection */}
+      <div className="flex items-center rounded-full border border-[hsl(216_20%_90%)] bg-white overflow-hidden">
+        <button
+          onClick={() => onModeChange('transcribe')}
+          className={cn(
+            "px-4 py-2 text-[13px] font-medium transition-colors",
+            mode === 'transcribe'
+              ? "bg-[hsl(5_85%_92%)] text-foreground"
+              : "bg-white text-foreground/70 hover:bg-sidebar"
+          )}
+        >
+          Transcribing
+        </button>
+        <button
+          onClick={() => onModeChange('dictate')}
+          className={cn(
+            "px-4 py-2 text-[13px] font-medium transition-colors",
+            mode === 'dictate'
+              ? "bg-[hsl(5_85%_92%)] text-foreground"
+              : "bg-white text-foreground/70 hover:bg-sidebar"
+          )}
+        >
+          Dictating
+        </button>
+      </div>
     </div>
   );
 };
