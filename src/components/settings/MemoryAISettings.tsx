@@ -28,7 +28,7 @@ export const MemoryAISettings = () => {
   };
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-4xl">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">Memory & AI Settings</h3>
         <p className="text-sm text-muted-foreground">Customize your AI preferences and language settings</p>
