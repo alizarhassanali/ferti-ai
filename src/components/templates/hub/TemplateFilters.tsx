@@ -37,10 +37,10 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
         <button
           className={cn(
             "inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all",
-            "border shadow-pill hover:shadow-md",
+            "border shadow-sm hover:shadow-md",
             hasActiveFilter
-              ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
-              : "bg-white text-[hsl(220_15%_35%)] border-[hsl(220_15%_88%)] hover:bg-[hsl(220_20%_96%)] hover:border-[hsl(220_15%_80%)]"
+              ? "bg-brand text-brand-foreground border-brand hover:bg-brand/90"
+              : "bg-white text-foreground border-primary hover:bg-muted"
           )}
         >
           {icon}
@@ -48,8 +48,8 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
           <span className={cn(
             "text-xs px-1.5 py-0.5 rounded-md",
             hasActiveFilter
-              ? "bg-white/20 text-primary-foreground"
-              : "bg-[hsl(220_20%_95%)] text-[hsl(220_15%_45%)]"
+              ? "bg-white/20 text-brand-foreground"
+              : "bg-muted text-muted-foreground"
           )}>
             {value}
           </span>
@@ -58,7 +58,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="min-w-[160px] bg-white border border-[hsl(220_15%_90%)] shadow-lg rounded-xl p-1.5 z-50"
+        className="min-w-[160px] bg-white border border-border shadow-lg rounded-xl p-1.5 z-50"
       >
         {options.map((option) => (
           <DropdownMenuItem 
@@ -67,8 +67,8 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
             className={cn(
               "px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors",
               value === option 
-                ? "bg-primary/10 text-primary font-medium" 
-                : "text-[hsl(220_15%_30%)] hover:bg-[hsl(220_20%_96%)]"
+                ? "bg-brand/10 text-brand font-medium" 
+                : "text-foreground hover:bg-muted"
             )}
           >
             {option}
