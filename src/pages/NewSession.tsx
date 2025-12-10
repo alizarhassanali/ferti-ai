@@ -246,6 +246,7 @@ const NewSession = () => {
 
         <div className="flex-1 overflow-hidden">
           <TwoColumnLayout
+            recordingMode={recordingMode}
             transcriptContent={transcriptContent}
             onTranscriptChange={setTranscriptContent}
             isRecording={isRecording}
