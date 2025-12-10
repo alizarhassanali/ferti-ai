@@ -3,14 +3,11 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-
 export const SessionFilters = () => {
   const [dateFilter, setDateFilter] = useState('last7');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [patientSearch, setPatientSearch] = useState('');
-
-  return (
-    <div className="space-y-4 p-4 border border-border rounded-lg bg-muted/30">
+  return <div className="space-y-4 p-4 border border-border rounded-lg bg-muted/30">
       {/* Date Filter */}
       <div className="space-y-3">
         <Label className="text-sm font-semibold">📅 Date</Label>
@@ -33,26 +30,10 @@ export const SessionFilters = () => {
           </div>
         </RadioGroup>
 
-        {dateFilter === 'custom' && (
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            className="rounded-md border"
-          />
-        )}
+        {dateFilter === 'custom' && <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} className="rounded-md border" />}
       </div>
 
       {/* Patient Filter */}
-      <div className="space-y-3">
-        <Label className="text-sm font-semibold">👤 Patient Profile</Label>
-        <Input
-          value={patientSearch}
-          onChange={(e) => setPatientSearch(e.target.value)}
-          placeholder="Search by patient name or ID..."
-          className="text-sm"
-        />
-      </div>
-    </div>
-  );
+      
+    </div>;
 };
