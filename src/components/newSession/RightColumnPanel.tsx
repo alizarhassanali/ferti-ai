@@ -186,14 +186,14 @@ export const RightColumnPanel = ({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Right Pane Header Row - Context/Note toggle + Template tabs */}
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-muted/30">
+      {/* Right Pane Header Row - Context/Note toggle only */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
         {/* Context / Note Toggle */}
-        <div className="flex items-center gap-1 mr-3">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => onViewChange('context')}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all",
+              "flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium transition-all",
               activeView === 'context'
                 ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
                 : "text-muted-foreground hover:bg-muted"
@@ -205,7 +205,7 @@ export const RightColumnPanel = ({
           <button
             onClick={() => onViewChange('note')}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all",
+              "flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium transition-all",
               activeView === 'note'
                 ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400"
                 : "text-muted-foreground hover:bg-muted"
@@ -215,48 +215,44 @@ export const RightColumnPanel = ({
             Note
           </button>
         </div>
-
-        {/* Divider */}
-        <div className="w-px h-5 bg-border" />
-
-        {/* Template Tabs - Always visible */}
-        <div className="flex items-center overflow-x-auto flex-1">
-          {noteTabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => {
-                onActiveNoteTabChange(tab.id);
-                if (activeView !== 'note') {
-                  onViewChange('note');
-                }
-              }}
-              className={cn(
-                "flex items-center gap-2 px-3 py-1.5 text-sm transition-colors whitespace-nowrap rounded-md mx-0.5",
-                tab.id === activeNoteTabId && activeView === 'note'
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              <FileText className="h-3.5 w-3.5" />
-              <span className="max-w-[120px] truncate">{tab.title}</span>
-              <button
-                onClick={(e) => closeTab(tab.id, e)}
-                className="ml-1 p-0.5 rounded hover:bg-muted"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </button>
-          ))}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 w-7 p-0 shrink-0"
-            onClick={addNewTab}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
       </div>
+
+      {/* Template Tabs Row - Only visible when Note is active */}
+      {activeView === 'note' && (
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-muted/20">
+          <div className="flex items-center overflow-x-auto flex-1">
+            {noteTabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => onActiveNoteTabChange(tab.id)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1.5 text-sm transition-colors whitespace-nowrap rounded-md mx-0.5",
+                  tab.id === activeNoteTabId
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                )}
+              >
+                <FileText className="h-3.5 w-3.5" />
+                <span className="max-w-[120px] truncate">{tab.title}</span>
+                <button
+                  onClick={(e) => closeTab(tab.id, e)}
+                  className="ml-1 p-0.5 rounded hover:bg-muted"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </button>
+            ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 shrink-0"
+              onClick={addNewTab}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Template Selection and Actions Row - Only in Note view */}
       {activeView === 'note' && (
