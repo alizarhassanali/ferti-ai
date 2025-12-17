@@ -122,7 +122,7 @@ export const SessionList = () => {
   const selectedCount = selectedSessions.length;
 
   return (
-    <div className="h-full flex flex-col bg-transparent border-r border-border w-96 relative">
+    <div className="h-full flex flex-col bg-muted border-r border-border w-96 relative">
       {/* Search & Controls */}
       <div className="p-4 border-b border-border space-y-3">
         <div className="relative">
@@ -175,13 +175,13 @@ export const SessionList = () => {
             value="schedule" 
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground font-medium text-base px-4 py-3 hover:text-foreground/80 hover:border-sidebar"
           >
-            Schedule
+            Scheduled
           </TabsTrigger>
           <TabsTrigger 
             value="past" 
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground font-medium text-base px-4 py-3 hover:text-foreground/80 hover:border-sidebar"
           >
-            Past
+            Sessions
           </TabsTrigger>
         </TabsList>
 
