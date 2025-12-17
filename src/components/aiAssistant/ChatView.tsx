@@ -9,13 +9,13 @@ import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 
 const EmptyState = () => (
   <div className="flex-1 flex flex-col items-center justify-center px-8">
-    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
-      <MessageCircle className="h-8 w-8 text-foreground/60" />
+    <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-5">
+      <MessageCircle className="h-7 w-7 text-foreground/50 stroke-[1.5]" />
     </div>
-    <h1 className="text-2xl font-semibold text-foreground mb-2 text-center">
+    <h1 className="text-xl font-semibold text-foreground mb-2 text-center">
       What's on your mind today?
     </h1>
-    <p className="text-muted-foreground text-center max-w-sm">
+    <p className="text-sm text-muted-foreground text-center max-w-sm">
       Ask clinical, workflow, or product questions.
     </p>
   </div>
@@ -23,10 +23,10 @@ const EmptyState = () => (
 
 const NoSelectionState = () => (
   <div className="h-full flex flex-col items-center justify-center bg-background text-muted-foreground px-8">
-    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-      <MessageCircle className="h-8 w-8 text-foreground/40" />
+    <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
+      <MessageCircle className="h-7 w-7 text-foreground/40 stroke-[1.5]" />
     </div>
-    <p className="text-center">Select a conversation or start a new chat</p>
+    <p className="text-sm text-center">Select a conversation or start a new chat</p>
   </div>
 );
 
@@ -171,30 +171,30 @@ export const ChatView = () => {
 
       {/* Chat Input */}
       <div className="border-t border-border p-4 bg-background">
-        <div className="max-w-[960px] mx-auto">
-          <div className="flex items-center gap-2 bg-white rounded-xl p-2 border border-border shadow-sm">
+        <div className="max-w-[800px] mx-auto">
+          <div className="flex items-center gap-2 bg-white rounded-xl p-2 border border-border">
             <Input
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask anything..."
-              className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
+              className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-9"
             />
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-foreground hover:text-foreground"
+              className="h-9 w-9 text-foreground/60 hover:text-foreground hover:bg-muted"
             >
-              <Mic className="h-5 w-5" />
+              <Mic className="h-4 w-4 stroke-[1.5]" />
             </Button>
             <Button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
               size="icon"
-              className="h-9 w-9 bg-brand hover:bg-brand/90 text-brand-foreground"
+              className="h-9 w-9 bg-brand hover:bg-brand/90 text-brand-foreground rounded-lg"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-4 w-4 stroke-[1.5]" />
             </Button>
           </div>
         </div>
