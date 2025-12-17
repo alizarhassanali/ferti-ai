@@ -27,7 +27,7 @@ export const MiddlePane = () => {
   });
 
   return (
-    <div className="w-75 h-screen bg-nav border-r border-nav-border">
+    <div className="w-75 h-screen bg-muted border-r border-border">
       <div className="p-6">
         <h2 className="text-2xl font-bold text-foreground mb-1">Settings</h2>
         <p className="text-sm text-muted-foreground">Manage your account and preferences</p>
