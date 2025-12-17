@@ -68,6 +68,9 @@ export default {
           active: "hsl(var(--nav-active))",
           hover: "hsl(var(--nav-hover))",
         },
+        content: {
+          DEFAULT: "hsl(var(--content-background))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

@@ -122,7 +122,7 @@ export const SessionList = () => {
   const selectedCount = selectedSessions.length;
 
   return (
-    <div className="h-full flex flex-col bg-muted border-r border-border w-96 relative">
+    <div className="h-full flex flex-col bg-content border-r border-border w-96 relative">
       {/* Search & Controls */}
       <div className="p-4 border-b border-border space-y-3">
         <div className="relative">
