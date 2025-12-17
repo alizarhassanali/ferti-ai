@@ -122,22 +122,16 @@ export const SessionList = () => {
   const selectedCount = selectedSessions.length;
 
   return (
-    <div className="h-full flex flex-col bg-muted border-r border-border w-96 relative">
-      {/* Header */}
-      <div className="px-5 pt-5 pb-3">
-        <h2 className="text-xl font-semibold text-foreground">Sessions</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">View and manage your sessions</p>
-      </div>
-
+    <div className="h-full flex flex-col bg-transparent border-r border-border w-96 relative">
       {/* Search & Controls */}
-      <div className="px-4 pb-3 space-y-3">
+      <div className="p-4 border-b border-border space-y-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/50 stroke-[1.5]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
           <Input 
             value={searchQuery} 
             onChange={e => setSearchQuery(e.target.value)} 
             placeholder="Search sessions..." 
-            className="pl-9 h-9 bg-white border-border focus:border-primary rounded-lg text-sm" 
+            className="pl-9 bg-white border-[hsl(216_20%_90%)] focus:border-primary" 
           />
         </div>
 
@@ -145,28 +139,28 @@ export const SessionList = () => {
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-1.5 h-8 bg-white border-border text-foreground hover:bg-white hover:border-primary/40 font-medium text-[13px] rounded-lg" 
+            className="gap-2 bg-white border-primary/20 text-foreground hover:bg-sidebar hover:border-primary/30 font-medium text-sm" 
             onClick={() => setShowFilters(!showFilters)}
           >
-            <Filter className="h-3.5 w-3.5 stroke-[1.5]" />
+            <Filter className="h-4 w-4 stroke-[1.5]" />
             Filter
           </Button>
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-1.5 h-8 bg-white border-border text-foreground hover:bg-white hover:border-primary/40 font-medium text-[13px] rounded-lg" 
+            className="gap-2 bg-white border-primary/20 text-foreground hover:bg-sidebar hover:border-primary/30 font-medium text-sm" 
             onClick={() => setShowSort(!showSort)}
           >
-            <ArrowUpDown className="h-3.5 w-3.5 stroke-[1.5]" />
+            <ArrowUpDown className="h-4 w-4 stroke-[1.5]" />
             Sort
           </Button>
           
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-foreground/70 hover:bg-white hover:text-foreground"
+            className="text-foreground hover:bg-sidebar"
           >
-            <RefreshCw className="h-3.5 w-3.5 stroke-[1.5]" />
+            <RefreshCw className="h-4 w-4 stroke-[1.5]" />
           </Button>
         </div>
 
@@ -179,13 +173,13 @@ export const SessionList = () => {
         <TabsList className="w-full justify-start bg-transparent border-b border-border px-4 h-auto py-0 rounded-none">
           <TabsTrigger 
             value="schedule" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/50 data-[state=active]:text-foreground font-medium text-sm px-3 py-2.5 hover:text-foreground/70"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground font-medium text-base px-4 py-3 hover:text-foreground/80 hover:border-sidebar"
           >
             Schedule
           </TabsTrigger>
           <TabsTrigger 
             value="past" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/50 data-[state=active]:text-foreground font-medium text-sm px-3 py-2.5 hover:text-foreground/70"
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground font-medium text-base px-4 py-3 hover:text-foreground/80 hover:border-sidebar"
           >
             Past
           </TabsTrigger>

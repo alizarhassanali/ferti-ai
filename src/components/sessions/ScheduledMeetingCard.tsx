@@ -20,11 +20,11 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
   const getMeetingIcon = () => {
     switch (meeting.meetingType) {
       case 'teams':
-        return <Video className="h-4 w-4 text-[#6264A7] stroke-[1.5]" />;
+        return <Video className="h-5 w-5 text-[#6264A7]" />;
       case 'zoom':
-        return <Video className="h-4 w-4 text-[#2D8CFF] stroke-[1.5]" />;
+        return <Video className="h-5 w-5 text-[#2D8CFF]" />;
       default:
-        return <MapPin className="h-4 w-4 text-foreground/60 stroke-[1.5]" />;
+        return <MapPin className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
@@ -35,62 +35,63 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
   };
 
   const handleStartSession = () => {
+    // Navigate to new session with patient pre-filled
     console.log('Start session for:', meeting.patientName);
   };
 
   return (
-    <div className="bg-white border border-border rounded-xl p-3 hover:shadow-sm transition-all duration-150 relative overflow-hidden">
-      {/* Accent border */}
+    <div className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow relative overflow-hidden">
+      {/* Teams accent border */}
       {meeting.meetingType === 'teams' && (
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#6264A7]" />
       )}
       
-      <div className="pl-2 space-y-2.5">
+      <div className="pl-3 space-y-3">
         {/* Title with icon */}
         <div className="flex items-start gap-2">
           {getMeetingIcon()}
-          <h3 className="font-medium text-sm text-foreground flex-1">{meeting.title}</h3>
+          <h3 className="font-semibold text-base flex-1">{meeting.title}</h3>
         </div>
 
         {/* Meeting details */}
-        <div className="space-y-1.5 text-[13px]">
-          <div className="flex items-center gap-2 text-foreground/50">
-            <User className="h-3.5 w-3.5 stroke-[1.5]" />
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <User className="h-4 w-4" />
             <span>Patient: <span className="text-foreground font-medium">{meeting.patientName}</span></span>
           </div>
           
-          <div className="flex items-center gap-2 text-foreground/50">
-            <Calendar className="h-3.5 w-3.5 stroke-[1.5]" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Calendar className="h-4 w-4" />
             <span>{meeting.date}</span>
           </div>
           
-          <div className="flex items-center gap-2 text-foreground/50">
-            <Clock className="h-3.5 w-3.5 stroke-[1.5]" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="h-4 w-4" />
             <span>{meeting.time}</span>
           </div>
           
-          <div className="flex items-center gap-2 text-foreground/50">
-            <MapPin className="h-3.5 w-3.5 stroke-[1.5]" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4" />
             <span>{meeting.location}</span>
           </div>
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2 pt-1">
+        <div className="flex items-center gap-2 pt-2">
           {meeting.meetingLink && (
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-1.5 h-8 text-[13px] rounded-lg border-border hover:border-primary/30"
+              className="gap-2"
               onClick={handleJoinMeeting}
             >
-              <ExternalLink className="h-3.5 w-3.5 stroke-[1.5]" />
+              <ExternalLink className="h-4 w-4" />
               Join Meeting
             </Button>
           )}
           <Button 
             size="sm" 
-            className="gap-1.5 h-8 text-[13px] rounded-lg bg-brand hover:bg-brand/90 text-brand-foreground"
+            className="gap-2"
             onClick={handleStartSession}
           >
             Start Session

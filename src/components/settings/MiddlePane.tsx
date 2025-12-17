@@ -27,11 +27,10 @@ export const MiddlePane = () => {
   });
 
   return (
-    <div className="w-72 h-screen bg-muted border-r border-border">
-      {/* Header */}
-      <div className="px-5 pt-5 pb-4">
-        <h2 className="text-xl font-semibold text-foreground">Settings</h2>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your account and preferences</p>
+    <div className="w-75 h-screen bg-nav border-r border-nav-border">
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-foreground mb-1">Settings</h2>
+        <p className="text-sm text-muted-foreground">Manage your account and preferences</p>
       </div>
 
       <nav className="px-3">
@@ -45,15 +44,15 @@ export const MiddlePane = () => {
                 <button
                   onClick={() => setSelectedCategory(category.id)}
                   className={`
-                    w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                    transition-all duration-150
+                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium
+                    transition-all duration-200
                     ${isActive
-                      ? 'bg-white text-foreground shadow-sm'
-                      : 'text-foreground/80 hover:bg-white/60 hover:text-foreground'
+                      ? 'bg-primary-light text-primary border-l-3 border-primary font-semibold shadow-sm'
+                      : 'text-foreground hover:bg-nav-hover'
                     }
                   `}
                 >
-                  <Icon className={`h-4 w-4 stroke-[1.5] ${isActive ? 'text-foreground' : 'text-foreground/60'}`} />
+                  <Icon className={`h-5 w-5 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
                   <span>{category.label}</span>
                 </button>
               </li>

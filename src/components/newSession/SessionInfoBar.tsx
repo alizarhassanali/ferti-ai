@@ -45,12 +45,12 @@ export const SessionInfoBar = ({
   };
 
   return (
-    <div className="flex items-center justify-between px-5 py-2.5 border-b border-border bg-background">
+    <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
       {/* Left side: Date and Language chips */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-3">
         {/* Date chip */}
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-muted text-foreground rounded-full text-[13px]">
-          <Calendar className="h-3.5 w-3.5 stroke-[1.5] text-foreground/60" />
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-sidebar text-foreground rounded-full text-[13px]">
+          <Calendar className="h-3.5 w-3.5 stroke-[1.5]" />
           <span>{format(sessionDate, "MMM d, yyyy h:mma")}</span>
         </div>
         
@@ -63,9 +63,9 @@ export const SessionInfoBar = ({
       </div>
 
       {/* Right side: Timer, Mic, Record button with mode selector */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* Timer */}
-        <span className="font-medium text-[13px] text-foreground/60 tabular-nums">
+        <span className="font-medium text-[13px] text-foreground/80 tabular-nums">
           {formatDuration(recordingDuration)}
         </span>
         
