@@ -119,7 +119,7 @@ const NewSession = () => {
       hasTranscript: transcriptContent.trim().length > 0,
       notes: noteTabs.map((t) => ({
         id: t.id,
-        type: t.templateId || "custom",
+        type: (t.templateId || "custom") as "clinical_note" | "custom" | "letter_to_gp" | "soap_note",
         title: t.title,
         content: t.content,
         isClosable: true,
