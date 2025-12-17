@@ -25,34 +25,34 @@ export const RecordingModeButton = ({
       {/* Primary action button - Salmon CTA */}
       <Button
         className={cn(
-          "gap-2 font-medium min-w-[120px] rounded-full",
-          "bg-brand hover:bg-[hsl(5_85%_68%)] text-brand-foreground",
+          "gap-2 font-medium min-w-[110px] h-9 rounded-full text-sm",
+          "bg-brand hover:bg-brand/90 text-brand-foreground",
           isRecording && "animate-pulse"
         )}
         onClick={onToggleRecording}
       >
         {isRecording ? (
           <>
-            <Square className="h-4 w-4 fill-current" />
+            <Square className="h-3.5 w-3.5 fill-current" />
             Stop
           </>
         ) : (
           <>
-            <Mic className="h-4 w-4 stroke-[1.5]" />
+            <Mic className="h-3.5 w-3.5 stroke-[1.5]" />
             {isTranscribe ? 'Transcribe' : 'Dictate'}
           </>
         )}
       </Button>
 
       {/* Segmented control for mode selection */}
-      <div className="flex items-center rounded-full border border-[hsl(216_20%_90%)] bg-white overflow-hidden">
+      <div className="flex items-center rounded-full border border-border bg-white overflow-hidden h-9">
         <button
           onClick={() => onModeChange('transcribe')}
           className={cn(
-            "px-4 py-2 text-[13px] font-medium transition-colors",
+            "px-3.5 h-full text-[13px] font-medium transition-colors",
             mode === 'transcribe'
-              ? "bg-[hsl(5_85%_92%)] text-foreground"
-              : "bg-white text-foreground/70 hover:bg-sidebar"
+              ? "bg-brand/10 text-foreground"
+              : "bg-white text-foreground/60 hover:bg-muted hover:text-foreground/80"
           )}
         >
           Transcribing
@@ -60,10 +60,10 @@ export const RecordingModeButton = ({
         <button
           onClick={() => onModeChange('dictate')}
           className={cn(
-            "px-4 py-2 text-[13px] font-medium transition-colors",
+            "px-3.5 h-full text-[13px] font-medium transition-colors",
             mode === 'dictate'
-              ? "bg-[hsl(5_85%_92%)] text-foreground"
-              : "bg-white text-foreground/70 hover:bg-sidebar"
+              ? "bg-brand/10 text-foreground"
+              : "bg-white text-foreground/60 hover:bg-muted hover:text-foreground/80"
           )}
         >
           Dictating
