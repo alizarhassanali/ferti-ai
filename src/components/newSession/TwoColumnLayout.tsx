@@ -6,28 +6,22 @@ import { NoteTab as NoteTabType, RecordingMode } from '@/types/session';
 import { RightColumnPanel } from './RightColumnPanel';
 
 interface TwoColumnLayoutProps {
-  // Recording mode
   recordingMode: RecordingMode;
-  
-  // Transcript
   transcriptContent: string;
   onTranscriptChange: (content: string) => void;
   isRecording: boolean;
-  
-  // Context
   contextContent: string;
   onContextChange: (content: string) => void;
-  
-  // Note tabs
   noteTabs: NoteTabType[];
   activeNoteTabId: string;
   onNoteTabsChange: (tabs: NoteTabType[]) => void;
   onActiveNoteTabChange: (tabId: string) => void;
-  
-  // Generation
   isGenerating: boolean;
   hasContent: boolean;
   onGenerate: (templateId: string) => void;
+  sessionId?: string;
+  patientName?: string;
+  sessionDate?: Date;
 }
 
 export const TwoColumnLayout = ({
@@ -44,6 +38,9 @@ export const TwoColumnLayout = ({
   isGenerating,
   hasContent,
   onGenerate,
+  sessionId,
+  patientName,
+  sessionDate,
 }: TwoColumnLayoutProps) => {
   const [rightView, setRightView] = useState<'context' | 'note'>('context');
   
@@ -109,6 +106,9 @@ export const TwoColumnLayout = ({
             isGenerating={isGenerating}
             hasContent={hasContent}
             onGenerate={onGenerate}
+            sessionId={sessionId}
+            patientName={patientName}
+            sessionDate={sessionDate}
           />
         </ResizablePanel>
       </ResizablePanelGroup>
