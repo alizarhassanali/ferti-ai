@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -43,6 +44,7 @@ const demoMeetings: ScheduledMeeting[] = [{
 }];
 
 export const SessionList = () => {
+  const navigate = useNavigate();
   const {
     sessions,
     deleteSession
@@ -97,6 +99,8 @@ export const SessionList = () => {
 
   const handleSessionClick = (id: string) => {
     setSelectedSessionId(id);
+    // Navigate to NewSession workspace with this session loaded
+    navigate(`/new-session?id=${id}`);
   };
 
   const handleCancelSelection = () => {

@@ -1,31 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
+
+interface ProfileFormState {
+  title: string;
+  firstName: string;
+  lastName: string;
+  specialty: string;
+  clinicName: string;
+  role: UserRole;
+  // Signature settings
+  signatureName: string;
+  signatureTitle: string;
+  signatureSpecialty: string;
+  signatureEmail: string;
+  signatureCountryCode: string;
+  signaturePhone: string;
+  includeClinicName: boolean;
+  // Language & time
+  displayLanguage: string;
+  dateFormat: string;
+}
+
 export const ProfileSettings = () => {
-  const {
-    user,
-    updateProfile,
-    isSaving
-  } = useSettings();
-  const {
-    toast
-  } = useToast();
-  const [formData, setFormData] = useState({
+  const { user, updateProfile, isSaving } = useSettings();
+  const { toast } = useToast();
+  
+  const getInitialState = (): ProfileFormState => ({
     title: user.title || 'Dr.',
     firstName: user.firstName,
     lastName: user.lastName,
     specialty: user.specialty || 'Fertility Specialist',
     clinicName: user.clinicName || user.clinic || '',
-    role: user.role as UserRole
+    role: user.role as UserRole,
+    signatureName: '',
+    signatureTitle: '',
+    signatureSpecialty: '',
+    signatureEmail: '',
+    signatureCountryCode: '+1',
+    signaturePhone: '',
+    includeClinicName: false,
+    displayLanguage: 'English',
+    dateFormat: 'MM/DD/YYYY',
   });
+
+  const [formData, setFormData] = useState<ProfileFormState>(getInitialState);
+  const [initialData, setInitialData] = useState<ProfileFormState>(getInitialState);
   const [imagePreview, setImagePreview] = useState<string | undefined>(user.profileImage);
+  const [localSaving, setLocalSaving] = useState(false);
+
+  const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -33,7 +66,7 @@ export const ProfileSettings = () => {
         toast({
           title: 'File too large',
           description: 'Please upload an image under 5MB',
-          variant: 'destructive'
+          variant: 'destructive',
         });
         return;
       }
@@ -44,32 +77,43 @@ export const ProfileSettings = () => {
       reader.readAsDataURL(file);
     }
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const handleSave = async () => {
+    setLocalSaving(true);
     try {
       await updateProfile(formData);
+      setInitialData(formData);
       toast({
         title: 'Profile updated',
-        description: 'Your profile has been successfully updated.'
+        description: 'Your profile has been successfully updated.',
       });
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to update profile. Please try again.',
-        variant: 'destructive'
+        variant: 'destructive',
       });
+    } finally {
+      setLocalSaving(false);
     }
   };
+
+  const handleCancel = () => {
+    setFormData(initialData);
+  };
+
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName[0]}${lastName[0]}`.toUpperCase();
   };
-  return <div className="w-full">
+
+  return (
+    <div className="w-full">
       <div className="mb-8">
-        <h3 className="text-lg font-semibold text-foreground mb-1">Personal</h3>
-        <p className="text-sm text-muted-foreground">Manage your personal information and profile</p>
+        <h3 className="text-lg font-semibold text-foreground mb-1">Profile</h3>
+        <p className="text-sm text-muted-foreground">Manage your personal information and preferences</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="space-y-8">
         {/* Account Info */}
         <div className="pb-6 border-b border-border">
           <h4 className="text-sm font-semibold text-foreground mb-2">Account</h4>
@@ -81,7 +125,7 @@ export const ProfileSettings = () => {
         </div>
 
         {/* About You Section */}
-        <div>
+        <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-6">About you</h4>
 
           {/* Profile Image */}
@@ -96,7 +140,7 @@ export const ProfileSettings = () => {
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Upload a JPG or PNG image up to 5MB. Shows in the template community.
+                  Upload a JPG or PNG image up to 5MB.
                 </p>
                 <label htmlFor="image-upload">
                   <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
@@ -115,10 +159,7 @@ export const ProfileSettings = () => {
           <div className="grid grid-cols-[120px_1fr_1fr] gap-4 mb-4">
             <div>
               <Label htmlFor="title" className="text-sm font-medium mb-2 block">Title</Label>
-              <Select value={formData.title} onValueChange={value => setFormData({
-              ...formData,
-              title: value
-            })}>
+              <Select value={formData.title} onValueChange={value => setFormData({ ...formData, title: value })}>
                 <SelectTrigger id="title">
                   <SelectValue />
                 </SelectTrigger>
@@ -133,27 +174,18 @@ export const ProfileSettings = () => {
             </div>
             <div>
               <Label htmlFor="firstName" className="text-sm font-medium mb-2 block">First name</Label>
-              <Input id="firstName" value={formData.firstName} onChange={e => setFormData({
-              ...formData,
-              firstName: e.target.value
-            })} required />
+              <Input id="firstName" value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} required />
             </div>
             <div>
               <Label htmlFor="lastName" className="text-sm font-medium mb-2 block">Last name</Label>
-              <Input id="lastName" value={formData.lastName} onChange={e => setFormData({
-              ...formData,
-              lastName: e.target.value
-            })} required />
+              <Input id="lastName" value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} required />
             </div>
           </div>
 
           {/* Specialty */}
           <div className="mb-4">
             <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
-            <Select value={formData.specialty} onValueChange={value => setFormData({
-            ...formData,
-            specialty: value
-          })}>
+            <Select value={formData.specialty} onValueChange={value => setFormData({ ...formData, specialty: value })}>
               <SelectTrigger id="specialty">
                 <SelectValue />
               </SelectTrigger>
@@ -171,17 +203,11 @@ export const ProfileSettings = () => {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
-              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({
-              ...formData,
-              clinicName: e.target.value
-            })} placeholder="Enter your clinic name" />
+              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
             </div>
             <div>
               <Label htmlFor="role" className="text-sm font-medium mb-2 block">Your role</Label>
-              <Select value={formData.role} onValueChange={value => setFormData({
-              ...formData,
-              role: value as UserRole
-            })}>
+              <Select value={formData.role} onValueChange={value => setFormData({ ...formData, role: value as UserRole })}>
                 <SelectTrigger id="role">
                   <SelectValue />
                 </SelectTrigger>
@@ -198,13 +224,13 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Country Field */}
-          <div className="mb-4">
+          <div>
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Country</Label>
               <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors" onClick={() => toast({
-              title: "Country setting",
-              description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
-            })}>
+                title: "Country setting",
+                description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
+              })}>
                 Why can't I change this?
               </button>
             </div>
@@ -214,19 +240,73 @@ export const ProfileSettings = () => {
           </div>
         </div>
 
+        {/* Signature Settings Section */}
+        <div className="border border-border rounded-lg p-6 bg-card">
+          <h4 className="text-sm font-semibold text-foreground mb-1">Signature Settings</h4>
+          <p className="text-sm text-muted-foreground mb-6">
+            Configure the signature that appears on your generated notes and letters.
+          </p>
+          
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="signatureName" className="text-sm font-medium mb-2 block">Name</Label>
+                <Input id="signatureName" value={formData.signatureName} onChange={(e) => setFormData({ ...formData, signatureName: e.target.value })} placeholder="Enter your name" />
+              </div>
+              <div>
+                <Label htmlFor="signatureTitle" className="text-sm font-medium mb-2 block">Title</Label>
+                <Input id="signatureTitle" value={formData.signatureTitle} onChange={(e) => setFormData({ ...formData, signatureTitle: e.target.value })} placeholder="Enter your title" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="signatureSpecialty" className="text-sm font-medium mb-2 block">Specialty</Label>
+                <Input id="signatureSpecialty" value={formData.signatureSpecialty} onChange={(e) => setFormData({ ...formData, signatureSpecialty: e.target.value })} placeholder="Enter your specialty" />
+              </div>
+              <div>
+                <Label htmlFor="signatureEmail" className="text-sm font-medium mb-2 block">Email</Label>
+                <Input id="signatureEmail" type="email" value={formData.signatureEmail} onChange={(e) => setFormData({ ...formData, signatureEmail: e.target.value })} placeholder="Enter your email" />
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Phone Number</Label>
+              <div className="flex gap-2">
+                <Select value={formData.signatureCountryCode} onValueChange={(value) => setFormData({ ...formData, signatureCountryCode: value })}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="+1">+1</SelectItem>
+                    <SelectItem value="+44">+44</SelectItem>
+                    <SelectItem value="+33">+33</SelectItem>
+                    <SelectItem value="+49">+49</SelectItem>
+                    <SelectItem value="+61">+61</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input value={formData.signaturePhone} onChange={(e) => setFormData({ ...formData, signaturePhone: e.target.value })} placeholder="Enter phone number" className="flex-1" />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox id="includeClinicName" checked={formData.includeClinicName} onCheckedChange={(checked) => setFormData({ ...formData, includeClinicName: checked as boolean })} />
+              <Label htmlFor="includeClinicName" className="text-sm font-medium cursor-pointer">Include Clinic Name</Label>
+            </div>
+          </div>
+        </div>
+
         {/* Language & Time Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
           <p className="text-sm text-muted-foreground mb-6">
-            Change the language used in the FertiAI interface.
+            Change the language used in the interface.
           </p>
           
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">
-                Display language
-              </Label>
-              <Select defaultValue="English">
+              <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
+              <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
                 <SelectTrigger id="displayLanguage">
                   <SelectValue />
                 </SelectTrigger>
@@ -237,10 +317,8 @@ export const ProfileSettings = () => {
               </Select>
             </div>
             <div>
-              <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">
-                Date format
-              </Label>
-              <Select defaultValue="MM/DD/YYYY">
+              <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">Date format</Label>
+              <Select value={formData.dateFormat} onValueChange={(value) => setFormData({ ...formData, dateFormat: value })}>
                 <SelectTrigger id="dateFormat">
                   <SelectValue />
                 </SelectTrigger>
@@ -254,12 +332,16 @@ export const ProfileSettings = () => {
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="pt-6">
-          <Button type="submit" disabled={isSaving} className="min-w-32">
-            {isSaving ? 'Saving...' : 'Save Changes'}
+        {/* Save / Cancel Buttons */}
+        <div className="flex items-center gap-3 pt-4 border-t border-border">
+          <Button onClick={handleSave} disabled={!hasChanges || localSaving || isSaving}>
+            {localSaving || isSaving ? 'Saving...' : 'Save Changes'}
+          </Button>
+          <Button variant="outline" onClick={handleCancel} disabled={!hasChanges || localSaving || isSaving}>
+            Cancel
           </Button>
         </div>
-      </form>
-    </div>;
+      </div>
+    </div>
+  );
 };

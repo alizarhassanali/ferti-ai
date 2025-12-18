@@ -1,4 +1,4 @@
-import { User, Shield, Database, BarChart3, Brain, Monitor } from 'lucide-react';
+import { User, Shield, Brain, Lock } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { UserRole } from '@/types/user';
 
@@ -11,11 +11,9 @@ interface SettingsCategory {
 
 const settingsCategories: SettingsCategory[] = [
   { id: 'profile', label: 'Profile', icon: User, roles: 'all' },
-  { id: 'usage', label: 'Usage', icon: BarChart3, roles: 'all' },
-  { id: 'memory-ai', label: 'Memory & AI Settings', icon: Brain, roles: 'all' },
-  { id: 'display-controls', label: 'Display Controls', icon: Monitor, roles: 'all' },
+  { id: 'ai-settings', label: 'AI Settings', icon: Brain, roles: 'all' },
+  { id: 'privacy', label: 'Privacy', icon: Lock, roles: 'all' },
   { id: 'security', label: 'Security', icon: Shield, roles: 'all' },
-  { id: 'data-settings', label: 'Data Management', icon: Database, roles: 'all' },
 ];
 
 export const MiddlePane = () => {
