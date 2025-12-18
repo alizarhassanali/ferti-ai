@@ -1,4 +1,4 @@
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Send, Download, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -6,12 +6,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
 import { TEMPLATES } from '@/data/demoContent';
 import { useState } from 'react';
+import { useLetters } from '@/contexts/LettersContext';
+import { Badge } from '@/components/ui/badge';
 
 interface NoteTabProps {
   tabs: NoteTabType[];
@@ -21,6 +24,9 @@ interface NoteTabProps {
   isGenerating: boolean;
   hasContent: boolean;
   onGenerate: (templateId: string) => void;
+  sessionId?: string;
+  patientName?: string;
+  sessionDate?: Date;
 }
 
 export const NoteTab = ({
@@ -31,13 +37,21 @@ export const NoteTab = ({
   isGenerating,
   hasContent,
   onGenerate,
+  sessionId,
+  patientName,
+  sessionDate,
 }: NoteTabProps) => {
   const { toast } = useToast();
+  const { createLetter, getLetterBySessionId } = useLetters();
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
 
   // Get the current tab's template ID
   const currentTemplateId = activeTab?.templateId || '';
+  
+  // Check if this session already has a letter
+  const existingLetter = sessionId ? getLetterBySessionId(sessionId) : undefined;
+  const hasGeneratedContent = activeTab?.content && activeTab.content.trim().length > 0;
 
   const handleTemplateSelect = (templateId: string) => {
     // Update the tab's templateId
@@ -96,6 +110,58 @@ export const NoteTab = ({
       toast({
         title: "Copied",
         description: "Note content copied to clipboard.",
+      });
+    }
+  };
+
+  const handleSendNow = () => {
+    if (activeTab?.content && sessionId) {
+      // Create letter and immediately mark as sent
+      createLetter({
+        sessionId,
+        patientName: patientName || 'Unknown Patient',
+        sessionDate: sessionDate || new Date(),
+        templateType: selectedTemplate?.name || 'Clinical Note',
+        content: activeTab.content,
+      });
+      toast({
+        title: "Letter sent",
+        description: "The letter has been sent directly.",
+      });
+    }
+  };
+
+  const handleDownload = () => {
+    if (activeTab?.content) {
+      // Create a blob and download
+      const blob = new Blob([activeTab.content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${patientName || 'note'}-${selectedTemplate?.name || 'clinical-note'}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast({
+        title: "Downloaded",
+        description: "Note has been downloaded.",
+      });
+    }
+  };
+
+  const handleApproveAndSendToLetters = () => {
+    if (activeTab?.content && sessionId) {
+      createLetter({
+        sessionId,
+        patientName: patientName || 'Unknown Patient',
+        sessionDate: sessionDate || new Date(),
+        templateType: selectedTemplate?.name || 'Clinical Note',
+        content: activeTab.content,
+      });
+      toast({
+        title: "Approved & sent to Letters",
+        description: "The note has been approved and sent to admin for dispatch.",
       });
     }
   };
@@ -228,6 +294,40 @@ export const NoteTab = ({
             placeholder="Select a template above to generate a note"
             className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed"
           />
+        )}
+
+        {/* Letter Actions - Show when note has content */}
+        {hasGeneratedContent && !isGenerating && (
+          <div className="mt-4 pt-4 border-t border-border">
+            {existingLetter ? (
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
+                  <CheckCircle className="h-3 w-3" />
+                  {existingLetter.status === 'sent' ? 'Sent' : 
+                   existingLetter.status === 'returned' ? 'Returned by admin' : 
+                   'Approved & pending'}
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  This note has been sent to Letters
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="gap-2" onClick={handleSendNow}>
+                  <Send className="h-4 w-4" />
+                  Send now
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" onClick={handleDownload}>
+                  <Download className="h-4 w-4" />
+                  Download
+                </Button>
+                <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                  <CheckCircle className="h-4 w-4" />
+                  Approve & send to Letters
+                </Button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

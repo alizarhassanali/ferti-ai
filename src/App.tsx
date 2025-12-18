@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionsProvider } from "./contexts/SessionsContext";
 import { PatientsProvider } from "./contexts/PatientsContext";
 import { SessionsPanelProvider } from "./contexts/SessionsPanelContext";
+import { LettersProvider } from "./contexts/LettersContext";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
@@ -14,7 +15,7 @@ import TemplateDetail from "./pages/TemplateDetail";
 import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
-import Team from "./pages/Team";
+import Letters from "./pages/Letters";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,27 +24,29 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <SessionsProvider>
       <PatientsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <SessionsPanelProvider>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/new-session" element={<NewSession />} />
-                <Route path="/sessions" element={<ViewSessions />} />
-                <Route path="/ai-assistant" element={<AIAssistant />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/my-templates" element={<MyTemplates />} />
-                <Route path="/template-hub" element={<TemplateHub />} />
-                <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
-                <Route path="/team" element={<Team />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </SessionsPanelProvider>
-          </BrowserRouter>
-        </TooltipProvider>
+        <LettersProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <SessionsPanelProvider>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/new-session" element={<NewSession />} />
+                  <Route path="/sessions" element={<ViewSessions />} />
+                  <Route path="/ai-assistant" element={<AIAssistant />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/my-templates" element={<MyTemplates />} />
+                  <Route path="/template-hub" element={<TemplateHub />} />
+                  <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
+                  <Route path="/letters" element={<Letters />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </SessionsPanelProvider>
+            </BrowserRouter>
+          </TooltipProvider>
+        </LettersProvider>
       </PatientsProvider>
     </SessionsProvider>
   </QueryClientProvider>

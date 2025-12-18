@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send, PenLine } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send, PenLine, Download, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
 import { availableTemplates } from '@/data/templates';
+import { useLetters } from '@/contexts/LettersContext';
 
 interface AttachedFile {
   id: string;
@@ -35,6 +37,9 @@ interface RightColumnPanelProps {
   isGenerating: boolean;
   hasContent: boolean;
   onGenerate: (templateId: string) => void;
+  sessionId?: string;
+  patientName?: string;
+  sessionDate?: Date;
 }
 
 export const RightColumnPanel = ({
@@ -49,8 +54,12 @@ export const RightColumnPanel = ({
   isGenerating,
   hasContent,
   onGenerate,
+  sessionId,
+  patientName,
+  sessionDate,
 }: RightColumnPanelProps) => {
   const { toast } = useToast();
+  const { createLetter, getLetterBySessionId } = useLetters();
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -58,6 +67,57 @@ export const RightColumnPanel = ({
   const activeTab = noteTabs.find(t => t.id === activeNoteTabId) || noteTabs[0];
   const currentTemplateId = activeTab?.templateId || '';
   const selectedTemplate = availableTemplates.find(t => t.id === currentTemplateId);
+  
+  // Letter workflow
+  const existingLetter = sessionId ? getLetterBySessionId(sessionId) : undefined;
+  const hasGeneratedContent = activeTab?.content && activeTab.content.trim().length > 0;
+
+  const handleSendNow = () => {
+    if (activeTab?.content && sessionId) {
+      const letter = createLetter({
+        sessionId,
+        patientName: patientName || 'Unknown Patient',
+        sessionDate: sessionDate || new Date(),
+        templateType: selectedTemplate?.name || 'Clinical Note',
+        content: activeTab.content,
+      });
+      toast({
+        title: "Letter sent",
+        description: "The letter has been sent directly.",
+      });
+    }
+  };
+
+  const handleDownloadNote = () => {
+    if (activeTab?.content) {
+      const blob = new Blob([activeTab.content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${patientName || 'note'}-${selectedTemplate?.name || 'clinical-note'}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast({ title: "Downloaded", description: "Note has been downloaded." });
+    }
+  };
+
+  const handleApproveAndSendToLetters = () => {
+    if (activeTab?.content && sessionId) {
+      createLetter({
+        sessionId,
+        patientName: patientName || 'Unknown Patient',
+        sessionDate: sessionDate || new Date(),
+        templateType: selectedTemplate?.name || 'Clinical Note',
+        content: activeTab.content,
+      });
+      toast({
+        title: "Approved & sent to Letters",
+        description: "The note has been approved and sent to admin for dispatch.",
+      });
+    }
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -472,12 +532,48 @@ export const RightColumnPanel = ({
 
             {/* Note textarea - show when not generating and either has content or no warning */}
             {!isGenerating && (!showNoContentWarning || activeTab?.content) && (
-              <Textarea
-                value={activeTab?.content || ''}
-                onChange={(e) => updateTabContent(e.target.value)}
-                placeholder="Select a template above to generate a note"
-                className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed whitespace-pre-wrap"
-              />
+              <>
+                <Textarea
+                  value={activeTab?.content || ''}
+                  onChange={(e) => updateTabContent(e.target.value)}
+                  placeholder="Select a template above to generate a note"
+                  className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed whitespace-pre-wrap"
+                />
+                
+                {/* Letter Actions */}
+                {hasGeneratedContent && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    {existingLetter ? (
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
+                          <CheckCircle className="h-3 w-3" />
+                          {existingLetter.status === 'sent' ? 'Sent' : 
+                           existingLetter.status === 'returned' ? 'Returned by admin' : 
+                           'Approved & pending'}
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">
+                          This note has been sent to Letters
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" className="gap-2" onClick={handleSendNow}>
+                          <Send className="h-4 w-4" />
+                          Send now
+                        </Button>
+                        <Button variant="outline" size="sm" className="gap-2" onClick={handleDownloadNote}>
+                          <Download className="h-4 w-4" />
+                          Download
+                        </Button>
+                        <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                          <CheckCircle className="h-4 w-4" />
+                          Approve & send to Letters
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

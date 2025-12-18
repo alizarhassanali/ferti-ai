@@ -333,6 +333,9 @@ const NewSession = () => {
             isGenerating={isGenerating}
             hasContent={hasContent}
             onGenerate={handleGenerate}
+            sessionId={currentSessionId || undefined}
+            patientName={selectedPatient?.name}
+            sessionDate={sessionDate}
           />
         </div>
 
