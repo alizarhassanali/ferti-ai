@@ -20,11 +20,11 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
   const getMeetingIcon = () => {
     switch (meeting.meetingType) {
       case 'teams':
-        return <Video className="h-5 w-5 text-[#6264A7]" />;
+        return <Video className="h-4 w-4 text-[#6264A7]" />;
       case 'zoom':
-        return <Video className="h-5 w-5 text-[#2D8CFF]" />;
+        return <Video className="h-4 w-4 text-[#2D8CFF]" />;
       default:
-        return <MapPin className="h-5 w-5 text-muted-foreground" />;
+        return <MapPin className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
@@ -40,61 +40,61 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
   };
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 hover:shadow-md transition-shadow relative overflow-hidden">
+    <div className="bg-card border border-border rounded-lg p-3 hover:shadow-md transition-shadow relative overflow-hidden">
       {/* Teams accent border */}
       {meeting.meetingType === 'teams' && (
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#6264A7]" />
       )}
       
-      <div className="pl-3 space-y-3">
+      <div className="pl-2 space-y-2">
         {/* Title with icon */}
         <div className="flex items-start gap-2">
           {getMeetingIcon()}
-          <h3 className="font-semibold text-base flex-1">{meeting.title}</h3>
+          <h3 className="font-medium text-sm flex-1 truncate">{meeting.title}</h3>
         </div>
 
         {/* Meeting details */}
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <User className="h-4 w-4" />
+        <div className="space-y-1 text-xs">
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <User className="h-3 w-3" />
             <span>Patient: <span className="text-foreground font-medium">{meeting.patientName}</span></span>
           </div>
           
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Calendar className="h-4 w-4" />
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Calendar className="h-3 w-3" />
             <span>{meeting.date}</span>
           </div>
           
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Clock className="h-4 w-4" />
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <Clock className="h-3 w-3" />
             <span>{meeting.time}</span>
           </div>
           
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            <span>{meeting.location}</span>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <MapPin className="h-3 w-3" />
+            <span className="truncate">{meeting.location}</span>
           </div>
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex items-center gap-1.5 pt-1">
           {meeting.meetingLink && (
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2"
+              className="gap-1 h-7 text-xs px-2"
               onClick={handleJoinMeeting}
             >
-              <ExternalLink className="h-4 w-4" />
-              Join Meeting
+              <ExternalLink className="h-3 w-3" />
+              Join
             </Button>
           )}
           <Button 
             size="sm" 
-            className="gap-2"
+            className="gap-1 h-7 text-xs px-2"
             onClick={handleStartSession}
           >
-            Start Session
+            Start
           </Button>
         </div>
       </div>
