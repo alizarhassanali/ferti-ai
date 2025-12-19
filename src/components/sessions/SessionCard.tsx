@@ -62,7 +62,7 @@ export const SessionCard = ({
           ? 'bg-[hsl(5_85%_92%)] border-brand/30' 
           : isActive 
             ? 'bg-[hsl(5_85%_92%)] border-brand/30 shadow-sm' 
-            : 'bg-white border-[hsl(216_20%_90%)] hover:shadow-md hover:border-[hsl(216_20%_85%)]'
+            : 'bg-transparent border-transparent hover:bg-white hover:border-[hsl(216_20%_90%)] hover:shadow-md'
         }
       `}
       onClick={onClick}
