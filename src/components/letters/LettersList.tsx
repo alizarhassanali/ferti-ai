@@ -41,7 +41,7 @@ export const LettersList = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-content border-r border-border w-80 relative">
+    <div className="h-full flex flex-col bg-card border-r border-border w-80 relative">
       {/* Header */}
       <div className="p-6 pb-2">
         <h2 className="text-2xl font-bold text-foreground mb-1">Letters</h2>
