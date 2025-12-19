@@ -14,7 +14,11 @@ const Index = () => {
         <p className="text-xl text-muted-foreground mb-8">
           AI-powered clinical documentation for healthcare
         </p>
-        <Button onClick={() => navigate('/new-session')} size="lg">
+        <Button 
+          onClick={() => navigate('/new-session')} 
+          size="lg"
+          className="bg-session-action hover:bg-session-action/90 text-session-action-foreground"
+        >
           <ArrowRight className="mr-2 h-5 w-5" />
           Open FertiAI
         </Button>
