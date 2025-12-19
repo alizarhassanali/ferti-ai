@@ -59,6 +59,7 @@ export const SessionList = () => {
   const [showSort, setShowSort] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const groupSessionsByDate = (sessionsList: typeof sessions) => {
     const grouped: Record<string, typeof sessions> = {};
@@ -128,20 +129,23 @@ export const SessionList = () => {
 
   return (
     <div className="h-full flex flex-col bg-content border-r border-border w-96 relative">
-      {/* Search & Controls */}
+      {/* Controls */}
       <div className="p-4 border-b border-border space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
-          <Input 
-            value={searchQuery} 
-            onChange={e => setSearchQuery(e.target.value)} 
-            placeholder="Search sessions..." 
-            className="pl-9 bg-white border-[hsl(216_20%_90%)] focus:border-primary" 
-          />
-        </div>
-
         <TooltipProvider delayDuration={300}>
           <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSearch ? 'bg-sidebar text-foreground' : ''}`}
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Search</TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
@@ -182,6 +186,19 @@ export const SessionList = () => {
             </Tooltip>
           </div>
         </TooltipProvider>
+
+        {showSearch && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/60" />
+            <Input 
+              value={searchQuery} 
+              onChange={e => setSearchQuery(e.target.value)} 
+              placeholder="Search sessions..." 
+              className="pl-9 bg-white border-[hsl(216_20%_90%)] focus:border-primary" 
+              autoFocus
+            />
+          </div>
+        )}
 
         {showFilters && <SessionFilters />}
         {showSort && <SessionSort />}
