@@ -93,7 +93,13 @@ export const SessionList = () => {
   };
 
   const filteredSessions = sessions.filter(session => session.title.toLowerCase().includes(searchQuery.toLowerCase()) || session.patientName?.toLowerCase().includes(searchQuery.toLowerCase()));
-  const groupedSessions = groupSessionsByDate(filteredSessions);
+  
+  // Split sessions into drafts (no notes) and completed (has notes)
+  const draftSessions = filteredSessions.filter(session => !session.hasNotes);
+  const completedSessions = filteredSessions.filter(session => session.hasNotes);
+  
+  const groupedDraftSessions = groupSessionsByDate(draftSessions);
+  const groupedCompletedSessions = groupSessionsByDate(completedSessions);
 
   const handleSelectSession = (id: string) => {
     setSelectedSessions(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]);
@@ -205,7 +211,7 @@ export const SessionList = () => {
       </div>
 
       {/* Tabs - Underline style */}
-      <Tabs defaultValue="past" className="flex-1 flex flex-col overflow-hidden">
+      <Tabs defaultValue="drafts" className="flex-1 flex flex-col overflow-hidden">
         <TabsList className="w-full justify-start bg-transparent border-b border-border px-4 h-auto py-0 rounded-none">
           <TabsTrigger 
             value="schedule" 
@@ -214,7 +220,13 @@ export const SessionList = () => {
             Scheduled
           </TabsTrigger>
           <TabsTrigger 
-            value="past" 
+            value="drafts" 
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground text-sm px-3 py-2 hover:text-foreground/80 hover:border-sidebar"
+          >
+            Drafts
+          </TabsTrigger>
+          <TabsTrigger 
+            value="sessions" 
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground text-sm px-3 py-2 hover:text-foreground/80 hover:border-sidebar"
           >
             Sessions
@@ -239,13 +251,13 @@ export const SessionList = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="past" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
-          {Object.entries(groupedSessions).length === 0 ? (
+        <TabsContent value="drafts" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+          {Object.entries(groupedDraftSessions).length === 0 ? (
             <div className="text-center text-foreground/60 py-8">
-              No sessions found
+              No draft sessions
             </div>
           ) : (
-            Object.entries(groupedSessions).map(([date, sessionGroup]) => (
+            Object.entries(groupedDraftSessions).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
                   📅 {date}
@@ -263,7 +275,54 @@ export const SessionList = () => {
                           year: 'numeric'
                         }),
                         time: session.time,
-                        status: session.status === 'complete' ? 'complete' : session.status === 'error' ? 'review' : 'draft',
+                        status: 'draft',
+                        patientId: session.patientId,
+                        patientName: session.patientName
+                      }} 
+                      isSelected={selectedSessions.includes(session.id)} 
+                      isActive={selectedSessionId === session.id} 
+                      onSelect={() => handleSelectSession(session.id)} 
+                      onClick={() => handleSessionClick(session.id)} 
+                      patientSessions={getSessionsForPatient(session.patientId)} 
+                      onSessionClick={handleSessionClick} 
+                      onDeleteAllPatientSessions={() => {
+                        if (session.patientId && session.patientName) {
+                          handleDeleteAllPatientSessions(session.patientId, session.patientName);
+                        }
+                      }} 
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="sessions" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+          {Object.entries(groupedCompletedSessions).length === 0 ? (
+            <div className="text-center text-foreground/60 py-8">
+              No completed sessions
+            </div>
+          ) : (
+            Object.entries(groupedCompletedSessions).map(([date, sessionGroup]) => (
+              <div key={date} className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
+                  📅 {date}
+                </div>
+                <div className="space-y-2">
+                  {sessionGroup.map(session => (
+                    <SessionCard 
+                      key={session.id} 
+                      session={{
+                        id: session.id,
+                        title: session.title,
+                        date: new Date(session.date).toLocaleDateString('en-US', {
+                          month: '2-digit',
+                          day: '2-digit',
+                          year: 'numeric'
+                        }),
+                        time: session.time,
+                        status: 'complete',
                         patientId: session.patientId,
                         patientName: session.patientName
                       }} 
