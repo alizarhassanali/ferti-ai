@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CheckCircle2, AlertCircle, FileText, ChevronDown, Trash2 } from 'lucide-react';
+import { CheckCircle2, AlertCircle, FileText, Plus, Minus, Trash2 } from 'lucide-react';
 import { Session } from '@/types/session';
 import { Button } from '@/components/ui/button';
 import {
@@ -136,28 +136,27 @@ export const SessionCard = ({
           <div className="flex items-center gap-2">
             <StatusIcon className={`h-4 w-4 shrink-0 stroke-[1.5] ${statusConfig[session.status].color}`} />
             <h4 className="text-base font-medium text-foreground truncate flex-1">{session.title}</h4>
+            {/* Expand button for linked patient sessions - next to name */}
+            {hasLinkedPatient && (
+              <button
+                onClick={handleExpandClick}
+                className="p-0.5 rounded hover:bg-foreground/10 transition-colors"
+              >
+                {isExpanded ? (
+                  <Minus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
+                ) : (
+                  <Plus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
+                )}
+              </button>
+            )}
             <span className="text-xs text-foreground/50 shrink-0">{session.time}</span>
           </div>
         </div>
-
-        {/* Expand button for linked patient sessions */}
-        {hasLinkedPatient && (
-          <button
-            onClick={handleExpandClick}
-            className="p-1 rounded hover:bg-foreground/10 transition-colors"
-          >
-            <ChevronDown 
-              className={`h-4 w-4 text-foreground/50 stroke-[1.5] transition-transform duration-200 ${
-                isExpanded ? 'rotate-180' : ''
-              }`} 
-            />
-          </button>
-        )}
       </div>
 
       {/* Expanded past sessions */}
       {hasLinkedPatient && isExpanded && (
-        <div className="ml-10 mt-1 mb-2 bg-white border border-[hsl(216_20%_90%)] rounded-lg overflow-hidden">
+        <div className="mt-1 mb-2 bg-white border border-[hsl(216_20%_90%)] rounded-lg overflow-hidden">
           <div className="px-3 py-2 border-b border-[hsl(216_20%_90%)] bg-sidebar/50">
             <span className="text-xs font-medium text-foreground/60">Past sessions</span>
           </div>
