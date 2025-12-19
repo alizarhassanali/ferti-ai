@@ -1,55 +1,69 @@
 import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-
-const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', flag: '🇫🇷' },
-  { code: 'de', name: 'German', flag: '🇩🇪' },
-  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-  { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },
-  { code: 'it', name: 'Italian', flag: '🇮🇹' },
-  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
-];
-
+const languages = [{
+  code: 'en',
+  name: 'English',
+  flag: '🇺🇸'
+}, {
+  code: 'es',
+  name: 'Spanish',
+  flag: '🇪🇸'
+}, {
+  code: 'fr',
+  name: 'French',
+  flag: '🇫🇷'
+}, {
+  code: 'de',
+  name: 'German',
+  flag: '🇩🇪'
+}, {
+  code: 'zh',
+  name: 'Chinese',
+  flag: '🇨🇳'
+}, {
+  code: 'ja',
+  name: 'Japanese',
+  flag: '🇯🇵'
+}, {
+  code: 'ko',
+  name: 'Korean',
+  flag: '🇰🇷'
+}, {
+  code: 'pt',
+  name: 'Portuguese',
+  flag: '🇵🇹'
+}, {
+  code: 'it',
+  name: 'Italian',
+  flag: '🇮🇹'
+}, {
+  code: 'ru',
+  name: 'Russian',
+  flag: '🇷🇺'
+}];
 interface LanguageSelectorProps {
   inputLanguage: string;
   outputLanguage: string;
   onInputLanguageChange: (lang: string) => void;
   onOutputLanguageChange: (lang: string) => void;
 }
-
 export const LanguageSelector = ({
   inputLanguage,
   outputLanguage,
   onInputLanguageChange,
-  onOutputLanguageChange,
+  onOutputLanguageChange
 }: LanguageSelectorProps) => {
   const getLanguageDisplay = (code: string) => {
     const lang = languages.find(l => l.code === code);
     return lang ? `${lang.flag} ${lang.name}` : code;
   };
-
-  return (
-    <Popover>
+  return <Popover>
       <PopoverTrigger asChild>
         {/* Language chip - pill style */}
-        <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-sidebar text-foreground rounded-full text-[13px] hover:bg-sidebar/80 transition-colors">
+        <button className="inline-flex items-center gap-2 px-3 py-1.5 text-foreground rounded-full text-[13px] transition-colors bg-white">
           <Globe className="h-3.5 w-3.5 stroke-[1.5]" />
           <span>{languages.find(l => l.code === inputLanguage)?.name || 'English'}</span>
         </button>
@@ -68,11 +82,9 @@ export const LanguageSelector = ({
                 <SelectValue>{getLanguageDisplay(inputLanguage)}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-white">
-                {languages.map(lang => (
-                  <SelectItem key={lang.code} value={lang.code}>
+                {languages.map(lang => <SelectItem key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
           </div>
@@ -87,16 +99,13 @@ export const LanguageSelector = ({
                 <SelectValue>{getLanguageDisplay(outputLanguage)}</SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-white">
-                {languages.map(lang => (
-                  <SelectItem key={lang.code} value={lang.code}>
+                {languages.map(lang => <SelectItem key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
           </div>
         </div>
       </PopoverContent>
-    </Popover>
-  );
+    </Popover>;
 };
