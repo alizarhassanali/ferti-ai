@@ -31,7 +31,7 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
           <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
             <GlobalSessionsPanel />
           </ResizablePanel>
-          <ResizableHandle withHandle />
+          <ResizableHandle withHandle className="[&>div]:mt-[180px]" />
           <ResizablePanel defaultSize={75}>
             {children}
           </ResizablePanel>
