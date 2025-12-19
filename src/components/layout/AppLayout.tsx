@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import { LeftPane } from '@/components/settings/LeftPane';
 import { GlobalSessionsPanel } from './GlobalSessionsPanel';
 import { useLocation } from 'react-router-dom';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 
 interface AppLayoutProps {
@@ -21,26 +20,19 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
   const shouldShowGlobalSessionsPanel = !hideGlobalSessionsPanel && 
     !ROUTES_WITHOUT_SESSIONS_PANEL.some(route => location.pathname.startsWith(route));
 
-  const showResizablePanel = shouldShowGlobalSessionsPanel && isSessionsPanelVisible;
+  const showSessionsPanel = shouldShowGlobalSessionsPanel && isSessionsPanelVisible;
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
       <LeftPane />
-      {showResizablePanel ? (
-        <ResizablePanelGroup direction="horizontal" className="flex-1">
-          <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-            <GlobalSessionsPanel />
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={75}>
-            {children}
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      ) : (
-        <div className="flex-1 overflow-hidden">
-          {children}
+      {showSessionsPanel && (
+        <div className="w-80 h-full flex-shrink-0">
+          <GlobalSessionsPanel />
         </div>
       )}
+      <div className="flex-1 overflow-hidden">
+        {children}
+      </div>
     </div>
   );
 };
