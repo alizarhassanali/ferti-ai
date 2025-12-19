@@ -2,7 +2,6 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { SessionList } from '@/components/sessions/SessionList';
 import { SessionDetail } from '@/components/sessions/SessionDetail';
 import { SessionsLayoutProvider, useSessionsLayout } from '@/contexts/SessionsLayoutContext';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 
 const ViewSessionsContent = () => {
   const { isSessionsListVisible } = useSessionsLayout();
@@ -10,22 +9,17 @@ const ViewSessionsContent = () => {
   return (
     <AppLayout hideGlobalSessionsPanel>
       <div className="flex h-screen overflow-hidden bg-background w-full">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          {/* Middle Pane - Sessions List */}
-          {isSessionsListVisible && (
-            <>
-              <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-                <SessionList />
-              </ResizablePanel>
-              <ResizableHandle withHandle />
-            </>
-          )}
+        {/* Middle Pane - Sessions List (fixed width like GlobalSessionsPanel) */}
+        {isSessionsListVisible && (
+          <div className="w-80 h-full flex-shrink-0">
+            <SessionList />
+          </div>
+        )}
 
-          {/* Right Pane - Session Detail */}
-          <ResizablePanel defaultSize={isSessionsListVisible ? 70 : 100}>
-            <SessionDetail />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+        {/* Right Pane - Session Detail */}
+        <div className="flex-1 overflow-hidden">
+          <SessionDetail />
+        </div>
       </div>
     </AppLayout>
   );

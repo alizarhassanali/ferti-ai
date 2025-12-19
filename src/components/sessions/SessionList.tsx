@@ -357,19 +357,19 @@ export const SessionList = () => {
           </div>
           <div className="flex items-center gap-2">
             <Button 
-              variant="ghost" 
+              variant="destructive" 
               size="sm" 
               onClick={handleCancelSelection} 
-              className="gap-1 text-foreground"
+              className="gap-1"
             >
               <X className="h-4 w-4 stroke-[1.5]" />
               Cancel
             </Button>
             <Button 
-              variant="destructive" 
+              variant="outline" 
               size="sm" 
               onClick={() => setShowDeleteDialog(true)} 
-              className="gap-1"
+              className="gap-1 bg-white text-foreground border-border hover:bg-muted"
             >
               <Trash2 className="h-4 w-4 stroke-[1.5]" />
               Delete
