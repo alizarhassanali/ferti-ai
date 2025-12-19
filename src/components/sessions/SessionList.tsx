@@ -214,16 +214,16 @@ export const SessionList = () => {
       <Tabs defaultValue="drafts" className="flex-1 flex flex-col overflow-hidden">
         <TabsList className="w-full justify-start bg-transparent border-b border-border px-4 h-auto py-0 rounded-none">
           <TabsTrigger 
-            value="schedule" 
-            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground text-sm px-3 py-2 hover:text-foreground/80 hover:border-sidebar"
-          >
-            Scheduled
-          </TabsTrigger>
-          <TabsTrigger 
             value="sessions" 
             className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground text-sm px-3 py-2 hover:text-foreground/80 hover:border-sidebar"
           >
             Sessions
+          </TabsTrigger>
+          <TabsTrigger 
+            value="schedule" 
+            className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none bg-transparent text-foreground/60 data-[state=active]:text-foreground text-sm px-3 py-2 hover:text-foreground/80 hover:border-sidebar"
+          >
+            Scheduled
           </TabsTrigger>
           <TabsTrigger 
             value="drafts" 
