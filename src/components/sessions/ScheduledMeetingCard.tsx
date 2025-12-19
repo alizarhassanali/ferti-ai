@@ -86,7 +86,7 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
               onClick={handleJoinMeeting}
             >
               <ExternalLink className="h-3 w-3" />
-              Join
+              Join Meeting
             </Button>
           )}
           <Button 
@@ -94,7 +94,7 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
             className="gap-1 h-7 text-xs px-2"
             onClick={handleStartSession}
           >
-            Start
+            Start Session
           </Button>
         </div>
       </div>
