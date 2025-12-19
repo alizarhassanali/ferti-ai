@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Filter, ArrowUpDown, RefreshCw, Plug, Trash2, CheckSquare, X } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw, Plug, Trash2, CheckSquare, X } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SessionCard } from './SessionCard';
 import { SessionFilters } from './SessionFilters';
 import { SessionSort } from './SessionSort';
@@ -139,34 +140,48 @@ export const SessionList = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="gap-2 bg-white border-primary/20 text-foreground hover:bg-sidebar hover:border-primary/30 font-medium text-sm" 
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4 stroke-[1.5]" />
-            Filter
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="gap-2 bg-white border-primary/20 text-foreground hover:bg-sidebar hover:border-primary/30 font-medium text-sm" 
-            onClick={() => setShowSort(!showSort)}
-          >
-            <ArrowUpDown className="h-4 w-4 stroke-[1.5]" />
-            Sort
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-foreground hover:bg-sidebar"
-          >
-            <RefreshCw className="h-4 w-4 stroke-[1.5]" />
-          </Button>
-        </div>
+        <TooltipProvider delayDuration={300}>
+          <div className="flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showFilters ? 'bg-sidebar text-foreground' : ''}`}
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Filter</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSort ? 'bg-sidebar text-foreground' : ''}`}
+                  onClick={() => setShowSort(!showSort)}
+                >
+                  <ArrowUpDown className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Sort</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Refresh</TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
 
         {showFilters && <SessionFilters />}
         {showSort && <SessionSort />}
