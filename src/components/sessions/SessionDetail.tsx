@@ -90,13 +90,36 @@ export const SessionDetail = () => {
       {/* Header */}
       <div className="border-b border-border p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 flex-1">
+          <div className="flex items-center gap-3 flex-1">
             <Input
               placeholder="Add patient details"
               defaultValue={selectedSession.patientName || selectedSession.title}
-              className="max-w-md"
+              className="max-w-[200px]"
               readOnly
             />
+            
+            {/* Partner - read only */}
+            <div 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
+              title={selectedSession.patientName ? "Jane Smith" : "No partner linked"}
+            >
+              <span className="text-muted-foreground">Partner:</span>
+              <span className={selectedSession.patientName ? "text-foreground" : "text-muted-foreground"}>
+                {selectedSession.patientName ? "Jane Smith" : "—"}
+              </span>
+            </div>
+            
+            {/* Referring Physician - read only */}
+            <div 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
+              title={selectedSession.patientName ? "Dr. Michael Chen" : "No referring physician"}
+            >
+              <span className="text-muted-foreground">Referring physician:</span>
+              <span className={selectedSession.patientName ? "text-foreground" : "text-muted-foreground"}>
+                {selectedSession.patientName ? "Dr. Michael Chen" : "—"}
+              </span>
+            </div>
+            
             <Button variant="ghost" size="icon" onClick={handleDeleteSession}>
               <Trash2 className="h-4 w-4" />
             </Button>

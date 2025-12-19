@@ -290,7 +290,7 @@ const NewSession = () => {
   return (
     <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
-        <div className="px-6 py-4 border-b border-border">
+        <div className="px-6 py-4 border-b border-border flex items-center gap-3">
           <PatientSelector
             selectedPatient={selectedPatient}
             patients={patients}
@@ -299,6 +299,28 @@ const NewSession = () => {
             onUpdatePatient={handleUpdatePatient}
             onDeletePatient={handleDeletePatient}
           />
+          
+          {/* Partner - read only */}
+          <div 
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
+            title={selectedPatient ? "Jane Smith" : "No partner linked"}
+          >
+            <span className="text-muted-foreground">Partner:</span>
+            <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
+              {selectedPatient ? "Jane Smith" : "—"}
+            </span>
+          </div>
+          
+          {/* Referring Physician - read only */}
+          <div 
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
+            title={selectedPatient ? "Dr. Michael Chen" : "No referring physician"}
+          >
+            <span className="text-muted-foreground">Referring physician:</span>
+            <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
+              {selectedPatient ? "Dr. Michael Chen" : "—"}
+            </span>
+          </div>
         </div>
 
         <SessionInfoBar
