@@ -87,14 +87,6 @@ export const SessionCard = ({
           </div>
         </div>
         
-        {session.status !== 'complete' && (
-          <Badge 
-            variant="secondary" 
-            className="mt-2 text-xs bg-sidebar text-foreground border-0 rounded-full px-3 py-0.5 font-medium"
-          >
-            {statusConfig[session.status].label}
-          </Badge>
-        )}
       </div>
 
       {/* Indicator for linked patient sessions */}

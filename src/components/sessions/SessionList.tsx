@@ -215,19 +215,19 @@ export const SessionList = () => {
         <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-2">
           <TabsTrigger 
             value="sessions" 
-            className="rounded-full border-none bg-transparent text-muted-foreground text-sm px-3 py-1.5 data-[state=active]:bg-white data-[state=active]:text-foreground hover:text-foreground"
+            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-sm px-4 py-1.5 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
             Sessions
           </TabsTrigger>
           <TabsTrigger 
             value="schedule" 
-            className="rounded-full border-none bg-transparent text-muted-foreground text-sm px-3 py-1.5 data-[state=active]:bg-white data-[state=active]:text-foreground hover:text-foreground"
+            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-sm px-4 py-1.5 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
             Scheduled
           </TabsTrigger>
           <TabsTrigger 
             value="drafts" 
-            className="rounded-full border-none bg-transparent text-muted-foreground text-sm px-3 py-1.5 data-[state=active]:bg-white data-[state=active]:text-foreground hover:text-foreground"
+            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-sm px-4 py-1.5 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
             Drafts
           </TabsTrigger>
@@ -251,18 +251,18 @@ export const SessionList = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="drafts" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+        <TabsContent value="drafts" className={`flex-1 overflow-y-auto m-0 p-4 space-y-1 ${selectedCount > 0 ? 'pb-20' : ''}`}>
           {Object.entries(groupedDraftSessions).length === 0 ? (
             <div className="text-center text-foreground/60 py-8">
               No draft sessions
             </div>
           ) : (
             Object.entries(groupedDraftSessions).map(([date, sessionGroup]) => (
-              <div key={date} className="space-y-2">
+              <div key={date} className="space-y-1">
                 <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
                   📅 {date}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {sessionGroup.map(session => (
                     <SessionCard 
                       key={session.id} 
@@ -298,18 +298,18 @@ export const SessionList = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="sessions" className={`flex-1 overflow-y-auto m-0 p-4 space-y-6 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+        <TabsContent value="sessions" className={`flex-1 overflow-y-auto m-0 p-4 space-y-1 ${selectedCount > 0 ? 'pb-20' : ''}`}>
           {Object.entries(groupedCompletedSessions).length === 0 ? (
             <div className="text-center text-foreground/60 py-8">
               No completed sessions
             </div>
           ) : (
             Object.entries(groupedCompletedSessions).map(([date, sessionGroup]) => (
-              <div key={date} className="space-y-2">
+              <div key={date} className="space-y-1">
                 <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
                   📅 {date}
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {sessionGroup.map(session => (
                     <SessionCard 
                       key={session.id} 
