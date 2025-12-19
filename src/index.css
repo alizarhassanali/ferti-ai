@@ -27,6 +27,10 @@ All colors MUST be HSL.
     --brand: 5 100% 74%; /* #FF887C */
     --brand-foreground: 0 0% 100%;
     
+    /* Session action - Deep blue for new session buttons */
+    --session-action: 222 41% 29%; /* #2C3E69 */
+    --session-action-foreground: 0 0% 100%;
+    
     /* Success green for positive actions */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -93,6 +97,9 @@ All colors MUST be HSL.
 
     --brand: 5 100% 74%;
     --brand-foreground: 0 0% 100%;
+    
+    --session-action: 222 41% 35%; /* Slightly lighter for dark mode */
+    --session-action-foreground: 0 0% 100%;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;

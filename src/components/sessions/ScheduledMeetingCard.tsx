@@ -91,7 +91,7 @@ export const ScheduledMeetingCard = ({ meeting }: ScheduledMeetingCardProps) => 
           )}
           <Button 
             size="sm" 
-            className="gap-1 h-7 text-xs px-2"
+            className="gap-1 h-7 text-xs px-2 bg-session-action hover:bg-session-action/90 text-session-action-foreground"
             onClick={handleStartSession}
           >
             Start Session

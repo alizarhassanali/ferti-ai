@@ -286,8 +286,12 @@ export const LeftPane = () => {
                             <div className={`
                               flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
                               ${isActive 
-                                ? 'bg-brand text-brand-foreground shadow-subtle' 
-                                : 'group-hover:scale-105'
+                                ? item.id === 'new-session' 
+                                  ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                                  : 'bg-brand text-brand-foreground shadow-subtle' 
+                                : item.id === 'new-session'
+                                  ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                                  : 'group-hover:scale-105'
                               }
                             `}>
                               <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
@@ -314,8 +318,12 @@ export const LeftPane = () => {
                       <div className={`
                         flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
                         ${isActive 
-                          ? 'bg-brand text-brand-foreground shadow-subtle' 
-                          : 'group-hover:scale-105'
+                          ? item.id === 'new-session'
+                            ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                            : 'bg-brand text-brand-foreground shadow-subtle' 
+                          : item.id === 'new-session'
+                            ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                            : 'group-hover:scale-105'
                         }
                       `}>
                         <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />

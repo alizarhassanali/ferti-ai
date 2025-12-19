@@ -33,6 +33,10 @@ export default {
           DEFAULT: "hsl(var(--brand))",
           foreground: "hsl(var(--brand-foreground))",
         },
+        "session-action": {
+          DEFAULT: "hsl(var(--session-action))",
+          foreground: "hsl(var(--session-action-foreground))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
