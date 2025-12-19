@@ -212,7 +212,7 @@ export const SessionList = () => {
 
       {/* Tabs - Pill style when selected */}
       <Tabs defaultValue="sessions" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-2">
+        <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-1">
           <TabsTrigger 
             value="sessions" 
             className="rounded-full border border-transparent bg-transparent text-muted-foreground text-sm px-4 py-1.5 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
