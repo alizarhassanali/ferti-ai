@@ -259,8 +259,8 @@ export const SessionList = () => {
           ) : (
             Object.entries(groupedDraftSessions).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
-                  📅 {date}
+                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
+                  <span>📅</span> <span>{date}</span>
                 </div>
                 <div className="space-y-1">
                   {sessionGroup.map(session => (
@@ -306,8 +306,8 @@ export const SessionList = () => {
           ) : (
             Object.entries(groupedCompletedSessions).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-foreground/60 px-2 font-medium">
-                  📅 {date}
+                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
+                  <span>📅</span> <span>{date}</span>
                 </div>
                 <div className="space-y-1">
                   {sessionGroup.map(session => (

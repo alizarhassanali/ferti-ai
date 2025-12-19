@@ -79,14 +79,11 @@ export const SessionCard = ({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start gap-2">
-          <StatusIcon className={`h-4 w-4 mt-0.5 shrink-0 stroke-[1.5] ${statusConfig[session.status].color}`} />
-          <div className="flex-1 min-w-0">
-            <h4 className="text-base font-medium text-foreground truncate">{session.title}</h4>
-            <p className="text-[13px] text-foreground/60">{session.time}</p>
-          </div>
+        <div className="flex items-center gap-2">
+          <StatusIcon className={`h-4 w-4 shrink-0 stroke-[1.5] ${statusConfig[session.status].color}`} />
+          <h4 className="text-base font-medium text-foreground truncate flex-1">{session.title}</h4>
+          <span className="text-xs text-foreground/50 shrink-0">{session.time}</span>
         </div>
-        
       </div>
 
       {/* Indicator for linked patient sessions */}
