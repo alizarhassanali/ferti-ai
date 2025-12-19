@@ -144,7 +144,7 @@ export const SessionList = () => {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSearch ? 'bg-sidebar text-foreground' : ''}`}
+                  className={`h-6 w-6 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSearch ? 'bg-sidebar text-foreground' : ''}`}
                   onClick={() => setShowSearch(!showSearch)}
                 >
                   <Search className="h-3 w-3" />
@@ -157,7 +157,7 @@ export const SessionList = () => {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showFilters ? 'bg-sidebar text-foreground' : ''}`}
+                  className={`h-6 w-6 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showFilters ? 'bg-sidebar text-foreground' : ''}`}
                   onClick={() => setShowFilters(!showFilters)}
                 >
                   <SlidersHorizontal className="h-3 w-3" />
@@ -170,7 +170,7 @@ export const SessionList = () => {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className={`h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSort ? 'bg-sidebar text-foreground' : ''}`}
+                  className={`h-6 w-6 text-foreground/70 hover:text-foreground hover:bg-sidebar ${showSort ? 'bg-sidebar text-foreground' : ''}`}
                   onClick={() => setShowSort(!showSort)}
                 >
                   <ArrowUpDown className="h-3 w-3" />
@@ -183,7 +183,7 @@ export const SessionList = () => {
                 <Button 
                   variant="ghost" 
                   size="icon"
-                  className="h-8 w-8 text-foreground/70 hover:text-foreground hover:bg-sidebar"
+                  className="h-6 w-6 text-foreground/70 hover:text-foreground hover:bg-sidebar"
                 >
                   <RefreshCw className="h-3 w-3" />
                 </Button>
