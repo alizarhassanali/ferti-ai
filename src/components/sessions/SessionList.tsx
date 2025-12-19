@@ -211,7 +211,7 @@ export const SessionList = () => {
       </div>
 
       {/* Tabs - Pill style when selected */}
-      <Tabs defaultValue="drafts" className="flex-1 flex flex-col overflow-hidden">
+      <Tabs defaultValue="sessions" className="flex-1 flex flex-col overflow-hidden">
         <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-2">
           <TabsTrigger 
             value="sessions" 
