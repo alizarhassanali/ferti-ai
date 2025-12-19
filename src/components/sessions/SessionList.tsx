@@ -134,7 +134,7 @@ export const SessionList = () => {
   const selectedCount = selectedSessions.length;
 
   return (
-    <div className="h-full flex flex-col bg-background border-r border-border w-96 relative">
+    <div className="h-full flex flex-col bg-white border-r border-border w-96 relative">
       {/* Controls */}
       <div className="p-4 space-y-3">
         <TooltipProvider delayDuration={300}>
