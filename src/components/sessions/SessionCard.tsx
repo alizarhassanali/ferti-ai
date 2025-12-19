@@ -59,9 +59,9 @@ export const SessionCard = ({
       className={`
         group relative flex items-start gap-3 p-3 px-4 rounded-xl border transition-all duration-200 cursor-pointer
         ${isSelected 
-          ? 'bg-brand/5 border-brand/30' 
+          ? 'bg-[hsl(5_85%_92%)] border-brand/30' 
           : isActive 
-            ? 'bg-white border-primary shadow-sm' 
+            ? 'bg-[hsl(5_85%_92%)] border-brand/30 shadow-sm' 
             : 'bg-white border-[hsl(216_20%_90%)] hover:shadow-md hover:border-[hsl(216_20%_85%)]'
         }
       `}
