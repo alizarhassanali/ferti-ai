@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CheckCircle2, AlertCircle, FileText, Plus, Minus, Trash2 } from 'lucide-react';
 import { Session } from '@/types/session';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -138,16 +139,25 @@ export const SessionCard = ({
             <h4 className="text-base font-medium text-foreground truncate flex-1">{session.title}</h4>
             {/* Expand button for linked patient sessions - next to name */}
             {hasLinkedPatient && (
-              <button
-                onClick={handleExpandClick}
-                className="p-0.5 rounded hover:bg-foreground/10 transition-colors"
-              >
-                {isExpanded ? (
-                  <Minus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
-                ) : (
-                  <Plus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
-                )}
-              </button>
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={handleExpandClick}
+                      className="p-0.5 rounded hover:bg-foreground/10 transition-colors"
+                    >
+                      {isExpanded ? (
+                        <Minus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
+                      ) : (
+                        <Plus className="h-3.5 w-3.5 text-foreground/50 stroke-[2]" />
+                      )}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">
+                    View past sessions
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
             <span className="text-xs text-foreground/50 shrink-0">{session.time}</span>
           </div>
