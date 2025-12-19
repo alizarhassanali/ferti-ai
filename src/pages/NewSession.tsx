@@ -12,23 +12,26 @@ import { usePatients } from "@/contexts/PatientsContext";
 import { generateNoteFromTemplate, availableTemplates } from "@/data/templates";
 import { format } from "date-fns";
 import { DEMO_NOTES } from "@/data/demoContent";
-
 const NewSession = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { addSession, updateSession, getSession } = useSessions();
+  const {
+    addSession,
+    updateSession,
+    getSession
+  } = useSessions();
   const {
     patients,
     addPatient,
     updatePatient: updatePatientInContext,
-    deletePatient: deletePatientInContext,
+    deletePatient: deletePatientInContext
   } = usePatients();
-
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(() => {
     return searchParams.get("id");
   });
-
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [recordingMode, setRecordingMode] = useState<RecordingMode>("transcribe");
   const [isRecording, setIsRecording] = useState(false);
@@ -40,12 +43,15 @@ const NewSession = () => {
   const [contextContent, setContextContent] = useState("");
   const [transcriptContent, setTranscriptContent] = useState("");
   const [dictationContent, setDictationContent] = useState("");
-
-  const [noteTabs, setNoteTabs] = useState<NoteTab[]>([{ id: "1", title: "Untitled 1", templateId: "", content: "" }]);
+  const [noteTabs, setNoteTabs] = useState<NoteTab[]>([{
+    id: "1",
+    title: "Untitled 1",
+    templateId: "",
+    content: ""
+  }]);
   const [activeNoteTabId, setActiveNoteTabId] = useState("1");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
-
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
@@ -66,13 +72,12 @@ const NewSession = () => {
         dictationContent: "",
         inputLanguage: "en",
         outputLanguage: "en",
-        notes: [],
+        notes: []
       };
       addSession(newSession);
       setCurrentSessionId(newId);
     }
   }, [currentSessionId, addSession]);
-
   useEffect(() => {
     if (currentSessionId) {
       const existingSession = getSession(currentSessionId);
@@ -83,29 +88,23 @@ const NewSession = () => {
         setRecordingMode(existingSession.mode || "transcribe");
         setInputLanguage(existingSession.inputLanguage || "en");
         setOutputLanguage(existingSession.outputLanguage || "en");
-
         if (existingSession.patientId) {
-          const patient = patients.find((p) => p.id === existingSession.patientId);
+          const patient = patients.find(p => p.id === existingSession.patientId);
           if (patient) setSelectedPatient(patient);
         }
-
         if (existingSession.notes && existingSession.notes.length > 0) {
-          setNoteTabs(
-            existingSession.notes.map((n) => ({
-              id: n.id,
-              title: n.title,
-              templateId: n.type,
-              content: n.content,
-            })),
-          );
+          setNoteTabs(existingSession.notes.map(n => ({
+            id: n.id,
+            title: n.title,
+            templateId: n.type,
+            content: n.content
+          })));
         }
       }
     }
   }, [currentSessionId, getSession, patients]);
-
   const saveSessionChanges = useCallback(() => {
     if (!currentSessionId) return;
-
     updateSession(currentSessionId, {
       contextContent,
       transcriptContent,
@@ -117,40 +116,26 @@ const NewSession = () => {
       patientName: selectedPatient?.name,
       title: selectedPatient?.name || "Untitled session",
       hasTranscript: transcriptContent.trim().length > 0,
-      notes: noteTabs.map((t) => ({
+      notes: noteTabs.map(t => ({
         id: t.id,
         type: (t.templateId || "custom") as "clinical_note" | "custom" | "letter_to_gp" | "soap_note",
         title: t.title,
         content: t.content,
-        isClosable: true,
-      })),
+        isClosable: true
+      }))
     });
-  }, [
-    currentSessionId,
-    updateSession,
-    contextContent,
-    transcriptContent,
-    dictationContent,
-    recordingMode,
-    inputLanguage,
-    outputLanguage,
-    selectedPatient,
-    noteTabs,
-  ]);
-
+  }, [currentSessionId, updateSession, contextContent, transcriptContent, dictationContent, recordingMode, inputLanguage, outputLanguage, selectedPatient, noteTabs]);
   useEffect(() => {
     const timeout = setTimeout(() => saveSessionChanges(), 1000);
     return () => clearTimeout(timeout);
   }, [saveSessionChanges]);
-
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRecording) {
-      interval = setInterval(() => setRecordingDuration((prev) => prev + 1), 1000);
+      interval = setInterval(() => setRecordingDuration(prev => prev + 1), 1000);
     }
     return () => clearInterval(interval);
   }, [isRecording]);
-
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRecording) {
@@ -160,151 +145,115 @@ const NewSession = () => {
     }
     return () => clearInterval(interval);
   }, [isRecording]);
-
   const handleToggleRecording = useCallback(() => {
     if (!isRecording) setRecordingDuration(0);
     setIsRecording(!isRecording);
     toast({
       title: isRecording ? "Recording stopped" : "Recording started",
-      description: isRecording
-        ? "Your recording has been saved."
-        : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`,
+      description: isRecording ? "Your recording has been saved." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
     });
   }, [isRecording, recordingMode, toast]);
-
   const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
-  const handleUploadAudio = () =>
-    toast({
-      title: "Upload audio",
-      description: "Audio upload feature coming soon.",
-    });
-
+  const handleUploadAudio = () => toast({
+    title: "Upload audio",
+    description: "Audio upload feature coming soon."
+  });
   const handleSelectPatient = (patient: Patient | null) => {
     setSelectedPatient(patient);
     if (currentSessionId && patient) {
       updateSession(currentSessionId, {
         patientId: patient.id,
         patientName: patient.name,
-        title: patient.name,
+        title: patient.name
       });
     } else if (currentSessionId) {
       updateSession(currentSessionId, {
         patientId: undefined,
         patientName: undefined,
-        title: "Untitled session",
+        title: "Untitled session"
       });
     }
   };
-
   const handleCreatePatient = (name: string) => {
     const newPatient: Patient = {
       id: crypto.randomUUID(),
       name,
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
     addPatient(newPatient);
     handleSelectPatient(newPatient);
-    toast({ title: "Patient created", description: `${name} has been added.` });
+    toast({
+      title: "Patient created",
+      description: `${name} has been added.`
+    });
   };
-
   const handleUpdatePatient = (patient: Patient) => {
     updatePatientInContext(patient.id, patient);
     if (selectedPatient?.id === patient.id) setSelectedPatient(patient);
     toast({
       title: "Patient updated",
-      description: "Changes have been saved.",
+      description: "Changes have been saved."
     });
   };
-
   const handleDeletePatient = (patientId: string) => {
     deletePatientInContext(patientId);
     if (selectedPatient?.id === patientId) setSelectedPatient(null);
     toast({
       title: "Patient deleted",
       description: "Patient has been removed.",
-      variant: "destructive",
+      variant: "destructive"
     });
   };
-
-  const handleAISubmit = (prompt: string) =>
-    toast({
-      title: "Processing...",
-      description: `AI is working on: "${prompt}"`,
-    });
-
-  const hasContent =
-    contextContent.trim().length > 0 || transcriptContent.trim().length > 0 || dictationContent.trim().length > 0;
-
-  const handleGenerate = useCallback(
-    (templateId: string) => {
-      if (!templateId) return;
-
-      setIsGenerating(true);
-
-      setTimeout(() => {
-        const template = availableTemplates.find((t) => t.id === templateId);
-        const generatedContent = generateNoteFromTemplate(templateId, transcriptContent, contextContent);
-
-        let updatedTabs: NoteTab[] = [];
-        setNoteTabs((prevTabs) => {
-          const mapped = prevTabs.map((t) =>
-            t.id === activeNoteTabId
-              ? {
-                  ...t,
-                  templateId,
-                  title: template?.name || t.title,
-                  content: generatedContent,
-                }
-              : t,
-          );
-          updatedTabs = mapped;
-          return mapped;
+  const handleAISubmit = (prompt: string) => toast({
+    title: "Processing...",
+    description: `AI is working on: "${prompt}"`
+  });
+  const hasContent = contextContent.trim().length > 0 || transcriptContent.trim().length > 0 || dictationContent.trim().length > 0;
+  const handleGenerate = useCallback((templateId: string) => {
+    if (!templateId) return;
+    setIsGenerating(true);
+    setTimeout(() => {
+      const template = availableTemplates.find(t => t.id === templateId);
+      const generatedContent = generateNoteFromTemplate(templateId, transcriptContent, contextContent);
+      let updatedTabs: NoteTab[] = [];
+      setNoteTabs(prevTabs => {
+        const mapped = prevTabs.map(t => t.id === activeNoteTabId ? {
+          ...t,
+          templateId,
+          title: template?.name || t.title,
+          content: generatedContent
+        } : t);
+        updatedTabs = mapped;
+        return mapped;
+      });
+      setIsGenerating(false);
+      if (currentSessionId) {
+        updateSession(currentSessionId, {
+          status: "complete",
+          hasNotes: true,
+          notes: updatedTabs.map(t => ({
+            id: t.id,
+            type: t.templateId as any || "custom",
+            title: t.title,
+            content: t.content,
+            isClosable: true
+          }))
         });
-
-        setIsGenerating(false);
-
-        if (currentSessionId) {
-          updateSession(currentSessionId, {
-            status: "complete",
-            hasNotes: true,
-            notes: updatedTabs.map((t) => ({
-              id: t.id,
-              type: (t.templateId as any) || "custom",
-              title: t.title,
-              content: t.content,
-              isClosable: true,
-            })),
-          });
-        }
-
-        toast({
-          title: "Note generated",
-          description: `${template?.name} has been created.`,
-        });
-      }, 800);
-    },
-    [activeNoteTabId, toast, currentSessionId, updateSession, transcriptContent, contextContent],
-  );
-
-  return (
-    <AppLayout>
+      }
+      toast({
+        title: "Note generated",
+        description: `${template?.name} has been created.`
+      });
+    }, 800);
+  }, [activeNoteTabId, toast, currentSessionId, updateSession, transcriptContent, contextContent]);
+  return <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
         <div className="px-6 py-4 border-b border-border flex items-center gap-3">
-          <PatientSelector
-            selectedPatient={selectedPatient}
-            patients={patients}
-            onSelectPatient={handleSelectPatient}
-            onCreatePatient={handleCreatePatient}
-            onUpdatePatient={handleUpdatePatient}
-            onDeletePatient={handleDeletePatient}
-          />
+          <PatientSelector selectedPatient={selectedPatient} patients={patients} onSelectPatient={handleSelectPatient} onCreatePatient={handleCreatePatient} onUpdatePatient={handleUpdatePatient} onDeletePatient={handleDeletePatient} />
           
           {/* Partner - read only */}
-          <div 
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
-            title={selectedPatient ? "Jane Smith" : "No partner linked"}
-          >
+          <div title={selectedPatient ? "Jane Smith" : "No partner linked"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] select-text bg-white">
             <span className="text-muted-foreground">Partner:</span>
             <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
               {selectedPatient ? "Jane Smith" : "—"}
@@ -312,10 +261,7 @@ const NewSession = () => {
           </div>
           
           {/* Referring Physician - read only */}
-          <div 
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
-            title={selectedPatient ? "Dr. Michael Chen" : "No referring physician"}
-          >
+          <div title={selectedPatient ? "Dr. Michael Chen" : "No referring physician"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] select-text bg-white">
             <span className="text-muted-foreground">Referring physician:</span>
             <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
               {selectedPatient ? "Dr. Michael Chen" : "—"}
@@ -323,48 +269,14 @@ const NewSession = () => {
           </div>
         </div>
 
-        <SessionInfoBar
-          sessionDate={sessionDate}
-          inputLanguage={inputLanguage}
-          outputLanguage={outputLanguage}
-          onInputLanguageChange={setInputLanguage}
-          onOutputLanguageChange={setOutputLanguage}
-          recordingDuration={recordingDuration}
-          selectedMicrophoneId={selectedMicrophoneId}
-          onMicrophoneChange={setSelectedMicrophoneId}
-          audioLevel={audioLevel}
-          recordingMode={recordingMode}
-          isRecording={isRecording}
-          onModeChange={handleModeChange}
-          onToggleRecording={handleToggleRecording}
-          onUploadAudio={handleUploadAudio}
-        />
+        <SessionInfoBar sessionDate={sessionDate} inputLanguage={inputLanguage} outputLanguage={outputLanguage} onInputLanguageChange={setInputLanguage} onOutputLanguageChange={setOutputLanguage} recordingDuration={recordingDuration} selectedMicrophoneId={selectedMicrophoneId} onMicrophoneChange={setSelectedMicrophoneId} audioLevel={audioLevel} recordingMode={recordingMode} isRecording={isRecording} onModeChange={handleModeChange} onToggleRecording={handleToggleRecording} onUploadAudio={handleUploadAudio} />
 
         <div className="flex-1 overflow-hidden">
-          <TwoColumnLayout
-            recordingMode={recordingMode}
-            transcriptContent={transcriptContent}
-            onTranscriptChange={setTranscriptContent}
-            isRecording={isRecording}
-            contextContent={contextContent}
-            onContextChange={setContextContent}
-            noteTabs={noteTabs}
-            activeNoteTabId={activeNoteTabId}
-            onNoteTabsChange={setNoteTabs}
-            onActiveNoteTabChange={setActiveNoteTabId}
-            isGenerating={isGenerating}
-            hasContent={hasContent}
-            onGenerate={handleGenerate}
-            sessionId={currentSessionId || undefined}
-            patientName={selectedPatient?.name}
-            sessionDate={sessionDate}
-          />
+          <TwoColumnLayout recordingMode={recordingMode} transcriptContent={transcriptContent} onTranscriptChange={setTranscriptContent} isRecording={isRecording} contextContent={contextContent} onContextChange={setContextContent} noteTabs={noteTabs} activeNoteTabId={activeNoteTabId} onNoteTabsChange={setNoteTabs} onActiveNoteTabChange={setActiveNoteTabId} isGenerating={isGenerating} hasContent={hasContent} onGenerate={handleGenerate} sessionId={currentSessionId || undefined} patientName={selectedPatient?.name} sessionDate={sessionDate} />
         </div>
 
         <AskAIInput onSubmit={handleAISubmit} />
       </div>
-    </AppLayout>
-  );
+    </AppLayout>;
 };
-
 export default NewSession;
