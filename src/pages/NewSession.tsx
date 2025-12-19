@@ -33,6 +33,7 @@ const NewSession = () => {
     return searchParams.get("id");
   });
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patientRequired, setPatientRequired] = useState(false);
   const [recordingMode, setRecordingMode] = useState<RecordingMode>("transcribe");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -146,13 +147,22 @@ const NewSession = () => {
     return () => clearInterval(interval);
   }, [isRecording]);
   const handleToggleRecording = useCallback(() => {
+    if (!isRecording && !selectedPatient) {
+      setPatientRequired(true);
+      toast({
+        title: "Patient required",
+        description: "Please add patient details before starting transcription.",
+        variant: "destructive"
+      });
+      return;
+    }
     if (!isRecording) setRecordingDuration(0);
     setIsRecording(!isRecording);
     toast({
       title: isRecording ? "Recording stopped" : "Recording started",
       description: isRecording ? "Your recording has been saved." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
     });
-  }, [isRecording, recordingMode, toast]);
+  }, [isRecording, recordingMode, toast, selectedPatient]);
   const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
   const handleUploadAudio = () => toast({
     title: "Upload audio",
@@ -160,6 +170,7 @@ const NewSession = () => {
   });
   const handleSelectPatient = (patient: Patient | null) => {
     setSelectedPatient(patient);
+    if (patient) setPatientRequired(false);
     if (currentSessionId && patient) {
       updateSession(currentSessionId, {
         patientId: patient.id,
@@ -250,7 +261,7 @@ const NewSession = () => {
   return <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
         <div className="px-6 py-4 border-b border-border flex items-center gap-3">
-          <PatientSelector selectedPatient={selectedPatient} patients={patients} onSelectPatient={handleSelectPatient} onCreatePatient={handleCreatePatient} onUpdatePatient={handleUpdatePatient} onDeletePatient={handleDeletePatient} />
+          <PatientSelector selectedPatient={selectedPatient} patients={patients} onSelectPatient={handleSelectPatient} onCreatePatient={handleCreatePatient} onUpdatePatient={handleUpdatePatient} onDeletePatient={handleDeletePatient} isHighlighted={patientRequired} />
           
           {/* Partner - read only */}
           <div title={selectedPatient ? "Jane Smith" : "No partner linked"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] select-text bg-white">

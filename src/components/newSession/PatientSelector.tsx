@@ -29,6 +29,7 @@ interface PatientSelectorProps {
   onCreatePatient: (name: string) => void;
   onUpdatePatient: (patient: Patient) => void;
   onDeletePatient: (patientId: string) => void;
+  isHighlighted?: boolean;
 }
 
 export const PatientSelector = ({
@@ -38,6 +39,7 @@ export const PatientSelector = ({
   onCreatePatient,
   onUpdatePatient,
   onDeletePatient,
+  isHighlighted = false,
 }: PatientSelectorProps) => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -87,16 +89,20 @@ export const PatientSelector = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           {/* Patient selector styled as dropdown with border */}
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[hsl(216_20%_90%)] rounded-xl text-sm hover:border-primary/30 transition-colors">
+          <button className={`inline-flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm transition-colors ${
+            isHighlighted 
+              ? 'border-destructive ring-2 ring-destructive/20 animate-pulse' 
+              : 'border-[hsl(216_20%_90%)] hover:border-primary/30'
+          }`}>
             {selectedPatient ? (
               <>
                 <User className="h-4 w-4 text-foreground stroke-[1.5]" />
                 <span className="font-medium text-foreground">{selectedPatient.name}</span>
               </>
             ) : (
-              <span className="text-foreground/80">+ Add patient details</span>
+              <span className={isHighlighted ? "text-destructive font-medium" : "text-foreground/80"}>+ Add patient details</span>
             )}
-            <ChevronDown className="h-4 w-4 text-foreground stroke-[1.5]" />
+            <ChevronDown className={`h-4 w-4 stroke-[1.5] ${isHighlighted ? 'text-destructive' : 'text-foreground'}`} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-72 bg-white border border-[hsl(216_20%_90%)]">
