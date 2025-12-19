@@ -61,9 +61,9 @@ export const ConversationList = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-content">
+    <div className="h-full flex flex-col bg-card">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2.5 px-4 py-2.5 border-b border-border bg-content">
+      <div className="flex items-center justify-between gap-2.5 px-4 py-2.5 border-b border-border bg-card">
         {/* Search Bar */}
         <div className="flex-1 flex items-center relative">
           <Search className="absolute left-3 h-4 w-4 text-foreground" />
