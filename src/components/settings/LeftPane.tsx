@@ -276,12 +276,10 @@ export const LeftPane = () => {
                           >
                             <div className={`
                               flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
-                              ${isActive 
-                                ? item.id === 'new-session' 
-                                  ? 'bg-session-action text-session-action-foreground shadow-subtle'
-                                  : 'bg-brand text-brand-foreground shadow-subtle' 
-                                : item.id === 'new-session'
-                                  ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                              ${item.id === 'new-session'
+                                ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                                : isActive 
+                                  ? 'border-2 border-white shadow-subtle' 
                                   : 'group-hover:scale-105'
                               }
                             `}>
@@ -308,12 +306,10 @@ export const LeftPane = () => {
                     >
                       <div className={`
                         flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
-                        ${isActive 
-                          ? item.id === 'new-session'
-                            ? 'bg-session-action text-session-action-foreground shadow-subtle'
-                            : 'bg-brand text-brand-foreground shadow-subtle' 
-                          : item.id === 'new-session'
-                            ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                        ${item.id === 'new-session'
+                          ? 'bg-session-action text-session-action-foreground shadow-subtle'
+                          : isActive 
+                            ? 'border-2 border-white shadow-subtle' 
                             : 'group-hover:scale-105'
                         }
                       `}>
