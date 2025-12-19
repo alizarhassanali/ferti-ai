@@ -192,7 +192,7 @@ export const LeftPane = () => {
                 text-muted-foreground hover:text-foreground hover:bg-muted
                 transition-all duration-200 hover:scale-105
                 top-1/2 -translate-y-1/2
-                ${isCollapsed ? 'left-[74px]' : 'left-[264px]'}
+                ${isCollapsed ? 'left-[66px]' : 'left-[250px]'}
               `}
               aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
             >
