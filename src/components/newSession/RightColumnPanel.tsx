@@ -434,7 +434,7 @@ export const RightColumnPanel = ({
               value={contextContent}
               onChange={(e) => onContextChange(e.target.value)}
               placeholder="Input any additional medical context you want included as part of your note."
-              className="flex-1 min-h-[150px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base"
+              className="flex-1 min-h-[150px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base bg-white"
             />
 
             {/* Example hint */}
