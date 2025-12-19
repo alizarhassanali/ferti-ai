@@ -84,7 +84,7 @@ export const TwoColumnLayout = ({
                   ? "Your dictation will appear here as you speak..."
                   : "Your transcript will appear here as you speak or record..."
                 }
-                className="w-full h-full min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed"
+                className="w-full h-full min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed bg-white"
               />
             </div>
           </div>
