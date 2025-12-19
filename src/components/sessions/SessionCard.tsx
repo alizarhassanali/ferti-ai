@@ -135,7 +135,7 @@ export const SessionCard = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1">
-            <h4 className="text-base font-medium text-foreground truncate flex-1">{session.title}</h4>
+            <h4 className="text-sm font-medium text-foreground truncate flex-1">{session.title}</h4>
             {/* Expand button for linked patient sessions - next to name */}
             {hasLinkedPatient && (
               <TooltipProvider delayDuration={300}>
