@@ -249,7 +249,7 @@ export const LeftPane = () => {
                 displayLabel = sessionsPaneOpen ? 'Hide sessions' : item.label;
                 ArrowIcon = sessionsPaneOpen ? ChevronLeft : ChevronRight;
               } else if (canToggleChartPrep) {
-                displayLabel = isChartPrepListVisible ? 'Hide sessions' : 'Show sessions';
+                displayLabel = isChartPrepListVisible ? 'Hide chart prep' : 'Show chart prep';
                 ArrowIcon = isChartPrepListVisible ? ChevronLeft : ChevronRight;
               }
 
