@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { PatientSelector } from "@/components/newSession/PatientSelector";
+import { SessionHeaderRow } from "@/components/newSession/SessionHeaderRow";
 import { SessionInfoBar } from "@/components/newSession/SessionInfoBar";
 import { TwoColumnLayout } from "@/components/newSession/TwoColumnLayout";
 import { AskAIInput } from "@/components/newSession/AskAIInput";
@@ -35,6 +35,8 @@ const NewSession = () => {
   });
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientRequired, setPatientRequired] = useState(false);
+  const [selectedPartner, setSelectedPartner] = useState<string | null>(null);
+  const [selectedPhysician, setSelectedPhysician] = useState<string | null>(null);
   const [recordingMode, setRecordingMode] = useState<RecordingMode>("transcribe");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -261,29 +263,19 @@ const NewSession = () => {
   }, [activeNoteTabId, toast, currentSessionId, updateSession, transcriptContent, contextContent]);
   return <AppLayout>
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
-        <div className="px-6 py-4 border-b border-border flex items-center gap-3">
-          <PatientSelector selectedPatient={selectedPatient} patients={patients} onSelectPatient={handleSelectPatient} onCreatePatient={handleCreatePatient} onUpdatePatient={handleUpdatePatient} onDeletePatient={handleDeletePatient} isHighlighted={patientRequired} />
-          
-          {/* Partner display (read-only, set via patient selector) */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-            <span className="text-muted-foreground">Partner:</span>
-            <span className="text-foreground">
-              {selectedPatient?.partnerFirstName && selectedPatient?.partnerLastName 
-                ? `${selectedPatient.partnerFirstName} ${selectedPatient.partnerLastName}`
-                : '—'}
-            </span>
-          </div>
-          
-          {/* Referring Physician display (read-only, set via patient selector) */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-            <span className="text-muted-foreground">Referring physician:</span>
-            <span className="text-foreground">
-              {selectedPatient?.referringPhysicianName 
-                ? `Dr. ${selectedPatient.referringPhysicianName}`
-                : '—'}
-            </span>
-          </div>
-        </div>
+        <SessionHeaderRow
+          selectedPatient={selectedPatient}
+          patients={patients}
+          onSelectPatient={handleSelectPatient}
+          onCreatePatient={handleCreatePatient}
+          onUpdatePatient={handleUpdatePatient}
+          onDeletePatient={handleDeletePatient}
+          isPatientHighlighted={patientRequired}
+          selectedPartner={selectedPartner}
+          onPartnerChange={setSelectedPartner}
+          selectedPhysician={selectedPhysician}
+          onPhysicianChange={setSelectedPhysician}
+        />
 
         <SessionInfoBar sessionDate={sessionDate} inputLanguage={inputLanguage} outputLanguage={outputLanguage} onInputLanguageChange={setInputLanguage} onOutputLanguageChange={setOutputLanguage} recordingDuration={recordingDuration} selectedMicrophoneId={selectedMicrophoneId} onMicrophoneChange={setSelectedMicrophoneId} audioLevel={audioLevel} recordingMode={recordingMode} isRecording={isRecording} onModeChange={handleModeChange} onToggleRecording={handleToggleRecording} onUploadAudio={handleUploadAudio} />
 
