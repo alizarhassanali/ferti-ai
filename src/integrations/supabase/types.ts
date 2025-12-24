@@ -21,6 +21,7 @@ export type Database = {
           email: string
           expires_at: string
           id: string
+          requires_profile_completion: boolean | null
           role_to_assign: Database["public"]["Enums"]["team_member_role"]
           team_member_id: string | null
           token: string
@@ -32,6 +33,7 @@ export type Database = {
           email: string
           expires_at: string
           id?: string
+          requires_profile_completion?: boolean | null
           role_to_assign: Database["public"]["Enums"]["team_member_role"]
           team_member_id?: string | null
           token: string
@@ -43,6 +45,7 @@ export type Database = {
           email?: string
           expires_at?: string
           id?: string
+          requires_profile_completion?: boolean | null
           role_to_assign?: Database["public"]["Enums"]["team_member_role"]
           team_member_id?: string | null
           token?: string
@@ -130,6 +133,66 @@ export type Database = {
           role?: Database["public"]["Enums"]["team_member_role"]
           status?: Database["public"]["Enums"]["team_member_status"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          include_clinic_name: boolean | null
+          language: string | null
+          last_name: string | null
+          phone_country_code: string | null
+          phone_number: string | null
+          profile_completed: boolean | null
+          role: string
+          signature_email: string | null
+          signature_preferred_name: string | null
+          signature_specialty: string | null
+          signature_title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          include_clinic_name?: boolean | null
+          language?: string | null
+          last_name?: string | null
+          phone_country_code?: string | null
+          phone_number?: string | null
+          profile_completed?: boolean | null
+          role?: string
+          signature_email?: string | null
+          signature_preferred_name?: string | null
+          signature_specialty?: string | null
+          signature_title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          include_clinic_name?: boolean | null
+          language?: string | null
+          last_name?: string | null
+          phone_country_code?: string | null
+          phone_number?: string | null
+          profile_completed?: boolean | null
+          role?: string
+          signature_email?: string | null
+          signature_preferred_name?: string | null
+          signature_specialty?: string | null
+          signature_title?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

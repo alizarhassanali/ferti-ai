@@ -18,6 +18,8 @@ import ViewSessions from "./pages/ViewSessions";
 import ChartPrep from "./pages/ChartPrep";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
+import SetPassword from "./pages/onboarding/SetPassword";
+import CompleteProfile from "./pages/onboarding/CompleteProfile";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -43,6 +45,9 @@ const App = () => (
                     <Route path="/template-hub" element={<TemplateHub />} />
                     <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
                     <Route path="/letters" element={<Letters />} />
+                    {/* Onboarding routes */}
+                    <Route path="/onboarding/invite" element={<SetPassword />} />
+                    <Route path="/onboarding/complete-profile" element={<CompleteProfile />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
