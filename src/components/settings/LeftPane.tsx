@@ -95,6 +95,8 @@ export const LeftPane = () => {
     { icon: Store, label: 'Template Hub', id: 'template-hub', route: '/template-hub' },
     { type: 'separator' },
     { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
+    // Dev-only: Onboarding preview link
+    { icon: Plus, label: 'Onboarding (dev)', id: 'onboarding-dev', route: '/onboarding/create-password' },
   ];
 
   const footerItems = [
