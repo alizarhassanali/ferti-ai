@@ -410,9 +410,7 @@ export const NoteTab = ({
             <Select value={currentTabState.language} onValueChange={handleLanguageChange}>
               <SelectTrigger className="w-auto h-8 gap-1 border-0 bg-transparent hover:bg-muted px-2">
                 <Globe className="h-4 w-4 text-muted-foreground" />
-                <SelectValue>
-                  {languages.find(l => l.code === currentTabState.language)?.flag}
-                </SelectValue>
+                <span>{languages.find(l => l.code === currentTabState.language)?.flag}</span>
               </SelectTrigger>
               <SelectContent>
                 {languages.map(lang => (
