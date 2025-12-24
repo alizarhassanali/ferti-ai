@@ -7,7 +7,7 @@ const ViewSessionsContent = () => {
   const { isSessionsListVisible } = useSessionsLayout();
 
   return (
-    <AppLayout hideGlobalSessionsPanel>
+    <AppLayout>
       <div className="flex h-screen overflow-hidden bg-background w-full">
         {/* Middle Pane - Sessions List (fixed width like GlobalSessionsPanel) */}
         {isSessionsListVisible && (

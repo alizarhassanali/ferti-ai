@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 
 const LettersContent = () => {
   return (
-    <AppLayout hideGlobalSessionsPanel>
+    <AppLayout>
       <div className="flex h-screen overflow-hidden bg-background w-full">
         {/* Middle Pane - Letters List */}
         <div className="flex-shrink-0 overflow-hidden">
