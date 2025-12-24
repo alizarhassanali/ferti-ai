@@ -71,7 +71,7 @@ export const LeftPane = () => {
       isToggleable: true
     },
     { type: 'separator' },
-    { icon: FileCode, label: 'Chart Prep', id: 'chart-prep' },
+    { icon: FileCode, label: 'Chart Prep', id: 'chart-prep', route: '/chart-prep' },
     { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant', route: '/ai-assistant' },
     { type: 'separator' },
     { icon: Mail, label: 'Letters', id: 'letters', route: '/letters' },

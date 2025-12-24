@@ -10,7 +10,7 @@ interface AppLayoutProps {
 }
 
 // Routes where global sessions panel should NOT be shown
-const ROUTES_WITHOUT_SESSIONS_PANEL = ['/settings', '/sessions'];
+const ROUTES_WITHOUT_SESSIONS_PANEL = ['/settings', '/sessions', '/chart-prep'];
 
 export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayoutProps) => {
   const location = useLocation();

@@ -14,6 +14,7 @@ import TemplateHub from "./pages/TemplateHub";
 import TemplateDetail from "./pages/TemplateDetail";
 import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
+import ChartPrep from "./pages/ChartPrep";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ const App = () => (
                   <Route path="/" element={<Index />} />
                   <Route path="/new-session" element={<NewSession />} />
                   <Route path="/sessions" element={<ViewSessions />} />
+                  <Route path="/chart-prep" element={<ChartPrep />} />
                   <Route path="/ai-assistant" element={<AIAssistant />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/my-templates" element={<MyTemplates />} />
