@@ -20,6 +20,8 @@ import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
 import SetPassword from "./pages/onboarding/SetPassword";
 import CompleteProfile from "./pages/onboarding/CompleteProfile";
+import CreatePasswordPage from "./pages/onboarding/CreatePasswordPage";
+import CompleteProfilePage from "./pages/onboarding/CompleteProfilePage";
 import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
@@ -45,9 +47,12 @@ const App = () => (
                     <Route path="/template-hub" element={<TemplateHub />} />
                     <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
                     <Route path="/letters" element={<Letters />} />
-                    {/* Onboarding routes */}
+                    {/* Onboarding routes - with token validation */}
                     <Route path="/invite" element={<SetPassword />} />
                     <Route path="/complete-profile" element={<CompleteProfile />} />
+                    {/* Onboarding routes - static UI (no backend) */}
+                    <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
+                    <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
