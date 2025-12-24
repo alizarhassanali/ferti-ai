@@ -10,19 +10,13 @@ interface ChartPrepLayoutContextType {
 const ChartPrepLayoutContext = createContext<ChartPrepLayoutContextType | undefined>(undefined);
 
 export const ChartPrepLayoutProvider = ({ children }: { children: ReactNode }) => {
-  const [isSessionsListVisible, setIsSessionsListVisible] = useState(() => {
-    const saved = localStorage.getItem('chart-prep-list-visible');
-    return saved !== 'false'; // Default to true
-  });
+  // Sessions list is always visible - no collapsible behavior
+  const [isSessionsListVisible] = useState(true);
   
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
 
   const toggleSessionsList = () => {
-    setIsSessionsListVisible((prev) => {
-      const newValue = !prev;
-      localStorage.setItem('chart-prep-list-visible', String(newValue));
-      return newValue;
-    });
+    // No-op - sessions list is always visible
   };
 
   return (
