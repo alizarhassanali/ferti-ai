@@ -55,7 +55,8 @@ export const CompleteProfile = () => {
     includeClinicName: false,
   });
 
-  const isPhysician = userRole === 'physician';
+  // MVP: Always treat as physician
+  const isPhysician = true;
 
   // Check auth and load existing profile data
   useEffect(() => {
@@ -63,8 +64,8 @@ export const CompleteProfile = () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        // Not logged in, redirect to login
-        navigate('/auth');
+        // Not logged in, redirect to invite page
+        navigate('/invite');
         return;
       }
 
@@ -146,7 +147,7 @@ export const CompleteProfile = () => {
           description: 'Please log in again.',
           variant: 'destructive',
         });
-        navigate('/auth');
+        navigate('/invite');
         return;
       }
 

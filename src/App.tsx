@@ -46,8 +46,8 @@ const App = () => (
                     <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
                     <Route path="/letters" element={<Letters />} />
                     {/* Onboarding routes */}
-                    <Route path="/onboarding/invite" element={<SetPassword />} />
-                    <Route path="/onboarding/complete-profile" element={<CompleteProfile />} />
+                    <Route path="/invite" element={<SetPassword />} />
+                    <Route path="/complete-profile" element={<CompleteProfile />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
