@@ -167,9 +167,9 @@ export const SetPassword = () => {
       });
 
       // Navigate to complete profile with role info
-      navigate('/onboarding/complete-profile', {
+      navigate('/complete-profile', {
         state: {
-          role: result.role || inviteData?.role_to_assign,
+          role: result.role || inviteData?.role_to_assign || 'physician',
           email: inviteData?.email,
           firstName: inviteData?.first_name,
           lastName: inviteData?.last_name,
@@ -221,7 +221,7 @@ export const SetPassword = () => {
             <Button 
               variant="outline" 
               className="w-full"
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/')}
             >
               Back to login
             </Button>
@@ -340,7 +340,7 @@ export const SetPassword = () => {
             <div className="text-center">
               <button
                 type="button"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/')}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Back to login
