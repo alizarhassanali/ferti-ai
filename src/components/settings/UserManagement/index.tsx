@@ -1,19 +1,13 @@
 import { useState, useCallback } from 'react';
 import { UserManagementList } from './UserManagementList';
-import { NewMemberForm } from './NewMemberForm';
-
-type View = 'list' | 'new-member';
+import { NewMemberModal } from './NewMemberModal';
 
 export const UserManagement = () => {
-  const [view, setView] = useState<View>('list');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAddMember = () => {
-    setView('new-member');
-  };
-
-  const handleBack = () => {
-    setView('list');
+    setIsModalOpen(true);
   };
 
   const handleSuccess = useCallback(() => {
@@ -21,12 +15,13 @@ export const UserManagement = () => {
   }, []);
 
   return (
-    <div key={refreshKey}>
-      {view === 'list' ? (
-        <UserManagementList onAddMember={handleAddMember} />
-      ) : (
-        <NewMemberForm onBack={handleBack} onSuccess={handleSuccess} />
-      )}
-    </div>
+    <>
+      <UserManagementList key={refreshKey} onAddMember={handleAddMember} />
+      <NewMemberModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onSuccess={handleSuccess}
+      />
+    </>
   );
 };
