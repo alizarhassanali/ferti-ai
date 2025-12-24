@@ -5,9 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionsProvider } from "./contexts/SessionsContext";
 import { PatientsProvider } from "./contexts/PatientsContext";
+import { SessionsPanelProvider } from "./contexts/SessionsPanelContext";
 import { ChartPrepLayoutProvider } from "./contexts/ChartPrepLayoutContext";
 import { LettersProvider } from "./contexts/LettersContext";
-import { GlobalSessionsOverlayProvider } from "./contexts/GlobalSessionsOverlayContext";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
@@ -23,7 +23,6 @@ import CompleteProfile from "./pages/onboarding/CompleteProfile";
 import CreatePasswordPage from "./pages/onboarding/CreatePasswordPage";
 import CompleteProfilePage from "./pages/onboarding/CompleteProfilePage";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -35,7 +34,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <GlobalSessionsOverlayProvider>
+              <SessionsPanelProvider>
                 <ChartPrepLayoutProvider>
                   <Routes>
                     <Route path="/" element={<Index />} />
@@ -58,7 +57,7 @@ const App = () => (
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </ChartPrepLayoutProvider>
-              </GlobalSessionsOverlayProvider>
+              </SessionsPanelProvider>
             </BrowserRouter>
           </TooltipProvider>
         </LettersProvider>

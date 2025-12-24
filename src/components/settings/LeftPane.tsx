@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { useChartPrepLayout } from '@/contexts/ChartPrepLayoutContext';
-import { useGlobalSessionsOverlay } from '@/contexts/GlobalSessionsOverlayContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -39,15 +39,20 @@ export const LeftPane = () => {
     return saved === 'true';
   });
 
+  // Get global sessions panel context
+  const { 
+    sessionsPaneOpen,
+    toggleSessionsPanel, 
+    isSessionsPanelAllowed 
+  } = useSessionsPanel();
+
   // Get chart prep layout context
   const {
     isSessionsListVisible: isChartPrepListVisible,
     toggleSessionsList: toggleChartPrepList
   } = useChartPrepLayout();
 
-  // Get global sessions overlay context
-  const { sessionsOverlayOpen, toggleSessionsOverlay } = useGlobalSessionsOverlay();
-
+  const isSessionsPage = location.pathname === '/sessions';
   const isChartPrepPage = location.pathname === '/chart-prep';
 
   const toggleSidebar = () => {
@@ -66,7 +71,13 @@ export const LeftPane = () => {
 
   const navItems = [
     { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
-    { icon: FileText, label: sessionsOverlayOpen ? 'Hide sessions' : 'View sessions', id: 'sessions', isSessionsToggle: true },
+    { 
+      icon: FileText, 
+      label: 'View sessions', 
+      id: 'sessions', 
+      route: '/sessions',
+      isToggleable: true
+    },
     { type: 'separator' },
     { 
       icon: FileCode, 
@@ -226,13 +237,20 @@ export const LeftPane = () => {
               const Icon = item.icon!;
               const isActive = item.route ? location.pathname === item.route : false;
 
+              // For toggleable items (View sessions), show different label when panel is open
+              // and we're on an allowed page (not settings, not /sessions page itself)
+              const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
+              
               // For Chart Prep toggle - only show toggle when on chart-prep page
               const canToggleChartPrep = item.isChartPrepToggle && isChartPrepPage;
               
               let displayLabel = item.label;
               let ArrowIcon: typeof ChevronLeft | null = null;
               
-              if (canToggleChartPrep) {
+              if (canToggle) {
+                displayLabel = sessionsPaneOpen ? 'Hide sessions' : item.label;
+                ArrowIcon = sessionsPaneOpen ? ChevronLeft : ChevronRight;
+              } else if (canToggleChartPrep) {
                 displayLabel = 'Chart Prep';
                 ArrowIcon = isChartPrepListVisible ? ChevronLeft : ChevronRight;
               }
@@ -243,9 +261,20 @@ export const LeftPane = () => {
                 
                 if (item.id === 'help') {
                   setHelpPanelOpen(true);
-                } else if (item.id === 'sessions' || item.isSessionsToggle) {
-                  // Toggle sessions overlay from any page
-                  toggleSessionsOverlay();
+                } else if (item.id === 'sessions') {
+                  // If we're on /sessions page, navigate there
+                  // If we're on another allowed page, toggle the sessions panel
+                  // If we're on settings, just navigate to /sessions
+                  if (isSessionsPage) {
+                    // Already on sessions page, do nothing or could navigate
+                    navigate('/sessions');
+                  } else if (isSessionsPanelAllowed) {
+                    // On an allowed page, toggle the panel
+                    toggleSessionsPanel();
+                  } else {
+                    // On a disallowed page (settings), navigate to sessions
+                    navigate('/sessions');
+                  }
                 } else if (item.id === 'chart-prep') {
                   // If we're on chart-prep page, toggle the sessions list
                   // Otherwise, navigate to chart-prep
