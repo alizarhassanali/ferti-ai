@@ -27,10 +27,27 @@ export interface Session {
 export interface Patient {
   id: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   identifier?: string;
   additionalContext?: string;
+  partnerFirstName?: string;
+  partnerLastName?: string;
+  referringPhysicianId?: string;
+  referringPhysicianName?: string;
+  referringPhysicianClinic?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ReferringPhysician {
+  id: string;
+  first_name: string;
+  last_name: string;
+  clinic_name?: string;
+  city?: string;
+  province?: string;
+  specialty?: string;
 }
 
 export interface NoteTab {
