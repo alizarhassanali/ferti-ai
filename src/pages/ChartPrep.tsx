@@ -130,7 +130,7 @@ const ChartPrep = () => {
   }, [activeNoteTabId, toast, selectedSessionId, getSession, contextContent, selectedPatient]);
 
   return (
-    <AppLayout hideGlobalSessionsPanel>
+    <AppLayout>
       <div className="flex h-screen overflow-hidden bg-background w-full">
         {/* Middle Pane - Sessions List (collapsible, same as View Sessions) */}
         {isSessionsListVisible && (

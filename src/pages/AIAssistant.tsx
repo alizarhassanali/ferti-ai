@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 
 const AIAssistantContent = () => {
   return (
-    <AppLayout hideGlobalSessionsPanel>
+    <AppLayout>
       <div className="flex h-screen overflow-hidden bg-background w-full">
         {/* Middle Pane - Conversation List */}
         <div className="w-80 flex-shrink-0 overflow-hidden border-r border-border">
