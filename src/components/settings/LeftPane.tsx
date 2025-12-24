@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useChartPrepLayout } from '@/contexts/ChartPrepLayoutContext';
+import { useGlobalSessionsOverlay } from '@/contexts/GlobalSessionsOverlayContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -44,6 +45,9 @@ export const LeftPane = () => {
     toggleSessionsList: toggleChartPrepList
   } = useChartPrepLayout();
 
+  // Get global sessions overlay context
+  const { sessionsOverlayOpen, toggleSessionsOverlay } = useGlobalSessionsOverlay();
+
   const isChartPrepPage = location.pathname === '/chart-prep';
 
   const toggleSidebar = () => {
@@ -62,7 +66,7 @@ export const LeftPane = () => {
 
   const navItems = [
     { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
-    { icon: FileText, label: 'View sessions', id: 'sessions', route: '/sessions' },
+    { icon: FileText, label: sessionsOverlayOpen ? 'Hide sessions' : 'View sessions', id: 'sessions', isSessionsToggle: true },
     { type: 'separator' },
     { 
       icon: FileCode, 
@@ -239,6 +243,9 @@ export const LeftPane = () => {
                 
                 if (item.id === 'help') {
                   setHelpPanelOpen(true);
+                } else if (item.id === 'sessions' || item.isSessionsToggle) {
+                  // Toggle sessions overlay from any page
+                  toggleSessionsOverlay();
                 } else if (item.id === 'chart-prep') {
                   // If we're on chart-prep page, toggle the sessions list
                   // Otherwise, navigate to chart-prep
