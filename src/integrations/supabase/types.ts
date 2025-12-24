@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      invites: {
+        Row: {
+          created_at: string
+          created_by_user_id: string | null
+          email: string
+          expires_at: string
+          id: string
+          role_to_assign: Database["public"]["Enums"]["team_member_role"]
+          team_member_id: string | null
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by_user_id?: string | null
+          email: string
+          expires_at: string
+          id?: string
+          role_to_assign: Database["public"]["Enums"]["team_member_role"]
+          team_member_id?: string | null
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by_user_id?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          role_to_assign?: Database["public"]["Enums"]["team_member_role"]
+          team_member_id?: string | null
+          token?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invites_team_member_id_fkey"
+            columns: ["team_member_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referring_physicians: {
         Row: {
           active: boolean
@@ -53,6 +97,42 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          invited_at: string | null
+          last_name: string
+          role: Database["public"]["Enums"]["team_member_role"]
+          status: Database["public"]["Enums"]["team_member_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          invited_at?: string | null
+          last_name: string
+          role?: Database["public"]["Enums"]["team_member_role"]
+          status?: Database["public"]["Enums"]["team_member_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          invited_at?: string | null
+          last_name?: string
+          role?: Database["public"]["Enums"]["team_member_role"]
+          status?: Database["public"]["Enums"]["team_member_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -61,7 +141,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      team_member_role: "admin" | "physician" | "nurse" | "staff"
+      team_member_status: "pending" | "active" | "disabled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -188,6 +269,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      team_member_role: ["admin", "physician", "nurse", "staff"],
+      team_member_status: ["pending", "active", "disabled"],
+    },
   },
 } as const

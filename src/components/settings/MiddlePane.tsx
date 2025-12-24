@@ -1,4 +1,4 @@
-import { User, Shield, Brain, Lock } from 'lucide-react';
+import { User, Shield, Brain, Lock, Users } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { UserRole } from '@/types/user';
 
@@ -12,6 +12,7 @@ interface SettingsCategory {
 const settingsCategories: SettingsCategory[] = [
   { id: 'profile', label: 'Profile', icon: User, roles: 'all' },
   { id: 'ai-settings', label: 'AI Settings', icon: Brain, roles: 'all' },
+  { id: 'user-management', label: 'User management', icon: Users, roles: 'all' },
   { id: 'privacy', label: 'Privacy', icon: Lock, roles: 'all' },
   { id: 'security', label: 'Security', icon: Shield, roles: 'all' },
 ];
