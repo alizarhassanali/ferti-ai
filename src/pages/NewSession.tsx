@@ -12,6 +12,16 @@ import { usePatients } from "@/contexts/PatientsContext";
 import { generateNoteFromTemplate, availableTemplates } from "@/data/templates";
 import { format } from "date-fns";
 import { DEMO_NOTES } from "@/data/demoContent";
+import { ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const partnerOptions = ['None', 'Jane Smith', 'Partner A', 'Partner B'];
+const referringPhysicianOptions = ['None', 'Dr. Michael Chen', 'Dr. Smith', 'Dr. Johnson'];
 const NewSession = () => {
   const {
     toast
@@ -53,6 +63,8 @@ const NewSession = () => {
   const [activeNoteTabId, setActiveNoteTabId] = useState("1");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
+  const [selectedPartner, setSelectedPartner] = useState<string | null>('Jane Smith');
+  const [selectedReferringPhysician, setSelectedReferringPhysician] = useState<string | null>('Dr. Michael Chen');
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
@@ -263,21 +275,49 @@ const NewSession = () => {
         <div className="px-6 py-4 border-b border-border flex items-center gap-3">
           <PatientSelector selectedPatient={selectedPatient} patients={patients} onSelectPatient={handleSelectPatient} onCreatePatient={handleCreatePatient} onUpdatePatient={handleUpdatePatient} onDeletePatient={handleDeletePatient} isHighlighted={patientRequired} />
           
-          {/* Partner - read only */}
-          <div title={selectedPatient ? "Jane Smith" : "No partner linked"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] select-text bg-white">
-            <span className="text-muted-foreground">Partner:</span>
-            <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
-              {selectedPatient ? "Jane Smith" : "—"}
-            </span>
-          </div>
+          {/* Partner dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white hover:bg-muted transition-colors cursor-pointer">
+                <span className="text-muted-foreground">Partner:</span>
+                <span className="text-foreground">{selectedPartner || '—'}</span>
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48 bg-white border border-border">
+              {partnerOptions.map(option => (
+                <DropdownMenuItem
+                  key={option}
+                  onClick={() => setSelectedPartner(option === 'None' ? null : option)}
+                  className="cursor-pointer"
+                >
+                  {option}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           
-          {/* Referring Physician - read only */}
-          <div title={selectedPatient ? "Dr. Michael Chen" : "No referring physician"} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] select-text bg-white">
-            <span className="text-muted-foreground">Referring physician:</span>
-            <span className={selectedPatient ? "text-foreground" : "text-muted-foreground"}>
-              {selectedPatient ? "Dr. Michael Chen" : "—"}
-            </span>
-          </div>
+          {/* Referring Physician dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white hover:bg-muted transition-colors cursor-pointer">
+                <span className="text-muted-foreground">Referring physician:</span>
+                <span className="text-foreground">{selectedReferringPhysician || '—'}</span>
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48 bg-white border border-border">
+              {referringPhysicianOptions.map(option => (
+                <DropdownMenuItem
+                  key={option}
+                  onClick={() => setSelectedReferringPhysician(option === 'None' ? null : option)}
+                  className="cursor-pointer"
+                >
+                  {option}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <SessionInfoBar sessionDate={sessionDate} inputLanguage={inputLanguage} outputLanguage={outputLanguage} onInputLanguageChange={setInputLanguage} onOutputLanguageChange={setOutputLanguage} recordingDuration={recordingDuration} selectedMicrophoneId={selectedMicrophoneId} onMicrophoneChange={setSelectedMicrophoneId} audioLevel={audioLevel} recordingMode={recordingMode} isRecording={isRecording} onModeChange={handleModeChange} onToggleRecording={handleToggleRecording} onUploadAudio={handleUploadAudio} />
