@@ -3,19 +3,8 @@ import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, P
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { useChartPrepLayout } from '@/contexts/ChartPrepLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 
@@ -25,9 +14,8 @@ const mockUser = {
   email: "shahid.saya@fertilitypartners.ca",
   role: 'Physician' as const,
   clinic: "Fertility Partners - Toronto",
-  profileImage: undefined,
+  profileImage: undefined
 };
-
 export const LeftPane = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,10 +28,10 @@ export const LeftPane = () => {
   });
 
   // Get global sessions panel context
-  const { 
+  const {
     sessionsPaneOpen,
-    toggleSessionsPanel, 
-    isSessionsPanelAllowed 
+    toggleSessionsPanel,
+    isSessionsPanelAllowed
   } = useSessionsPanel();
 
   // Get chart prep layout context
@@ -51,76 +39,90 @@ export const LeftPane = () => {
     isSessionsListVisible: isChartPrepListVisible,
     toggleSessionsList: toggleChartPrepList
   } = useChartPrepLayout();
-
   const isSessionsPage = location.pathname === '/sessions';
   const isChartPrepPage = location.pathname === '/chart-prep';
-
   const toggleSidebar = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem('sidebar-collapsed', String(newState));
   };
-
   const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase();
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
-
-  const navItems = [
-    { icon: Plus, label: 'New session', id: 'new-session', route: '/new-session' },
-    { 
-      icon: FileText, 
-      label: 'View sessions', 
-      id: 'sessions', 
-      route: '/sessions',
-      isToggleable: true
-    },
-    { type: 'separator' },
-    { 
-      icon: FileCode, 
-      label: 'Chart Prep', 
-      id: 'chart-prep', 
-      route: '/chart-prep',
-      isChartPrepToggle: true
-    },
-    { icon: MessageSquare, label: 'AI Assistant', id: 'ai-assistant', route: '/ai-assistant' },
-    { type: 'separator' },
-    { icon: Mail, label: 'Letters', id: 'letters', route: '/letters' },
-    { type: 'separator' },
-    { label: 'Templates', type: 'header' },
-    { icon: FileText, label: 'My Templates', id: 'my-templates', route: '/my-templates' },
-    { icon: Store, label: 'Template Hub', id: 'template-hub', route: '/template-hub' },
-    { type: 'separator' },
-    { icon: Settings, label: 'Settings', id: 'settings', route: '/settings' },
-    // Dev-only: Onboarding preview link
-    { icon: Plus, label: 'Onboarding (dev)', id: 'onboarding-dev', route: '/onboarding/create-password' },
-  ];
-
-  const footerItems = [
-    { icon: HelpCircle, label: 'Help', id: 'help' },
-  ];
-
-  return (
-    <>
+  const navItems = [{
+    icon: Plus,
+    label: 'New session',
+    id: 'new-session',
+    route: '/new-session'
+  }, {
+    icon: FileText,
+    label: 'View sessions',
+    id: 'sessions',
+    route: '/sessions',
+    isToggleable: true
+  }, {
+    type: 'separator'
+  }, {
+    icon: FileCode,
+    label: 'Chart Prep',
+    id: 'chart-prep',
+    route: '/chart-prep',
+    isChartPrepToggle: true
+  }, {
+    icon: MessageSquare,
+    label: 'AI Assistant',
+    id: 'ai-assistant',
+    route: '/ai-assistant'
+  }, {
+    type: 'separator'
+  }, {
+    icon: Mail,
+    label: 'Letters',
+    id: 'letters',
+    route: '/letters'
+  }, {
+    type: 'separator'
+  }, {
+    label: 'Templates',
+    type: 'header'
+  }, {
+    icon: FileText,
+    label: 'My Templates',
+    id: 'my-templates',
+    route: '/my-templates'
+  }, {
+    icon: Store,
+    label: 'Template Hub',
+    id: 'template-hub',
+    route: '/template-hub'
+  }, {
+    type: 'separator'
+  }, {
+    icon: Settings,
+    label: 'Settings',
+    id: 'settings',
+    route: '/settings'
+  },
+  // Dev-only: Onboarding preview link
+  {
+    icon: Plus,
+    label: 'Onboarding (dev)',
+    id: 'onboarding-dev',
+    route: '/onboarding/create-password'
+  }];
+  const footerItems = [{
+    icon: HelpCircle,
+    label: 'Help',
+    id: 'help'
+  }];
+  return <>
       {/* Mobile Hamburger Button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-40 p-2.5 rounded-xl bg-sidebar text-foreground hover:bg-muted shadow-subtle transition-all"
-        aria-label="Open menu"
-      >
+      <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden fixed top-4 left-4 z-40 p-2.5 rounded-xl bg-sidebar text-foreground hover:bg-muted shadow-subtle transition-all" aria-label="Open menu">
         <Menu className="h-5 w-5" />
       </button>
 
       {/* Mobile Backdrop */}
-      {isMobileMenuOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 transition-opacity duration-300"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
+      {isMobileMenuOpen && <div className="md:hidden fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 transition-opacity duration-300" onClick={() => setIsMobileMenuOpen(false)} />}
 
       {/* Sidebar */}
       <div className={`
@@ -131,11 +133,7 @@ export const LeftPane = () => {
         ${isMobileMenuOpen ? '!flex fixed inset-y-0 left-0 z-50 w-64 m-2 rounded-2xl' : ''}
       `}>
         {/* Mobile Close Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="md:hidden absolute top-5 right-4 z-10 p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
-          aria-label="Close menu"
-        >
+        <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden absolute top-5 right-4 z-10 p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all" aria-label="Close menu">
           <X className="h-5 w-5" />
         </button>
 
@@ -144,11 +142,7 @@ export const LeftPane = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button
-                  onClick={toggleSidebar}
-                  className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card border border-border shadow-subtle hover:shadow-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200"
-                  aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}
-                >
+                <button onClick={toggleSidebar} className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card border border-border shadow-subtle hover:shadow-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200" aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}>
                   <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${isCollapsed ? '' : 'rotate-180'}`} />
                 </button>
               </TooltipTrigger>
@@ -162,8 +156,7 @@ export const LeftPane = () => {
         {/* User Profile Section */}
         <div className={`border-b border-sidebar-border relative ${isCollapsed ? 'px-3 py-5' : 'px-5 py-6'}`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
-            {!isCollapsed && (
-              <DropdownMenu>
+            {!isCollapsed && <DropdownMenu>
                 <DropdownMenuTrigger className="flex-1 min-w-0 focus:outline-none">
                   <div className="flex items-center gap-3 p-2 -m-2 rounded-xl hover:bg-muted cursor-pointer group transition-all duration-200">
                     <Avatar className="h-10 w-10 flex-shrink-0 shadow-subtle ring-2 ring-card">
@@ -189,10 +182,8 @@ export const LeftPane = () => {
                     <span>Logout</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-            {isCollapsed && (
-              <TooltipProvider>
+              </DropdownMenu>}
+            {isCollapsed && <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center justify-center">
@@ -209,8 +200,7 @@ export const LeftPane = () => {
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
-            )}
+              </TooltipProvider>}
           </div>
           
       </div>
@@ -220,99 +210,75 @@ export const LeftPane = () => {
         <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
           <ul className="space-y-1">
             {navItems.map((item, index) => {
-              if (item.type === 'separator') {
-                return <li key={`sep-${index}`} className="h-px bg-sidebar-border my-3 mx-2" />;
-              }
-
-              if (item.type === 'header') {
-                return !isCollapsed ? (
-                  <li key={item.label} className="px-3 pt-4 pb-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.1em]">
+            if (item.type === 'separator') {
+              return <li key={`sep-${index}`} className="h-px bg-sidebar-border my-3 mx-2" />;
+            }
+            if (item.type === 'header') {
+              return !isCollapsed ? <li key={item.label} className="px-3 pt-4 pb-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.1em]">
                     {item.label}
-                  </li>
-                ) : (
-                  <li key={item.label} className="h-px bg-sidebar-border my-3" />
-                );
-              }
+                  </li> : <li key={item.label} className="h-px bg-sidebar-border my-3" />;
+            }
+            const Icon = item.icon!;
+            const isActive = item.route ? location.pathname === item.route : false;
 
-              const Icon = item.icon!;
-              const isActive = item.route ? location.pathname === item.route : false;
+            // For toggleable items (View sessions), show different label when panel is open
+            // and we're on an allowed page (not settings, not /sessions page itself)
+            const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
 
-              // For toggleable items (View sessions), show different label when panel is open
-              // and we're on an allowed page (not settings, not /sessions page itself)
-              const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
-              
-              // For Chart Prep toggle - only show toggle when on chart-prep page
-              const canToggleChartPrep = item.isChartPrepToggle && isChartPrepPage;
-              
-              let displayLabel = item.label;
-              let ArrowIcon: typeof ChevronLeft | null = null;
-              
-              if (canToggle) {
-                displayLabel = sessionsPaneOpen ? 'Hide sessions' : item.label;
-                ArrowIcon = sessionsPaneOpen ? ChevronLeft : ChevronRight;
-              } else if (canToggleChartPrep) {
-                displayLabel = 'Chart Prep';
-                ArrowIcon = isChartPrepListVisible ? ChevronLeft : ChevronRight;
-              }
-
-              const handleClick = () => {
-                // Close mobile menu when navigating
-                setIsMobileMenuOpen(false);
-                
-                if (item.id === 'help') {
-                  setHelpPanelOpen(true);
-                } else if (item.id === 'sessions') {
-                  // If we're on /sessions page, navigate there
-                  // If we're on another allowed page, toggle the sessions panel
-                  // If we're on settings, just navigate to /sessions
-                  if (isSessionsPage) {
-                    // Already on sessions page, do nothing or could navigate
-                    navigate('/sessions');
-                  } else if (isSessionsPanelAllowed) {
-                    // On an allowed page, toggle the panel
-                    toggleSessionsPanel();
-                  } else {
-                    // On a disallowed page (settings), navigate to sessions
-                    navigate('/sessions');
-                  }
-                } else if (item.id === 'chart-prep') {
-                  // If we're on chart-prep page, toggle the sessions list
-                  // Otherwise, navigate to chart-prep
-                  if (isChartPrepPage) {
-                    toggleChartPrepList();
-                  } else {
-                    navigate('/chart-prep');
-                  }
-                } else if (item.route) {
-                  navigate(item.route);
+            // For Chart Prep toggle - only show toggle when on chart-prep page
+            const canToggleChartPrep = item.isChartPrepToggle && isChartPrepPage;
+            let displayLabel = item.label;
+            let ArrowIcon: typeof ChevronLeft | null = null;
+            if (canToggle) {
+              displayLabel = sessionsPaneOpen ? 'Hide sessions' : item.label;
+              ArrowIcon = sessionsPaneOpen ? ChevronLeft : ChevronRight;
+            } else if (canToggleChartPrep) {
+              displayLabel = 'Chart Prep';
+              ArrowIcon = isChartPrepListVisible ? ChevronLeft : ChevronRight;
+            }
+            const handleClick = () => {
+              // Close mobile menu when navigating
+              setIsMobileMenuOpen(false);
+              if (item.id === 'help') {
+                setHelpPanelOpen(true);
+              } else if (item.id === 'sessions') {
+                // If we're on /sessions page, navigate there
+                // If we're on another allowed page, toggle the sessions panel
+                // If we're on settings, just navigate to /sessions
+                if (isSessionsPage) {
+                  // Already on sessions page, do nothing or could navigate
+                  navigate('/sessions');
+                } else if (isSessionsPanelAllowed) {
+                  // On an allowed page, toggle the panel
+                  toggleSessionsPanel();
+                } else {
+                  // On a disallowed page (settings), navigate to sessions
+                  navigate('/sessions');
                 }
-              };
-
-              return (
-                <li key={item.id}>
-                  {isCollapsed ? (
-                    <TooltipProvider>
+              } else if (item.id === 'chart-prep') {
+                // If we're on chart-prep page, toggle the sessions list
+                // Otherwise, navigate to chart-prep
+                if (isChartPrepPage) {
+                  toggleChartPrepList();
+                } else {
+                  navigate('/chart-prep');
+                }
+              } else if (item.route) {
+                navigate(item.route);
+              }
+            };
+            return <li key={item.id}>
+                  {isCollapsed ? <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button
-                            onClick={handleClick}
-                            className={`
+                          <button onClick={handleClick} className={`
                               w-full flex items-center justify-center p-2.5 rounded-xl text-sm
                               transition-all duration-200 group
-                              ${isActive
-                                ? 'bg-sidebar-accent text-foreground border border-primary/20 shadow-subtle'
-                                : 'text-foreground hover:bg-muted'
-                              }
-                            `}
-                          >
+                              ${isActive ? 'bg-sidebar-accent text-foreground border border-primary/20 shadow-subtle' : 'text-foreground hover:bg-muted'}
+                            `}>
                             <div className={`
                               flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200
-                              ${item.id === 'new-session'
-                                ? 'bg-session-action text-session-action-foreground shadow-subtle'
-                                : isActive 
-                                  ? 'border-2 border-white shadow-subtle' 
-                                  : 'group-hover:scale-105'
-                              }
+                              ${item.id === 'new-session' ? 'bg-session-action text-session-action-foreground shadow-subtle' : isActive ? 'border-2 border-white shadow-subtle' : 'group-hover:scale-105'}
                             `}>
                               <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
                             </div>
@@ -322,63 +288,41 @@ export const LeftPane = () => {
                           <p>{displayLabel}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <button
-                      onClick={handleClick}
-                      className={`
+                    </TooltipProvider> : <button onClick={handleClick} className={`
                         w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm
                         transition-all duration-200 group
-                        ${isActive
-                          ? 'bg-sidebar-accent text-foreground font-semibold border border-primary/20 shadow-subtle'
-                          : 'text-foreground hover:bg-muted font-medium'
-                        }
-                      `}
-                    >
+                        ${isActive ? 'bg-sidebar-accent text-foreground font-semibold border border-primary/20 shadow-subtle' : 'text-foreground hover:bg-muted font-medium'}
+                      `}>
                       <div className={`
                         flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200
-                        ${item.id === 'new-session'
-                          ? 'bg-session-action text-session-action-foreground shadow-subtle'
-                          : isActive 
-                            ? 'border-2 border-white shadow-subtle' 
-                            : 'group-hover:scale-105'
-                        }
+                        ${item.id === 'new-session' ? 'bg-session-action text-session-action-foreground shadow-subtle' : isActive ? 'border-2 border-white shadow-subtle' : 'group-hover:scale-105'}
                       `}>
                         <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
                       </div>
                       <span className="flex-1 text-left transition-all duration-200">{displayLabel}</span>
-                      {ArrowIcon && <ArrowIcon className="h-4 w-4 text-muted-foreground" />}
-                    </button>
-                  )}
-                </li>
-              );
-            })}
+                      {ArrowIcon}
+                    </button>}
+                </li>;
+          })}
           </ul>
         </nav>
 
         {/* Footer Section */}
         <div className={`border-t border-sidebar-border ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
           <ul className="space-y-1">
-            {footerItems.map((item) => {
-              const Icon = item.icon;
-
-              const handleClick = () => {
-                setIsMobileMenuOpen(false);
-                if (item.id === 'help') {
-                  setHelpPanelOpen(true);
-                }
-              };
-
-              return (
-                <li key={item.id}>
-                  {isCollapsed ? (
-                    <TooltipProvider>
+            {footerItems.map(item => {
+            const Icon = item.icon;
+            const handleClick = () => {
+              setIsMobileMenuOpen(false);
+              if (item.id === 'help') {
+                setHelpPanelOpen(true);
+              }
+            };
+            return <li key={item.id}>
+                  {isCollapsed ? <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button
-                            onClick={handleClick}
-                            className="w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground"
-                          >
+                          <button onClick={handleClick} className="w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground">
                             <div className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 group-hover:scale-105">
                               <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                             </div>
@@ -388,24 +332,16 @@ export const LeftPane = () => {
                           <p>{item.label}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <button
-                      onClick={handleClick}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground font-medium"
-                    >
+                    </TooltipProvider> : <button onClick={handleClick} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground font-medium">
                       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                       <span className="flex-1 text-left">{item.label}</span>
-                    </button>
-                  )}
-                </li>
-              );
-            })}
+                    </button>}
+                </li>;
+          })}
           </ul>
         </div>
       </div>
       
       <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
-    </>
-  );
+    </>;
 };
