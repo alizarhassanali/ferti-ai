@@ -3,6 +3,7 @@ import { ProfileSettings } from './ProfileSettings';
 import { SecuritySettings } from './SecuritySettings';
 import { AISettings } from './AISettings';
 import { PrivacySettings } from './PrivacySettings';
+import { UserManagement } from './UserManagement';
 
 export const RightPane = () => {
   const { selectedCategory } = useSettings();
@@ -13,6 +14,8 @@ export const RightPane = () => {
         return <ProfileSettings />;
       case 'ai-settings':
         return <AISettings />;
+      case 'user-management':
+        return <UserManagement />;
       case 'privacy':
         return <PrivacySettings />;
       case 'security':
