@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Mail, Printer, FileDown, Send, PenLine, Download, CheckCircle } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, Download, CheckCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -7,17 +7,38 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
 import { availableTemplates } from '@/data/templates';
 import { useLetters } from '@/contexts/LettersContext';
+
+const languages = [
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', flag: '🇫🇷' },
+  { code: 'de', name: 'German', flag: '🇩🇪' },
+  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+  { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },
+  { code: 'it', name: 'Italian', flag: '🇮🇹' },
+  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+];
+
+interface ExtendedTabState {
+  language: string;
+  undoStack: string[];
+  redoStack: string[];
+}
 
 interface AttachedFile {
   id: string;
@@ -64,8 +85,22 @@ export const RightColumnPanel = ({
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Per-tab state for language and undo/redo history
+  const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
+    const initial: Record<string, ExtendedTabState> = {};
+    noteTabs.forEach(tab => {
+      initial[tab.id] = {
+        language: 'en',
+        undoStack: [],
+        redoStack: [],
+      };
+    });
+    return initial;
+  });
+  
   const activeTab = noteTabs.find(t => t.id === activeNoteTabId) || noteTabs[0];
   const currentTemplateId = activeTab?.templateId || '';
+  const currentTabState = tabStates[activeNoteTabId] || { language: 'en', undoStack: [], redoStack: [] };
   const selectedTemplate = availableTemplates.find(t => t.id === currentTemplateId);
   
   // Letter workflow
@@ -185,12 +220,86 @@ export const RightColumnPanel = ({
     }
   };
 
-  const updateTabContent = (content: string) => {
+  const updateTabContent = useCallback((content: string) => {
+    // Push current content to undo stack before updating
+    const currentContent = activeTab?.content || '';
+    if (currentContent !== content) {
+      setTabStates(prev => ({
+        ...prev,
+        [activeNoteTabId]: {
+          ...prev[activeNoteTabId],
+          undoStack: [...(prev[activeNoteTabId]?.undoStack || []), currentContent],
+          redoStack: [], // Clear redo stack on new edit
+        },
+      }));
+    }
+    
     const newTabs = noteTabs.map(t =>
       t.id === activeNoteTabId ? { ...t, content } : t
     );
     onNoteTabsChange(newTabs);
+  }, [activeNoteTabId, activeTab?.content, noteTabs, onNoteTabsChange]);
+
+  const handleUndo = useCallback(() => {
+    const { undoStack } = currentTabState;
+    if (undoStack.length === 0) return;
+    
+    const previousContent = undoStack[undoStack.length - 1];
+    const currentContent = activeTab?.content || '';
+    
+    setTabStates(prev => ({
+      ...prev,
+      [activeNoteTabId]: {
+        ...prev[activeNoteTabId],
+        undoStack: undoStack.slice(0, -1),
+        redoStack: [...(prev[activeNoteTabId]?.redoStack || []), currentContent],
+      },
+    }));
+    
+    const newTabs = noteTabs.map(t =>
+      t.id === activeNoteTabId ? { ...t, content: previousContent } : t
+    );
+    onNoteTabsChange(newTabs);
+  }, [activeNoteTabId, activeTab?.content, currentTabState, noteTabs, onNoteTabsChange]);
+
+  const handleRedo = useCallback(() => {
+    const { redoStack } = currentTabState;
+    if (redoStack.length === 0) return;
+    
+    const nextContent = redoStack[redoStack.length - 1];
+    const currentContent = activeTab?.content || '';
+    
+    setTabStates(prev => ({
+      ...prev,
+      [activeNoteTabId]: {
+        ...prev[activeNoteTabId],
+        undoStack: [...(prev[activeNoteTabId]?.undoStack || []), currentContent],
+        redoStack: redoStack.slice(0, -1),
+      },
+    }));
+    
+    const newTabs = noteTabs.map(t =>
+      t.id === activeNoteTabId ? { ...t, content: nextContent } : t
+    );
+    onNoteTabsChange(newTabs);
+  }, [activeNoteTabId, activeTab?.content, currentTabState, noteTabs, onNoteTabsChange]);
+
+  const handleLanguageChange = (langCode: string) => {
+    setTabStates(prev => ({
+      ...prev,
+      [activeNoteTabId]: {
+        ...prev[activeNoteTabId],
+        language: langCode,
+      },
+    }));
+    toast({
+      title: "Language updated",
+      description: `Output language set to ${languages.find(l => l.code === langCode)?.name}`,
+    });
   };
+
+  const canUndo = currentTabState.undoStack.length > 0;
+  const canRedo = currentTabState.redoStack.length > 0;
 
   const handleCopyAll = () => {
     if (activeTab?.content) {
@@ -347,7 +456,7 @@ export const RightColumnPanel = ({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Actions Menu */}
+          {/* Actions Menu - Streamlined */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -355,42 +464,36 @@ export const RightColumnPanel = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48 bg-popover">
-              <DropdownMenuItem onClick={handleCopyAll}>
-                <Copy className="h-4 w-4 mr-2" />
-                Copy all text
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSendEmail}>
-                <Mail className="h-4 w-4 mr-2" />
-                Send as email
+              <DropdownMenuItem onClick={handleExportPDF}>
+                <FileDown className="h-4 w-4 mr-2" />
+                Export as PDF
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handlePrint}>
                 <Printer className="h-4 w-4 mr-2" />
                 Print
               </DropdownMenuItem>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <FileDown className="h-4 w-4 mr-2" />
-                  Export as
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="bg-popover">
-                  <DropdownMenuItem onClick={handleExportPDF}>
-                    PDF
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleExportWord}>
-                    Word document
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSendToEMR}>
-                <Send className="h-4 w-4 mr-2" />
-                Send to EMR
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <div className="ml-auto flex items-center gap-1">
+            {/* Language Selector */}
+            <Select value={currentTabState.language} onValueChange={handleLanguageChange}>
+              <SelectTrigger className="w-auto h-8 gap-1 border-0 bg-transparent hover:bg-muted px-2">
+                <Globe className="h-4 w-4 text-muted-foreground" />
+                <span>{languages.find(l => l.code === currentTabState.language)?.flag}</span>
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map(lang => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    <span className="flex items-center gap-2">
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <Button 
               variant="ghost" 
               size="sm" 
@@ -401,10 +504,24 @@ export const RightColumnPanel = ({
             >
               <Copy className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0"
+              onClick={handleUndo}
+              disabled={!canUndo}
+              title="Undo"
+            >
               <Undo className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0"
+              onClick={handleRedo}
+              disabled={!canRedo}
+              title="Redo"
+            >
               <Redo className="h-4 w-4" />
             </Button>
           </div>
