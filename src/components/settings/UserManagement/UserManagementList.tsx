@@ -108,66 +108,67 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">User Management</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage team members and their access</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold text-foreground">User Management</h1>
+        <p className="text-sm text-muted-foreground mt-1">Manage team members and their access</p>
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center justify-between gap-3">
         <Button onClick={onAddMember} className="gap-2">
           <Plus className="h-4 w-4" />
           New Member
         </Button>
-      </div>
+        
+        <div className="flex items-center gap-3">
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Name, email"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
 
-      {/* Filters */}
-      <div className="flex items-center justify-end gap-3">
-        <div className="relative w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Name, email"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                {statusOptions.find(s => s.value === statusFilter)?.label}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-popover">
+              {statusOptions.map(option => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setStatusFilter(option.value)}
+                >
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                {roleOptions.find(r => r.value === roleFilter)?.label}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-popover">
+              {roleOptions.map(option => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setRoleFilter(option.value)}
+                >
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              {statusOptions.find(s => s.value === statusFilter)?.label}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-popover">
-            {statusOptions.map(option => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setStatusFilter(option.value)}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              {roleOptions.find(r => r.value === roleFilter)?.label}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-popover">
-            {roleOptions.map(option => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setRoleFilter(option.value)}
-              >
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       {/* Table */}
