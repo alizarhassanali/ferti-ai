@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { PatientSelector } from "@/components/newSession/PatientSelector";
+import { SessionHeaderRow } from "@/components/newSession/SessionHeaderRow";
 import { ChartPrepInfoBar } from "@/components/chartPrep/ChartPrepInfoBar";
 import { ChartPrepSessionList } from "@/components/chartPrep/ChartPrepSessionList";
 import { ChartPrepRightPanel } from "@/components/chartPrep/ChartPrepRightPanel";
@@ -25,6 +25,8 @@ const ChartPrep = () => {
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [selectedPartner, setSelectedPartner] = useState<string | null>(null);
+  const [selectedPhysician, setSelectedPhysician] = useState<string | null>(null);
   const [inputLanguage, setInputLanguage] = useState("en");
   const [outputLanguage, setOutputLanguage] = useState("en");
   const [contextContent, setContextContent] = useState("");
@@ -142,37 +144,19 @@ const ChartPrep = () => {
 
         {/* Right Pane - Main workspace */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Top Header Row - identical to New Session */}
-          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
-            <PatientSelector 
-              selectedPatient={selectedPatient} 
-              patients={patients} 
-              onSelectPatient={handleSelectPatient} 
-              onCreatePatient={handleCreatePatient} 
-              onUpdatePatient={handleUpdatePatient} 
-              onDeletePatient={handleDeletePatient} 
-            />
-            
-            {/* Partner display (read-only) */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-              <span className="text-muted-foreground">Partner:</span>
-              <span className="text-foreground">
-                {selectedPatient?.partnerFirstName && selectedPatient?.partnerLastName 
-                  ? `${selectedPatient.partnerFirstName} ${selectedPatient.partnerLastName}`
-                  : '—'}
-              </span>
-            </div>
-            
-            {/* Referring Physician display (read-only) */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-              <span className="text-muted-foreground">Referring physician:</span>
-              <span className="text-foreground">
-                {selectedPatient?.referringPhysicianName 
-                  ? `Dr. ${selectedPatient.referringPhysicianName}`
-                  : '—'}
-              </span>
-            </div>
-          </div>
+          {/* Top Header Row - shared with New Session */}
+          <SessionHeaderRow
+            selectedPatient={selectedPatient}
+            patients={patients}
+            onSelectPatient={handleSelectPatient}
+            onCreatePatient={handleCreatePatient}
+            onUpdatePatient={handleUpdatePatient}
+            onDeletePatient={handleDeletePatient}
+            selectedPartner={selectedPartner}
+            onPartnerChange={setSelectedPartner}
+            selectedPhysician={selectedPhysician}
+            onPhysicianChange={setSelectedPhysician}
+          />
 
           {/* Secondary Header Row - Date & Language (no recording controls) */}
           <ChartPrepInfoBar 
