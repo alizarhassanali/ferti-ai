@@ -277,13 +277,19 @@ const NewSession = () => {
           onPhysicianChange={setSelectedPhysician}
         />
 
-        <SessionInfoBar sessionDate={sessionDate} inputLanguage={inputLanguage} outputLanguage={outputLanguage} onInputLanguageChange={setInputLanguage} onOutputLanguageChange={setOutputLanguage} recordingDuration={recordingDuration} selectedMicrophoneId={selectedMicrophoneId} onMicrophoneChange={setSelectedMicrophoneId} audioLevel={audioLevel} recordingMode={recordingMode} isRecording={isRecording} onModeChange={handleModeChange} onToggleRecording={handleToggleRecording} onUploadAudio={handleUploadAudio} />
+        <SessionInfoBar sessionDate={sessionDate} recordingDuration={recordingDuration} selectedMicrophoneId={selectedMicrophoneId} onMicrophoneChange={setSelectedMicrophoneId} audioLevel={audioLevel} recordingMode={recordingMode} isRecording={isRecording} onModeChange={handleModeChange} onToggleRecording={handleToggleRecording} onUploadAudio={handleUploadAudio} />
 
         <div className="flex-1 overflow-hidden">
           <TwoColumnLayout recordingMode={recordingMode} transcriptContent={transcriptContent} onTranscriptChange={setTranscriptContent} isRecording={isRecording} contextContent={contextContent} onContextChange={setContextContent} noteTabs={noteTabs} activeNoteTabId={activeNoteTabId} onNoteTabsChange={setNoteTabs} onActiveNoteTabChange={setActiveNoteTabId} isGenerating={isGenerating} hasContent={hasContent} onGenerate={handleGenerate} sessionId={currentSessionId || undefined} patientName={selectedPatient?.name} sessionDate={sessionDate} />
         </div>
 
-        <AskAIInput onSubmit={handleAISubmit} />
+        {/* Helper text - Review note warning */}
+        <div className="px-4 py-2 bg-muted/30 border-t border-border">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="text-amber-500">⚠</span>
+            <span>Review your note before use to ensure it accurately represents the visit</span>
+          </div>
+        </div>
       </div>
     </AppLayout>;
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,14 +17,9 @@ interface ProfileFormState {
   specialty: string;
   clinicName: string;
   role: UserRole;
-  // Signature settings
-  signatureName: string;
-  signatureTitle: string;
-  signatureSpecialty: string;
-  signatureEmail: string;
-  signatureCountryCode: string;
-  signaturePhone: string;
-  includeClinicName: boolean;
+  phoneCountryCode: string;
+  phoneNumber: string;
+  useInfoForSignature: boolean;
   // Language & time
   displayLanguage: string;
   dateFormat: string;
@@ -41,13 +36,9 @@ export const ProfileSettings = () => {
     specialty: user.specialty || 'Fertility Specialist',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
-    signatureName: '',
-    signatureTitle: '',
-    signatureSpecialty: '',
-    signatureEmail: '',
-    signatureCountryCode: '+1',
-    signaturePhone: '',
-    includeClinicName: false,
+    phoneCountryCode: '+1',
+    phoneNumber: '',
+    useInfoForSignature: false,
     displayLanguage: 'English',
     dateFormat: 'MM/DD/YYYY',
   });
@@ -223,8 +214,28 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
+          {/* Phone Number */}
+          <div className="mb-4">
+            <Label className="text-sm font-medium mb-2 block">Phone number</Label>
+            <div className="flex gap-2">
+              <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
+                <SelectTrigger className="w-24">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="+1">+1</SelectItem>
+                  <SelectItem value="+44">+44</SelectItem>
+                  <SelectItem value="+33">+33</SelectItem>
+                  <SelectItem value="+49">+49</SelectItem>
+                  <SelectItem value="+61">+61</SelectItem>
+                </SelectContent>
+              </Select>
+              <Input value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} placeholder="Enter phone number" className="flex-1" />
+            </div>
+          </div>
+
           {/* Country Field */}
-          <div>
+          <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Country</Label>
               <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors" onClick={() => toast({
@@ -238,61 +249,17 @@ export const ProfileSettings = () => {
               <span className="text-sm text-foreground">{user.country || 'Canada'}</span>
             </div>
           </div>
-        </div>
 
-        {/* Signature Settings Section */}
-        <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-1">Signature Settings</h4>
-          <p className="text-sm text-muted-foreground mb-6">
-            Configure the signature that appears on your generated notes and letters.
-          </p>
-          
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="signatureName" className="text-sm font-medium mb-2 block">Name</Label>
-                <Input id="signatureName" value={formData.signatureName} onChange={(e) => setFormData({ ...formData, signatureName: e.target.value })} placeholder="Enter your name" />
-              </div>
-              <div>
-                <Label htmlFor="signatureTitle" className="text-sm font-medium mb-2 block">Title</Label>
-                <Input id="signatureTitle" value={formData.signatureTitle} onChange={(e) => setFormData({ ...formData, signatureTitle: e.target.value })} placeholder="Enter your title" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="signatureSpecialty" className="text-sm font-medium mb-2 block">Specialty</Label>
-                <Input id="signatureSpecialty" value={formData.signatureSpecialty} onChange={(e) => setFormData({ ...formData, signatureSpecialty: e.target.value })} placeholder="Enter your specialty" />
-              </div>
-              <div>
-                <Label htmlFor="signatureEmail" className="text-sm font-medium mb-2 block">Email</Label>
-                <Input id="signatureEmail" type="email" value={formData.signatureEmail} onChange={(e) => setFormData({ ...formData, signatureEmail: e.target.value })} placeholder="Enter your email" />
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-2 block">Phone Number</Label>
-              <div className="flex gap-2">
-                <Select value={formData.signatureCountryCode} onValueChange={(value) => setFormData({ ...formData, signatureCountryCode: value })}>
-                  <SelectTrigger className="w-24">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="+1">+1</SelectItem>
-                    <SelectItem value="+44">+44</SelectItem>
-                    <SelectItem value="+33">+33</SelectItem>
-                    <SelectItem value="+49">+49</SelectItem>
-                    <SelectItem value="+61">+61</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input value={formData.signaturePhone} onChange={(e) => setFormData({ ...formData, signaturePhone: e.target.value })} placeholder="Enter phone number" className="flex-1" />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2 pt-2">
-              <Checkbox id="includeClinicName" checked={formData.includeClinicName} onCheckedChange={(checked) => setFormData({ ...formData, includeClinicName: checked as boolean })} />
-              <Label htmlFor="includeClinicName" className="text-sm font-medium cursor-pointer">Include Clinic Name</Label>
-            </div>
+          {/* Use for Signature Checkbox */}
+          <div className="flex items-center space-x-2 pt-4 border-t border-border">
+            <Checkbox 
+              id="useInfoForSignature" 
+              checked={formData.useInfoForSignature} 
+              onCheckedChange={(checked) => setFormData({ ...formData, useInfoForSignature: checked as boolean })} 
+            />
+            <Label htmlFor="useInfoForSignature" className="text-sm font-medium cursor-pointer">
+              Use this information for my signature
+            </Label>
           </div>
         </div>
 

@@ -1,16 +1,11 @@
 import { Calendar } from 'lucide-react';
 import { format } from 'date-fns';
-import { LanguageSelector } from './LanguageSelector';
 import { MicrophoneSelector } from './MicrophoneSelector';
 import { RecordingModeButton } from './RecordingModeButton';
 import { RecordingMode } from '@/types/session';
 
 interface SessionInfoBarProps {
   sessionDate: Date;
-  inputLanguage: string;
-  outputLanguage: string;
-  onInputLanguageChange: (lang: string) => void;
-  onOutputLanguageChange: (lang: string) => void;
   recordingDuration: number;
   selectedMicrophoneId: string;
   onMicrophoneChange: (deviceId: string) => void;
@@ -24,10 +19,6 @@ interface SessionInfoBarProps {
 
 export const SessionInfoBar = ({
   sessionDate,
-  inputLanguage,
-  outputLanguage,
-  onInputLanguageChange,
-  onOutputLanguageChange,
   recordingDuration,
   selectedMicrophoneId,
   onMicrophoneChange,
@@ -46,20 +37,13 @@ export const SessionInfoBar = ({
 
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-background">
-      {/* Left side: Date, Language chips */}
+      {/* Left side: Date chip only - language moved to NoteTab */}
       <div className="flex items-center gap-3">
         {/* Date chip */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 text-foreground rounded-full text-[13px] bg-white">
           <Calendar className="h-3.5 w-3.5 stroke-[1.5]" />
           <span>{format(sessionDate, "MMM d, yyyy h:mma")}</span>
         </div>
-        
-        <LanguageSelector 
-          inputLanguage={inputLanguage} 
-          outputLanguage={outputLanguage} 
-          onInputLanguageChange={onInputLanguageChange} 
-          onOutputLanguageChange={onOutputLanguageChange} 
-        />
       </div>
 
       {/* Right side: Timer, Mic, Record button with mode selector */}

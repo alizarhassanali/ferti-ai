@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Plus, User, Search, X, Loader2 } from 'lucide-react';
+import { ChevronDown, Plus, User, Search, X, Loader2, CalendarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -22,6 +22,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Patient, ReferringPhysician } from '@/types/session';
 import { usePhysicianSearch } from '@/hooks/usePhysicianSearch';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface PatientSelectorProps {
   selectedPatient: Patient | null;
@@ -49,8 +53,12 @@ export const PatientSelector = ({
   // Create form state
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [emrId, setEmrId] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
   const [partnerFirstName, setPartnerFirstName] = useState('');
   const [partnerLastName, setPartnerLastName] = useState('');
+  const [partnerEmrId, setPartnerEmrId] = useState('');
+  const [partnerDateOfBirth, setPartnerDateOfBirth] = useState<Date | undefined>(undefined);
   const [selectedPhysician, setSelectedPhysician] = useState<ReferringPhysician | null>(null);
   const [physicianSearchQuery, setPhysicianSearchQuery] = useState('');
   
@@ -58,8 +66,12 @@ export const PatientSelector = ({
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
+  const [editEmrId, setEditEmrId] = useState('');
+  const [editDateOfBirth, setEditDateOfBirth] = useState<Date | undefined>(undefined);
   const [editPartnerFirstName, setEditPartnerFirstName] = useState('');
   const [editPartnerLastName, setEditPartnerLastName] = useState('');
+  const [editPartnerEmrId, setEditPartnerEmrId] = useState('');
+  const [editPartnerDateOfBirth, setEditPartnerDateOfBirth] = useState<Date | undefined>(undefined);
   const [editSelectedPhysician, setEditSelectedPhysician] = useState<ReferringPhysician | null>(null);
   const [editPhysicianSearchQuery, setEditPhysicianSearchQuery] = useState('');
   const [editIdentifier, setEditIdentifier] = useState('');
@@ -107,8 +119,12 @@ export const PatientSelector = ({
         name: fullName,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        emrId: emrId.trim() || undefined,
+        dateOfBirth: dateOfBirth,
         partnerFirstName: partnerFirstName.trim() || undefined,
         partnerLastName: partnerLastName.trim() || undefined,
+        partnerEmrId: partnerEmrId.trim() || undefined,
+        partnerDateOfBirth: partnerDateOfBirth,
         referringPhysicianId: selectedPhysician?.id,
         referringPhysicianName: selectedPhysician ? `${selectedPhysician.first_name} ${selectedPhysician.last_name}` : undefined,
         referringPhysicianClinic: selectedPhysician?.clinic_name || undefined,
@@ -121,8 +137,12 @@ export const PatientSelector = ({
   const resetCreateForm = () => {
     setFirstName('');
     setLastName('');
+    setEmrId('');
+    setDateOfBirth(undefined);
     setPartnerFirstName('');
     setPartnerLastName('');
+    setPartnerEmrId('');
+    setPartnerDateOfBirth(undefined);
     setSelectedPhysician(null);
     setPhysicianSearchQuery('');
     clearResults();
@@ -132,8 +152,12 @@ export const PatientSelector = ({
     setEditingPatient(patient);
     setEditFirstName(patient.firstName || patient.name.split(' ')[0] || '');
     setEditLastName(patient.lastName || patient.name.split(' ').slice(1).join(' ') || '');
+    setEditEmrId(patient.emrId || '');
+    setEditDateOfBirth(patient.dateOfBirth ? new Date(patient.dateOfBirth) : undefined);
     setEditPartnerFirstName(patient.partnerFirstName || '');
     setEditPartnerLastName(patient.partnerLastName || '');
+    setEditPartnerEmrId(patient.partnerEmrId || '');
+    setEditPartnerDateOfBirth(patient.partnerDateOfBirth ? new Date(patient.partnerDateOfBirth) : undefined);
     setEditIdentifier(patient.identifier || '');
     setEditAdditionalContext(patient.additionalContext || '');
     if (patient.referringPhysicianId && patient.referringPhysicianName) {
@@ -159,8 +183,12 @@ export const PatientSelector = ({
         name: fullName,
         firstName: editFirstName.trim(),
         lastName: editLastName.trim(),
+        emrId: editEmrId.trim() || undefined,
+        dateOfBirth: editDateOfBirth,
         partnerFirstName: editPartnerFirstName.trim() || undefined,
         partnerLastName: editPartnerLastName.trim() || undefined,
+        partnerEmrId: editPartnerEmrId.trim() || undefined,
+        partnerDateOfBirth: editPartnerDateOfBirth,
         referringPhysicianId: editSelectedPhysician?.id,
         referringPhysicianName: editSelectedPhysician ? `${editSelectedPhysician.first_name} ${editSelectedPhysician.last_name}` : undefined,
         referringPhysicianClinic: editSelectedPhysician?.clinic_name || undefined,
@@ -293,6 +321,41 @@ export const PatientSelector = ({
     </div>
   );
 
+  const DatePickerField = ({
+    value,
+    onChange,
+    placeholder = "Select date"
+  }: {
+    value: Date | undefined;
+    onChange: (date: Date | undefined) => void;
+    placeholder?: string;
+  }) => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "w-full justify-start text-left font-normal bg-white border-border",
+            !value && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {value ? format(value, "MMM d, yyyy") : <span>{placeholder}</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={onChange}
+          disabled={(date) => date > new Date()}
+          initialFocus
+          className="p-3 pointer-events-auto"
+        />
+      </PopoverContent>
+    </Popover>
+  );
+
   return (
     <>
       <DropdownMenu>
@@ -404,7 +467,7 @@ export const PatientSelector = ({
         setCreateModalOpen(open);
         if (!open) resetCreateForm();
       }}>
-        <DialogContent className="bg-white border border-[hsl(216_20%_90%)] max-w-md">
+        <DialogContent className="bg-white border border-[hsl(216_20%_90%)] max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-foreground">Create new patient</DialogTitle>
             <DialogDescription className="text-foreground/60">
@@ -434,6 +497,26 @@ export const PatientSelector = ({
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last name"
                     className="bg-white border-border"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
+                  <Input
+                    id="emr-id"
+                    value={emrId}
+                    onChange={(e) => setEmrId(e.target.value)}
+                    placeholder="EMR ID"
+                    className="bg-white border-border"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Date of birth</Label>
+                  <DatePickerField
+                    value={dateOfBirth}
+                    onChange={setDateOfBirth}
+                    placeholder="Select date"
                   />
                 </div>
               </div>
@@ -467,6 +550,26 @@ export const PatientSelector = ({
               {partnerValidationError && (
                 <p className="text-xs text-destructive">Please fill in both first and last name for partner</p>
               )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="partner-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
+                  <Input
+                    id="partner-emr-id"
+                    value={partnerEmrId}
+                    onChange={(e) => setPartnerEmrId(e.target.value)}
+                    placeholder="EMR ID"
+                    className="bg-white border-border"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">Date of birth</Label>
+                  <DatePickerField
+                    value={partnerDateOfBirth}
+                    onChange={setPartnerDateOfBirth}
+                    placeholder="Select date"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Referring Physician Section */}
@@ -499,7 +602,7 @@ export const PatientSelector = ({
 
       {/* Edit Patient Modal */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="max-w-md bg-white border border-[hsl(216_20%_90%)]">
+        <DialogContent className="max-w-md bg-white border border-[hsl(216_20%_90%)] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-foreground">Edit patient profile</DialogTitle>
             <DialogDescription className="text-foreground/60">
@@ -533,6 +636,26 @@ export const PatientSelector = ({
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="edit-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
+                    <Input
+                      id="edit-emr-id"
+                      value={editEmrId}
+                      onChange={(e) => setEditEmrId(e.target.value)}
+                      placeholder="EMR ID"
+                      className="bg-white border-border"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Date of birth</Label>
+                    <DatePickerField
+                      value={editDateOfBirth}
+                      onChange={setEditDateOfBirth}
+                      placeholder="Select date"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Partner Section */}
@@ -563,6 +686,26 @@ export const PatientSelector = ({
                 {editPartnerValidationError && (
                   <p className="text-xs text-destructive">Please fill in both first and last name for partner</p>
                 )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="edit-partner-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
+                    <Input
+                      id="edit-partner-emr-id"
+                      value={editPartnerEmrId}
+                      onChange={(e) => setEditPartnerEmrId(e.target.value)}
+                      placeholder="EMR ID"
+                      className="bg-white border-border"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Date of birth</Label>
+                    <DatePickerField
+                      value={editPartnerDateOfBirth}
+                      onChange={setEditPartnerDateOfBirth}
+                      placeholder="Select date"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Referring Physician Section */}

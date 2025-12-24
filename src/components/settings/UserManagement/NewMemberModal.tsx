@@ -29,10 +29,9 @@ interface NewMemberModalProps {
 }
 
 const roleOptions: { value: TeamMemberRole; label: string }[] = [
-  { value: 'admin', label: 'Administrator' },
+  { value: 'admin', label: 'Clinic Admin' },
   { value: 'physician', label: 'Physician' },
-  { value: 'nurse', label: 'Nurse' },
-  { value: 'staff', label: 'Staff' },
+  { value: 'nurse', label: 'Nurse/Staff' },
 ];
 
 export const NewMemberModal = ({ open, onOpenChange, onSuccess }: NewMemberModalProps) => {

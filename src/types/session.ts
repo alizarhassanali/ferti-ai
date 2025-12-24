@@ -31,8 +31,12 @@ export interface Patient {
   lastName?: string;
   identifier?: string;
   additionalContext?: string;
+  emrId?: string;
+  dateOfBirth?: Date;
   partnerFirstName?: string;
   partnerLastName?: string;
+  partnerEmrId?: string;
+  partnerDateOfBirth?: Date;
   referringPhysicianId?: string;
   referringPhysicianName?: string;
   referringPhysicianClinic?: string;

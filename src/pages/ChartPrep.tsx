@@ -185,7 +185,13 @@ const ChartPrep = () => {
             />
           </div>
 
-          <AskAIInput onSubmit={handleAISubmit} />
+        {/* Helper text - Review note warning */}
+          <div className="px-4 py-2 bg-muted/30 border-t border-border">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="text-amber-500">⚠</span>
+              <span>Review your note before use to ensure it accurately represents the visit</span>
+            </div>
+          </div>
         </div>
       </div>
     </AppLayout>

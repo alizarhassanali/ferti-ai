@@ -217,13 +217,7 @@ export const SessionList = () => {
             value="sessions" 
             className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
-            Sessions
-          </TabsTrigger>
-          <TabsTrigger 
-            value="schedule" 
-            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-          >
-            Scheduled
+            Completed
           </TabsTrigger>
           <TabsTrigger 
             value="drafts" 
@@ -232,24 +226,6 @@ export const SessionList = () => {
             Drafts
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="schedule" className="flex-1 overflow-y-auto m-0 p-4 space-y-4">
-          {demoMeetings.map(meeting => <ScheduledMeetingCard key={meeting.id} meeting={meeting} />)}
-          
-          <div className="text-center space-y-4 max-w-sm mx-auto mt-8 p-6 bg-white border border-[hsl(216_20%_90%)] rounded-xl">
-            <p className="text-foreground font-medium">📅 Show upcoming sessions</p>
-            <p className="text-sm text-foreground/60">
-              Integrate with your practice software to automatically link to upcoming sessions.
-            </p>
-            <Button 
-              variant="outline" 
-              className="gap-2 bg-white border-primary/20 text-foreground hover:bg-sidebar"
-            >
-              <Plug className="h-4 w-4 stroke-[1.5]" />
-              Set up integration
-            </Button>
-          </div>
-        </TabsContent>
 
         <TabsContent value="drafts" className={`flex-1 overflow-y-auto m-0 p-4 space-y-1 ${selectedCount > 0 ? 'pb-20' : ''}`}>
           {Object.entries(groupedDraftSessions).length === 0 ? (

@@ -1,4 +1,5 @@
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Send, Download, CheckCircle } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Send, Download, CheckCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -6,15 +7,33 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
 import { TEMPLATES } from '@/data/demoContent';
-import { useState } from 'react';
 import { useLetters } from '@/contexts/LettersContext';
 import { Badge } from '@/components/ui/badge';
+
+const languages = [
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+  { code: 'fr', name: 'French', flag: '🇫🇷' },
+  { code: 'de', name: 'German', flag: '🇩🇪' },
+  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
+  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
+  { code: 'pt', name: 'Portuguese', flag: '🇵🇹' },
+  { code: 'it', name: 'Italian', flag: '🇮🇹' },
+  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+];
 
 interface NoteTabProps {
   tabs: NoteTabType[];
@@ -27,6 +46,13 @@ interface NoteTabProps {
   sessionId?: string;
   patientName?: string;
   sessionDate?: Date;
+}
+
+// Extended tab type to include language and history
+interface ExtendedTabState {
+  language: string;
+  undoStack: string[];
+  redoStack: string[];
 }
 
 export const NoteTab = ({
@@ -45,6 +71,19 @@ export const NoteTab = ({
   const { createLetter, getLetterBySessionId } = useLetters();
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
+  
+  // Per-tab state for language and undo/redo history
+  const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
+    const initial: Record<string, ExtendedTabState> = {};
+    tabs.forEach(tab => {
+      initial[tab.id] = {
+        language: 'en',
+        undoStack: [],
+        redoStack: [],
+      };
+    });
+    return initial;
+  });
 
   // Get the current tab's template ID
   const currentTemplateId = activeTab?.templateId || '';
@@ -52,6 +91,9 @@ export const NoteTab = ({
   // Check if this session already has a letter
   const existingLetter = sessionId ? getLetterBySessionId(sessionId) : undefined;
   const hasGeneratedContent = activeTab?.content && activeTab.content.trim().length > 0;
+
+  // Get current tab state
+  const currentTabState = tabStates[activeTabId] || { language: 'en', undoStack: [], redoStack: [] };
 
   const handleTemplateSelect = (templateId: string) => {
     // Update the tab's templateId
@@ -78,6 +120,16 @@ export const NoteTab = ({
     };
     onTabsChange([...tabs, newTab]);
     onActiveTabChange(newTab.id);
+    
+    // Initialize state for new tab
+    setTabStates(prev => ({
+      ...prev,
+      [newTab.id]: {
+        language: 'en',
+        undoStack: [],
+        redoStack: [],
+      }
+    }));
   };
 
   const closeTab = (tabId: string, e: React.MouseEvent) => {
@@ -95,13 +147,87 @@ export const NoteTab = ({
     if (activeTabId === tabId) {
       onActiveTabChange(newTabs[0].id);
     }
+    
+    // Clean up tab state
+    setTabStates(prev => {
+      const newState = { ...prev };
+      delete newState[tabId];
+      return newState;
+    });
   };
 
-  const updateTabContent = (content: string) => {
+  const updateTabContent = useCallback((content: string) => {
+    // Save current content to undo stack before updating
+    const currentContent = activeTab?.content || '';
+    if (currentContent !== content) {
+      setTabStates(prev => ({
+        ...prev,
+        [activeTabId]: {
+          ...prev[activeTabId],
+          undoStack: [...(prev[activeTabId]?.undoStack || []), currentContent].slice(-50), // Keep last 50 states
+          redoStack: [], // Clear redo stack on new change
+        }
+      }));
+    }
+    
     const newTabs = tabs.map(t =>
       t.id === activeTabId ? { ...t, content } : t
     );
     onTabsChange(newTabs);
+  }, [activeTabId, activeTab, tabs, onTabsChange]);
+
+  const handleUndo = useCallback(() => {
+    const state = tabStates[activeTabId];
+    if (!state || state.undoStack.length === 0) return;
+    
+    const currentContent = activeTab?.content || '';
+    const previousContent = state.undoStack[state.undoStack.length - 1];
+    
+    setTabStates(prev => ({
+      ...prev,
+      [activeTabId]: {
+        ...prev[activeTabId],
+        undoStack: prev[activeTabId].undoStack.slice(0, -1),
+        redoStack: [...prev[activeTabId].redoStack, currentContent],
+      }
+    }));
+    
+    const newTabs = tabs.map(t =>
+      t.id === activeTabId ? { ...t, content: previousContent } : t
+    );
+    onTabsChange(newTabs);
+  }, [activeTabId, activeTab, tabs, onTabsChange, tabStates]);
+
+  const handleRedo = useCallback(() => {
+    const state = tabStates[activeTabId];
+    if (!state || state.redoStack.length === 0) return;
+    
+    const currentContent = activeTab?.content || '';
+    const nextContent = state.redoStack[state.redoStack.length - 1];
+    
+    setTabStates(prev => ({
+      ...prev,
+      [activeTabId]: {
+        ...prev[activeTabId],
+        undoStack: [...prev[activeTabId].undoStack, currentContent],
+        redoStack: prev[activeTabId].redoStack.slice(0, -1),
+      }
+    }));
+    
+    const newTabs = tabs.map(t =>
+      t.id === activeTabId ? { ...t, content: nextContent } : t
+    );
+    onTabsChange(newTabs);
+  }, [activeTabId, activeTab, tabs, onTabsChange, tabStates]);
+
+  const handleLanguageChange = (language: string) => {
+    setTabStates(prev => ({
+      ...prev,
+      [activeTabId]: {
+        ...prev[activeTabId],
+        language,
+      }
+    }));
   };
 
   const handleCopy = () => {
@@ -114,9 +240,36 @@ export const NoteTab = ({
     }
   };
 
+  const handleExportPDF = () => {
+    toast({
+      title: "Export PDF",
+      description: "PDF export feature coming soon.",
+    });
+  };
+
+  const handlePrint = () => {
+    if (activeTab?.content) {
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>${patientName || 'Note'} - ${selectedTemplate?.name || 'Clinical Note'}</title>
+              <style>
+                body { font-family: Arial, sans-serif; padding: 40px; white-space: pre-wrap; }
+              </style>
+            </head>
+            <body>${activeTab.content}</body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+  };
+
   const handleSendNow = () => {
     if (activeTab?.content && sessionId) {
-      // Create letter and immediately mark as sent
       createLetter({
         sessionId,
         patientName: patientName || 'Unknown Patient',
@@ -133,7 +286,6 @@ export const NoteTab = ({
 
   const handleDownload = () => {
     if (activeTab?.content) {
-      // Create a blob and download
       const blob = new Blob([activeTab.content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -167,6 +319,8 @@ export const NoteTab = ({
   };
 
   const selectedTemplate = TEMPLATES.find(t => t.id === currentTemplateId);
+  const canUndo = (tabStates[activeTabId]?.undoStack.length || 0) > 0;
+  const canRedo = (tabStates[activeTabId]?.redoStack.length || 0) > 0;
 
   return (
     <div className="flex flex-col h-full">
@@ -246,20 +400,48 @@ export const NoteTab = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>Export as PDF</DropdownMenuItem>
-              <DropdownMenuItem>Send via email</DropdownMenuItem>
-              <DropdownMenuItem>Save to EHR</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportPDF}>Export as PDF</DropdownMenuItem>
+              <DropdownMenuItem onClick={handlePrint}>Print</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
           <div className="ml-auto flex items-center gap-1">
+            {/* Language selector per template */}
+            <Select value={currentTabState.language} onValueChange={handleLanguageChange}>
+              <SelectTrigger className="w-auto h-8 gap-1 border-0 bg-transparent hover:bg-muted px-2">
+                <Globe className="h-4 w-4 text-muted-foreground" />
+                <SelectValue>
+                  {languages.find(l => l.code === currentTabState.language)?.flag}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map(lang => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    {lang.flag} {lang.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleCopy} disabled={!activeTab?.content}>
               <Copy className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0" 
+              onClick={handleUndo}
+              disabled={!canUndo}
+            >
               <Undo className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0" 
+              onClick={handleRedo}
+              disabled={!canRedo}
+            >
               <Redo className="h-4 w-4" />
             </Button>
           </div>
