@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronRight, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -14,32 +13,21 @@ import {
 } from '@/components/ui/select';
 
 interface BlankTemplateEditorProps {
-  onBack: () => void;
   onSave: () => void;
 }
 
-export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps) => {
+export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
   const [title, setTitle] = useState('Untitled template');
   const [content, setContent] = useState('');
   const [visibility, setVisibility] = useState('Just me');
   const [type, setType] = useState('Note');
-  const [isDefault, setIsDefault] = useState(false);
   const [helperOpen, setHelperOpen] = useState(true);
 
   return (
-    <div className="flex h-[80vh] gap-6">
+    <div className="flex max-h-[80vh] gap-6 p-6">
       {/* Left Side - Editor */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={onBack}
-            className="-ml-2 mb-4 text-muted-foreground hover:text-foreground"
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Create template &gt; Blank template
-          </Button>
-          
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -54,7 +42,7 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
         <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="flex-1 resize-none font-mono text-sm"
+          className="flex-1 resize-none font-mono text-sm min-h-[300px]"
           placeholder="Start typing your template content..."
         />
 
@@ -63,13 +51,13 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
             <div className="flex items-center gap-2">
               <Label className="text-sm text-muted-foreground">Visibility</Label>
               <Select value={visibility} onValueChange={setVisibility}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-32 bg-background">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover">
                   <SelectItem value="Just me">Just me</SelectItem>
-                  <SelectItem value="My clinic">My clinic</SelectItem>
-                  <SelectItem value="Community">Community</SelectItem>
+                  <SelectItem value="Clinic">Clinic</SelectItem>
+                  <SelectItem value="TFP Network">TFP Network</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -77,10 +65,10 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
             <div className="flex items-center gap-2">
               <Label className="text-sm text-muted-foreground">Type</Label>
               <Select value={type} onValueChange={setType}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-32 bg-background">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-popover">
                   <SelectItem value="Note">Note</SelectItem>
                   <SelectItem value="Document">Document</SelectItem>
                   <SelectItem value="Letter">Letter</SelectItem>
@@ -89,29 +77,18 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="default"
-                checked={isDefault}
-                onCheckedChange={setIsDefault}
-              />
-              <Label htmlFor="default" className="text-sm">Make default</Label>
-            </div>
-
-            <Button
-              onClick={onSave}
-              className="bg-[hsl(25,35%,25%)] hover:bg-[hsl(25,35%,20%)] text-white"
-            >
-              Save
-            </Button>
-          </div>
+          <Button
+            onClick={onSave}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            Save
+          </Button>
         </div>
       </div>
 
       {/* Right Side - Helper Panel */}
       {helperOpen && (
-        <div className="w-80 flex flex-col gap-6 p-6 bg-muted/30 rounded-lg border">
+        <div className="w-80 flex flex-col gap-6 p-6 bg-muted/30 rounded-lg border overflow-y-auto max-h-full">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-foreground">Helper</h3>
             <Button
@@ -186,7 +163,7 @@ export const BlankTemplateEditor = ({ onBack, onSave }: BlankTemplateEditorProps
           onClick={() => setHelperOpen(true)}
           className="self-start"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 rotate-180" />
         </Button>
       )}
     </div>

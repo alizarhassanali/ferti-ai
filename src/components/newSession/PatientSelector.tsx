@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import {
   Dialog,
@@ -82,10 +81,10 @@ export const PatientSelector = ({
   const [showPhysicianDropdown, setShowPhysicianDropdown] = useState(false);
   const [showEditPhysicianDropdown, setShowEditPhysicianDropdown] = useState(false);
 
-  const recentPatients = patients.slice(0, 3);
-  const filteredPatients = patients.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Dynamic search - only show results when user types
+  const filteredPatients = searchQuery.trim().length > 0 
+    ? patients.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : [];
 
   // Validation
   const isCreateValid = firstName.trim() && lastName.trim() && 
@@ -274,7 +273,7 @@ export const PatientSelector = ({
             }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Search physicians..."
-            className="pl-9 bg-white border-border"
+            className="pl-9 bg-background border-border"
           />
           {isLoading && (
             <Loader2 className="absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground animate-spin" />
@@ -283,7 +282,7 @@ export const PatientSelector = ({
       )}
       
       {showDropdown && !selected && value.length >= 2 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-md shadow-lg max-h-48 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-lg max-h-48 overflow-auto">
           {isLoading ? (
             <div className="px-3 py-4 text-center text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin mx-auto mb-2" />
@@ -335,7 +334,7 @@ export const PatientSelector = ({
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal bg-white border-border",
+            "w-full justify-start text-left font-normal bg-background border-border",
             !value && "text-muted-foreground"
           )}
         >
@@ -343,7 +342,7 @@ export const PatientSelector = ({
           {value ? format(value, "MMM d, yyyy") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0 bg-popover" align="start">
         <Calendar
           mode="single"
           selected={value}
@@ -360,10 +359,10 @@ export const PatientSelector = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className={`inline-flex items-center gap-2 px-4 py-2 bg-white border rounded-xl text-sm transition-colors ${
+          <button className={`inline-flex items-center gap-2 px-4 py-2 bg-background border rounded-xl text-sm transition-colors ${
             isHighlighted 
               ? 'border-destructive ring-2 ring-destructive/20 animate-pulse' 
-              : 'border-[hsl(216_20%_90%)] hover:border-primary/30'
+              : 'border-border hover:border-primary/30'
           }`}>
             {selectedPatient ? (
               <>
@@ -376,67 +375,45 @@ export const PatientSelector = ({
             <ChevronDown className={`h-4 w-4 stroke-[1.5] ${isHighlighted ? 'text-destructive' : 'text-foreground'}`} />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-72 bg-white border border-[hsl(216_20%_90%)]">
+        <DropdownMenuContent align="start" className="w-72 bg-popover border border-border">
           <div className="p-2">
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-foreground/60 stroke-[1.5]" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground stroke-[1.5]" />
               <Input
                 placeholder="Search patients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 bg-white border-[hsl(216_20%_90%)]"
+                className="pl-8 bg-background border-border"
               />
             </div>
           </div>
-          <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
+          <DropdownMenuSeparator className="bg-border" />
           <DropdownMenuItem 
             onClick={() => setCreateModalOpen(true)}
-            className="text-foreground hover:bg-sidebar"
+            className="text-foreground hover:bg-muted"
           >
             <Plus className="mr-2 h-4 w-4 stroke-[1.5]" />
             Create new patient
           </DropdownMenuItem>
-          <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
-          {recentPatients.length > 0 && (
-            <>
-              <DropdownMenuLabel className="text-xs text-foreground/60">Suggested</DropdownMenuLabel>
-              {recentPatients.map(patient => (
-                <DropdownMenuItem
-                  key={patient.id}
-                  className="flex justify-between text-foreground hover:bg-sidebar"
-                  onClick={() => onSelectPatient(patient)}
-                >
-                  <span>{patient.name}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs text-foreground/80 hover:text-foreground hover:bg-sidebar"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditPatient(patient);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
-            </>
-          )}
+          
+          {/* Dynamic search results - only show when user types */}
           {filteredPatients.length > 0 && (
             <>
-              <DropdownMenuLabel className="text-xs text-foreground/60">All patients</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-border" />
               {filteredPatients.map(patient => (
                 <DropdownMenuItem
                   key={patient.id}
-                  className="flex justify-between text-foreground hover:bg-sidebar"
-                  onClick={() => onSelectPatient(patient)}
+                  className="flex justify-between text-foreground hover:bg-muted"
+                  onClick={() => {
+                    onSelectPatient(patient);
+                    setSearchQuery('');
+                  }}
                 >
                   <span>{patient.name}</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2 text-xs text-foreground/80 hover:text-foreground hover:bg-sidebar"
+                    className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-muted"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditPatient(patient);
@@ -448,133 +425,110 @@ export const PatientSelector = ({
               ))}
             </>
           )}
-          {selectedPatient && (
+          
+          {/* No results message */}
+          {searchQuery.trim().length > 0 && filteredPatients.length === 0 && (
             <>
-              <DropdownMenuSeparator className="bg-[hsl(216_20%_90%)]" />
-              <DropdownMenuItem 
-                onClick={() => onSelectPatient(null)}
-                className="text-foreground hover:bg-sidebar"
-              >
-                Clear selection
-              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-border" />
+              <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                No patients found
+              </div>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
       {/* Create Patient Modal */}
-      <Dialog open={createModalOpen} onOpenChange={(open) => {
-        setCreateModalOpen(open);
-        if (!open) resetCreateForm();
-      }}>
-        <DialogContent className="bg-white border border-[hsl(216_20%_90%)] max-w-md max-h-[90vh] overflow-y-auto">
+      <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
+        <DialogContent className="sm:max-w-lg bg-background">
           <DialogHeader>
             <DialogTitle className="text-foreground">Create new patient</DialogTitle>
-            <DialogDescription className="text-foreground/60">
-              Set up a patient profile to link multiple sessions together.
+            <DialogDescription>
+              Add patient and optional partner details
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-5 py-4">
-            {/* Primary Patient Section */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-foreground">Primary patient</Label>
+          
+          <div className="space-y-6 py-4 max-h-[60vh] overflow-y-auto">
+            {/* Primary Patient */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Primary patient</h4>
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="first-name" className="text-xs text-muted-foreground">First name *</Label>
-                  <Input
-                    id="first-name"
-                    value={firstName}
+                <div className="space-y-2">
+                  <Label className="text-foreground">First name *</Label>
+                  <Input 
+                    value={firstName} 
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="First name"
-                    className="bg-white border-border"
+                    className="bg-background border-border"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="last-name" className="text-xs text-muted-foreground">Last name *</Label>
-                  <Input
-                    id="last-name"
-                    value={lastName}
+                <div className="space-y-2">
+                  <Label className="text-foreground">Last name *</Label>
+                  <Input 
+                    value={lastName} 
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Last name"
-                    className="bg-white border-border"
+                    className="bg-background border-border"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
-                  <Input
-                    id="emr-id"
-                    value={emrId}
+                <div className="space-y-2">
+                  <Label className="text-foreground">EMR ID</Label>
+                  <Input 
+                    value={emrId} 
                     onChange={(e) => setEmrId(e.target.value)}
-                    placeholder="EMR ID"
-                    className="bg-white border-border"
+                    className="bg-background border-border"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Date of birth</Label>
-                  <DatePickerField
-                    value={dateOfBirth}
-                    onChange={setDateOfBirth}
-                    placeholder="Select date"
-                  />
+                <div className="space-y-2">
+                  <Label className="text-foreground">Date of birth</Label>
+                  <DatePickerField value={dateOfBirth} onChange={setDateOfBirth} />
                 </div>
               </div>
             </div>
 
-            {/* Partner Section */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-foreground">Partner <span className="text-muted-foreground font-normal">(optional)</span></Label>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="partner-first-name" className="text-xs text-muted-foreground">First name</Label>
-                  <Input
-                    id="partner-first-name"
-                    value={partnerFirstName}
-                    onChange={(e) => setPartnerFirstName(e.target.value)}
-                    placeholder="First name"
-                    className={`bg-white ${partnerValidationError ? 'border-destructive' : 'border-border'}`}
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="partner-last-name" className="text-xs text-muted-foreground">Last name</Label>
-                  <Input
-                    id="partner-last-name"
-                    value={partnerLastName}
-                    onChange={(e) => setPartnerLastName(e.target.value)}
-                    placeholder="Last name"
-                    className={`bg-white ${partnerValidationError ? 'border-destructive' : 'border-border'}`}
-                  />
-                </div>
-              </div>
+            {/* Partner */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Partner (optional)</h4>
               {partnerValidationError && (
-                <p className="text-xs text-destructive">Please fill in both first and last name for partner</p>
+                <p className="text-xs text-destructive">Both first and last name are required for partner</p>
               )}
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="partner-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
-                  <Input
-                    id="partner-emr-id"
-                    value={partnerEmrId}
-                    onChange={(e) => setPartnerEmrId(e.target.value)}
-                    placeholder="EMR ID"
-                    className="bg-white border-border"
+                <div className="space-y-2">
+                  <Label className="text-foreground">First name</Label>
+                  <Input 
+                    value={partnerFirstName} 
+                    onChange={(e) => setPartnerFirstName(e.target.value)}
+                    className="bg-background border-border"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-muted-foreground">Date of birth</Label>
-                  <DatePickerField
-                    value={partnerDateOfBirth}
-                    onChange={setPartnerDateOfBirth}
-                    placeholder="Select date"
+                <div className="space-y-2">
+                  <Label className="text-foreground">Last name</Label>
+                  <Input 
+                    value={partnerLastName} 
+                    onChange={(e) => setPartnerLastName(e.target.value)}
+                    className="bg-background border-border"
                   />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-foreground">EMR ID</Label>
+                  <Input 
+                    value={partnerEmrId} 
+                    onChange={(e) => setPartnerEmrId(e.target.value)}
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Date of birth</Label>
+                  <DatePickerField value={partnerDateOfBirth} onChange={setPartnerDateOfBirth} />
                 </div>
               </div>
             </div>
 
-            {/* Referring Physician Section */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-foreground">Referring physician <span className="text-muted-foreground font-normal">(optional)</span></Label>
+            {/* Referring Physician */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Referring physician (optional)</h4>
               <PhysicianSearchField
                 value={physicianSearchQuery}
                 onChange={setPhysicianSearchQuery}
@@ -589,12 +543,17 @@ export const PatientSelector = ({
               />
             </div>
           </div>
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreatePatient} disabled={!isCreateValid}>
-              Save changes
+            <Button 
+              onClick={handleCreatePatient} 
+              disabled={!isCreateValid}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              Create patient
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -602,170 +561,149 @@ export const PatientSelector = ({
 
       {/* Edit Patient Modal */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="max-w-md bg-white border border-[hsl(216_20%_90%)] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg bg-background">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Edit patient profile</DialogTitle>
-            <DialogDescription className="text-foreground/60">
-              Changes will be reflected across all linked sessions.
+            <DialogTitle className="text-foreground">Edit patient</DialogTitle>
+            <DialogDescription>
+              Update patient and partner details
             </DialogDescription>
           </DialogHeader>
-          {editingPatient && (
-            <div className="space-y-5 py-4">
-              {/* Primary Patient Section */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-foreground">Primary patient</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-first-name" className="text-xs text-muted-foreground">First name *</Label>
-                    <Input
-                      id="edit-first-name"
-                      value={editFirstName}
-                      onChange={(e) => setEditFirstName(e.target.value)}
-                      placeholder="First name"
-                      className="bg-white border-border"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-last-name" className="text-xs text-muted-foreground">Last name *</Label>
-                    <Input
-                      id="edit-last-name"
-                      value={editLastName}
-                      onChange={(e) => setEditLastName(e.target.value)}
-                      placeholder="Last name"
-                      className="bg-white border-border"
-                    />
-                  </div>
+          
+          <div className="space-y-6 py-4 max-h-[60vh] overflow-y-auto">
+            {/* Primary Patient */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Primary patient</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-foreground">First name *</Label>
+                  <Input 
+                    value={editFirstName} 
+                    onChange={(e) => setEditFirstName(e.target.value)}
+                    className="bg-background border-border"
+                  />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
-                    <Input
-                      id="edit-emr-id"
-                      value={editEmrId}
-                      onChange={(e) => setEditEmrId(e.target.value)}
-                      placeholder="EMR ID"
-                      className="bg-white border-border"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Date of birth</Label>
-                    <DatePickerField
-                      value={editDateOfBirth}
-                      onChange={setEditDateOfBirth}
-                      placeholder="Select date"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Last name *</Label>
+                  <Input 
+                    value={editLastName} 
+                    onChange={(e) => setEditLastName(e.target.value)}
+                    className="bg-background border-border"
+                  />
                 </div>
               </div>
-
-              {/* Partner Section */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-foreground">Partner <span className="text-muted-foreground font-normal">(optional)</span></Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-partner-first-name" className="text-xs text-muted-foreground">First name</Label>
-                    <Input
-                      id="edit-partner-first-name"
-                      value={editPartnerFirstName}
-                      onChange={(e) => setEditPartnerFirstName(e.target.value)}
-                      placeholder="First name"
-                      className={`bg-white ${editPartnerValidationError ? 'border-destructive' : 'border-border'}`}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-partner-last-name" className="text-xs text-muted-foreground">Last name</Label>
-                    <Input
-                      id="edit-partner-last-name"
-                      value={editPartnerLastName}
-                      onChange={(e) => setEditPartnerLastName(e.target.value)}
-                      placeholder="Last name"
-                      className={`bg-white ${editPartnerValidationError ? 'border-destructive' : 'border-border'}`}
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-foreground">EMR ID</Label>
+                  <Input 
+                    value={editEmrId} 
+                    onChange={(e) => setEditEmrId(e.target.value)}
+                    className="bg-background border-border"
+                  />
                 </div>
-                {editPartnerValidationError && (
-                  <p className="text-xs text-destructive">Please fill in both first and last name for partner</p>
-                )}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="edit-partner-emr-id" className="text-xs text-muted-foreground">EMR ID</Label>
-                    <Input
-                      id="edit-partner-emr-id"
-                      value={editPartnerEmrId}
-                      onChange={(e) => setEditPartnerEmrId(e.target.value)}
-                      placeholder="EMR ID"
-                      className="bg-white border-border"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Date of birth</Label>
-                    <DatePickerField
-                      value={editPartnerDateOfBirth}
-                      onChange={setEditPartnerDateOfBirth}
-                      placeholder="Select date"
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Date of birth</Label>
+                  <DatePickerField value={editDateOfBirth} onChange={setEditDateOfBirth} />
                 </div>
-              </div>
-
-              {/* Referring Physician Section */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium text-foreground">Referring physician <span className="text-muted-foreground font-normal">(optional)</span></Label>
-                <PhysicianSearchField
-                  value={editPhysicianSearchQuery}
-                  onChange={setEditPhysicianSearchQuery}
-                  selected={editSelectedPhysician}
-                  onClear={() => setEditSelectedPhysician(null)}
-                  results={physicianResults}
-                  isLoading={physicianLoading}
-                  error={physicianError}
-                  onSelect={handleSelectEditPhysician}
-                  showDropdown={showEditPhysicianDropdown}
-                  setShowDropdown={setShowEditPhysicianDropdown}
-                />
-              </div>
-
-              {/* Additional Fields */}
-              <div className="space-y-3">
-                <Label htmlFor="edit-identifier" className="text-sm font-medium text-foreground">Patient identifier</Label>
-                <Input
-                  id="edit-identifier"
-                  value={editIdentifier}
-                  onChange={(e) => setEditIdentifier(e.target.value)}
-                  placeholder="Enter patient identifier"
-                  className="bg-white border-border"
-                />
-              </div>
-              <div className="space-y-3">
-                <Label htmlFor="edit-context" className="text-sm font-medium text-foreground">Additional patient context</Label>
-                <Textarea
-                  id="edit-context"
-                  value={editAdditionalContext}
-                  onChange={(e) => setEditAdditionalContext(e.target.value.slice(0, 1000))}
-                  placeholder="Enter additional patient context"
-                  className="min-h-[80px] bg-white border-border"
-                  maxLength={1000}
-                />
-                <p className="text-xs text-muted-foreground">
-                  {editAdditionalContext.length}/1000 characters
-                </p>
               </div>
             </div>
-          )}
-          <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button
-              variant="destructive"
-              onClick={handleDeletePatient}
-              className="sm:mr-auto"
-            >
-              Delete patient
+
+            {/* Partner */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Partner (optional)</h4>
+              {editPartnerValidationError && (
+                <p className="text-xs text-destructive">Both first and last name are required for partner</p>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-foreground">First name</Label>
+                  <Input 
+                    value={editPartnerFirstName} 
+                    onChange={(e) => setEditPartnerFirstName(e.target.value)}
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Last name</Label>
+                  <Input 
+                    value={editPartnerLastName} 
+                    onChange={(e) => setEditPartnerLastName(e.target.value)}
+                    className="bg-background border-border"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label className="text-foreground">EMR ID</Label>
+                  <Input 
+                    value={editPartnerEmrId} 
+                    onChange={(e) => setEditPartnerEmrId(e.target.value)}
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-foreground">Date of birth</Label>
+                  <DatePickerField value={editPartnerDateOfBirth} onChange={setEditPartnerDateOfBirth} />
+                </div>
+              </div>
+            </div>
+
+            {/* Referring Physician */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Referring physician (optional)</h4>
+              <PhysicianSearchField
+                value={editPhysicianSearchQuery}
+                onChange={setEditPhysicianSearchQuery}
+                selected={editSelectedPhysician}
+                onClear={() => setEditSelectedPhysician(null)}
+                results={physicianResults}
+                isLoading={physicianLoading}
+                error={physicianError}
+                onSelect={handleSelectEditPhysician}
+                showDropdown={showEditPhysicianDropdown}
+                setShowDropdown={setShowEditPhysicianDropdown}
+              />
+            </div>
+
+            {/* Identifier & Context */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-sm text-foreground">Additional info</h4>
+              <div className="space-y-2">
+                <Label className="text-foreground">Identifier</Label>
+                <Input 
+                  value={editIdentifier} 
+                  onChange={(e) => setEditIdentifier(e.target.value)}
+                  placeholder="e.g., MRN, chart number"
+                  className="bg-background border-border"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-foreground">Additional context</Label>
+                <Textarea 
+                  value={editAdditionalContext} 
+                  onChange={(e) => setEditAdditionalContext(e.target.value)}
+                  placeholder="Notes about this patient..."
+                  className="bg-background border-border"
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex justify-between">
+            <Button variant="destructive" onClick={handleDeletePatient}>
+              Delete
             </Button>
-            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSavePatient} disabled={!isEditValid}>
-              Save changes
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSavePatient} 
+                disabled={!isEditValid}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              >
+                Save changes
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

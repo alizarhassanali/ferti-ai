@@ -46,7 +46,7 @@ export const useTemplates = () => {
     setState(prev => ({ 
       ...prev, 
       isCreateModalOpen: true, 
-      createModalStep: 'type',
+      createModalStep: 'blank',
       selectedTemplateType: null 
     }));
   };
