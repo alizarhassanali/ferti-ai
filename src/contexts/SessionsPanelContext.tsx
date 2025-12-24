@@ -76,8 +76,18 @@ export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => 
 
 export const useSessionsPanel = () => {
   const context = useContext(SessionsPanelContext);
+  // Return default values if not within provider (e.g., onboarding pages)
   if (context === undefined) {
-    throw new Error('useSessionsPanel must be used within SessionsPanelProvider');
+    return {
+      isSessionsPanelVisible: false,
+      sessionsPaneOpen: false,
+      toggleSessionsPanel: () => {},
+      showSessionsPanel: () => {},
+      hideSessionsPanel: () => {},
+      isSessionsPanelAllowed: false,
+      selectedSessionId: null,
+      setSelectedSessionId: () => {}
+    };
   }
   return context;
 };
