@@ -9,11 +9,13 @@ import { Patient, NoteTab, Session } from "@/types/session";
 import { useToast } from "@/hooks/use-toast";
 import { useSessions } from "@/contexts/SessionsContext";
 import { usePatients } from "@/contexts/PatientsContext";
+import { useChartPrepLayout } from "@/contexts/ChartPrepLayoutContext";
 import { format } from "date-fns";
 
 const ChartPrep = () => {
   const { toast } = useToast();
   const { sessions, getSession } = useSessions();
+  const { isSessionsListVisible } = useChartPrepLayout();
   const {
     patients,
     addPatient,
@@ -127,59 +129,61 @@ const ChartPrep = () => {
 
   return (
     <AppLayout hideGlobalSessionsPanel>
-      <div className="flex-1 flex flex-col h-screen overflow-hidden bg-background w-full">
-        {/* Top Header Row - identical to New Session */}
-        <div className="px-6 py-4 border-b border-border flex items-center gap-3">
-          <PatientSelector 
-            selectedPatient={selectedPatient} 
-            patients={patients} 
-            onSelectPatient={handleSelectPatient} 
-            onCreatePatient={handleCreatePatient} 
-            onUpdatePatient={handleUpdatePatient} 
-            onDeletePatient={handleDeletePatient} 
-          />
-          
-          {/* Partner display (read-only) */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-            <span className="text-muted-foreground">Partner:</span>
-            <span className="text-foreground">
-              {selectedPatient?.partnerFirstName && selectedPatient?.partnerLastName 
-                ? `${selectedPatient.partnerFirstName} ${selectedPatient.partnerLastName}`
-                : '—'}
-            </span>
-          </div>
-          
-          {/* Referring Physician display (read-only) */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
-            <span className="text-muted-foreground">Referring physician:</span>
-            <span className="text-foreground">
-              {selectedPatient?.referringPhysicianName 
-                ? `Dr. ${selectedPatient.referringPhysicianName}`
-                : '—'}
-            </span>
-          </div>
-        </div>
-
-        {/* Secondary Header Row - Date & Language (no recording controls) */}
-        <ChartPrepInfoBar 
-          sessionDate={sessionDate}
-          inputLanguage={inputLanguage}
-          outputLanguage={outputLanguage}
-          onInputLanguageChange={setInputLanguage}
-          onOutputLanguageChange={setOutputLanguage}
-        />
-
-        {/* Main Content - Middle Pane (Session List) + Right Pane (Context/Note) */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Middle Pane - Sessions List */}
-          <div className="w-80 h-full flex-shrink-0">
+      <div className="flex h-screen overflow-hidden bg-background w-full">
+        {/* Middle Pane - Sessions List (collapsible, same as View Sessions) */}
+        {isSessionsListVisible && (
+          <div className="w-80 h-full flex-shrink-0 flex flex-col">
             <ChartPrepSessionList 
               selectedSessionId={selectedSessionId}
               onSessionSelect={handleSessionSelect}
             />
           </div>
+        )}
 
-          {/* Right Pane - Context/Note */}
+        {/* Right Pane - Main workspace */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Top Header Row - identical to New Session */}
+          <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+            <PatientSelector 
+              selectedPatient={selectedPatient} 
+              patients={patients} 
+              onSelectPatient={handleSelectPatient} 
+              onCreatePatient={handleCreatePatient} 
+              onUpdatePatient={handleUpdatePatient} 
+              onDeletePatient={handleDeletePatient} 
+            />
+            
+            {/* Partner display (read-only) */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
+              <span className="text-muted-foreground">Partner:</span>
+              <span className="text-foreground">
+                {selectedPatient?.partnerFirstName && selectedPatient?.partnerLastName 
+                  ? `${selectedPatient.partnerFirstName} ${selectedPatient.partnerLastName}`
+                  : '—'}
+              </span>
+            </div>
+            
+            {/* Referring Physician display (read-only) */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] bg-white">
+              <span className="text-muted-foreground">Referring physician:</span>
+              <span className="text-foreground">
+                {selectedPatient?.referringPhysicianName 
+                  ? `Dr. ${selectedPatient.referringPhysicianName}`
+                  : '—'}
+              </span>
+            </div>
+          </div>
+
+          {/* Secondary Header Row - Date & Language (no recording controls) */}
+          <ChartPrepInfoBar 
+            sessionDate={sessionDate}
+            inputLanguage={inputLanguage}
+            outputLanguage={outputLanguage}
+            onInputLanguageChange={setInputLanguage}
+            onOutputLanguageChange={setOutputLanguage}
+          />
+
+          {/* Context/Note workspace */}
           <div className="flex-1 overflow-hidden">
             <ChartPrepRightPanel
               contextContent={contextContent}
@@ -196,9 +200,9 @@ const ChartPrep = () => {
               sessionDate={sessionDate}
             />
           </div>
-        </div>
 
-        <AskAIInput onSubmit={handleAISubmit} />
+          <AskAIInput onSubmit={handleAISubmit} />
+        </div>
       </div>
     </AppLayout>
   );

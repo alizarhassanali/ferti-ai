@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw, CheckSquare, X, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SessionCard } from '@/components/sessions/SessionCard';
 import { SessionFilters } from '@/components/sessions/SessionFilters';
 import { SessionSort } from '@/components/sessions/SessionSort';
 import { useSessions } from '@/contexts/SessionsContext';
+import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 interface ChartPrepSessionListProps {
   selectedSessionId: string | null;
@@ -18,11 +20,14 @@ export const ChartPrepSessionList = ({
   selectedSessionId,
   onSessionSelect,
 }: ChartPrepSessionListProps) => {
-  const { sessions } = useSessions();
+  const { sessions, deleteSession } = useSessions();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const groupSessionsByDate = (sessionsList: typeof sessions) => {
     const grouped: Record<string, typeof sessions> = {};
@@ -40,20 +45,65 @@ export const ChartPrepSessionList = ({
     return grouped;
   };
 
+  const getSessionsForPatient = (patientId: string | undefined) => {
+    if (!patientId) return [];
+    return sessions.filter(s => s.patientId === patientId);
+  };
+
+  const handleDeleteAllPatientSessions = (patientId: string, patientName: string) => {
+    const patientSessions = sessions.filter(s => s.patientId === patientId);
+    patientSessions.forEach(s => deleteSession(s.id));
+    toast({
+      title: 'Sessions deleted',
+      description: `All sessions for ${patientName} have been deleted.`,
+      variant: 'destructive'
+    });
+  };
+
   const filteredSessions = sessions.filter(session => 
     session.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     session.patientName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  // For chart prep, show all sessions (can be filtered as needed)
-  const groupedSessions = groupSessionsByDate(filteredSessions);
+  // Split sessions into drafts (no notes) and completed (has notes)
+  const draftSessions = filteredSessions.filter(session => !session.hasNotes);
+  const completedSessions = filteredSessions.filter(session => session.hasNotes);
+  
+  const groupedDraftSessions = groupSessionsByDate(draftSessions);
+  const groupedCompletedSessions = groupSessionsByDate(completedSessions);
+
+  const handleSelectSession = (id: string) => {
+    setSelectedSessions(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]);
+  };
 
   const handleSessionClick = (id: string) => {
     onSessionSelect(id);
   };
 
+  const handleCancelSelection = () => {
+    setSelectedSessions([]);
+  };
+
+  const handleDeleteSelected = () => {
+    selectedSessions.forEach(id => deleteSession(id));
+    const count = selectedSessions.length;
+    setSelectedSessions([]);
+    setShowDeleteDialog(false);
+
+    // Clear selected session if it was deleted
+    if (selectedSessionId && selectedSessions.includes(selectedSessionId)) {
+      onSessionSelect('');
+    }
+    toast({
+      title: 'Sessions deleted',
+      description: `${count} session${count !== 1 ? 's' : ''} deleted.`
+    });
+  };
+
+  const selectedCount = selectedSessions.length;
+
   return (
-    <div className="h-full flex flex-col bg-white border-r border-border w-full">
+    <div className="h-full flex flex-col bg-white border-r border-border w-full relative">
       {/* Controls */}
       <div className="p-4 space-y-3">
         <TooltipProvider delayDuration={300}>
@@ -129,30 +179,30 @@ export const ChartPrepSessionList = ({
         {showSort && <SessionSort />}
       </div>
 
-      {/* Sessions List - simplified for chart prep */}
-      <Tabs defaultValue="all" className="flex-1 flex flex-col overflow-hidden">
+      {/* Tabs - Completed / Drafts */}
+      <Tabs defaultValue="completed" className="flex-1 flex flex-col overflow-hidden">
         <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-0.5">
           <TabsTrigger 
-            value="all" 
+            value="completed" 
             className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
-            All Sessions
+            Completed
           </TabsTrigger>
           <TabsTrigger 
-            value="upcoming" 
+            value="drafts" 
             className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
-            Upcoming
+            Drafts
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="flex-1 overflow-y-auto m-0 p-4 space-y-1">
-          {Object.entries(groupedSessions).length === 0 ? (
+        <TabsContent value="completed" className={`flex-1 overflow-y-auto m-0 p-4 space-y-1 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+          {Object.entries(groupedCompletedSessions).length === 0 ? (
             <div className="text-center text-foreground/60 py-8">
-              No sessions available
+              No completed sessions
             </div>
           ) : (
-            Object.entries(groupedSessions).map(([date, sessionGroup]) => (
+            Object.entries(groupedCompletedSessions).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-1">
                 <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
                   <span>📅</span> <span>{date}</span>
@@ -170,17 +220,21 @@ export const ChartPrepSessionList = ({
                           year: 'numeric'
                         }),
                         time: session.time,
-                        status: session.hasNotes ? 'complete' : 'draft',
+                        status: 'complete',
                         patientId: session.patientId,
                         patientName: session.patientName
                       }} 
-                      isSelected={false} 
+                      isSelected={selectedSessions.includes(session.id)} 
                       isActive={selectedSessionId === session.id} 
-                      onSelect={() => {}} 
+                      onSelect={() => handleSelectSession(session.id)} 
                       onClick={() => handleSessionClick(session.id)} 
-                      patientSessions={[]} 
+                      patientSessions={getSessionsForPatient(session.patientId)} 
                       onSessionClick={handleSessionClick} 
-                      onDeleteAllPatientSessions={() => {}} 
+                      onDeleteAllPatientSessions={() => {
+                        if (session.patientId && session.patientName) {
+                          handleDeleteAllPatientSessions(session.patientId, session.patientName);
+                        }
+                      }} 
                     />
                   ))}
                 </div>
@@ -189,13 +243,105 @@ export const ChartPrepSessionList = ({
           )}
         </TabsContent>
 
-        <TabsContent value="upcoming" className="flex-1 overflow-y-auto m-0 p-4 space-y-1">
-          <div className="text-center text-foreground/60 py-8">
-            <p className="font-medium">📅 Upcoming sessions</p>
-            <p className="text-sm mt-2">Sessions scheduled for chart prep will appear here.</p>
-          </div>
+        <TabsContent value="drafts" className={`flex-1 overflow-y-auto m-0 p-4 space-y-1 ${selectedCount > 0 ? 'pb-20' : ''}`}>
+          {Object.entries(groupedDraftSessions).length === 0 ? (
+            <div className="text-center text-foreground/60 py-8">
+              No draft sessions
+            </div>
+          ) : (
+            Object.entries(groupedDraftSessions).map(([date, sessionGroup]) => (
+              <div key={date} className="space-y-1">
+                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
+                  <span>📅</span> <span>{date}</span>
+                </div>
+                <div className="space-y-1">
+                  {sessionGroup.map(session => (
+                    <SessionCard 
+                      key={session.id} 
+                      session={{
+                        id: session.id,
+                        title: session.title,
+                        date: new Date(session.date).toLocaleDateString('en-US', {
+                          month: '2-digit',
+                          day: '2-digit',
+                          year: 'numeric'
+                        }),
+                        time: session.time,
+                        status: 'draft',
+                        patientId: session.patientId,
+                        patientName: session.patientName
+                      }} 
+                      isSelected={selectedSessions.includes(session.id)} 
+                      isActive={selectedSessionId === session.id} 
+                      onSelect={() => handleSelectSession(session.id)} 
+                      onClick={() => handleSessionClick(session.id)} 
+                      patientSessions={getSessionsForPatient(session.patientId)} 
+                      onSessionClick={handleSessionClick} 
+                      onDeleteAllPatientSessions={() => {
+                        if (session.patientId && session.patientName) {
+                          handleDeleteAllPatientSessions(session.patientId, session.patientName);
+                        }
+                      }} 
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
         </TabsContent>
       </Tabs>
+
+      {/* Bottom Action Bar */}
+      {selectedCount > 0 && (
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-border p-3 flex items-center justify-between shadow-lg z-10">
+          <div className="flex items-center gap-2 text-sm">
+            <CheckSquare className="h-4 w-4 text-primary stroke-[1.5]" />
+            <span className="font-medium text-foreground">
+              {selectedCount} session{selectedCount !== 1 ? 's' : ''} selected
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="destructive" 
+              size="sm" 
+              onClick={handleCancelSelection} 
+              className="gap-1"
+            >
+              <X className="h-4 w-4 stroke-[1.5]" />
+              Cancel
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowDeleteDialog(true)} 
+              className="gap-1 bg-white text-foreground border-border hover:bg-muted"
+            >
+              <Trash2 className="h-4 w-4 stroke-[1.5]" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">
+              Delete Session{selectedCount !== 1 ? 's' : ''}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {selectedCount} session{selectedCount !== 1 ? 's' : ''}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteSelected} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
