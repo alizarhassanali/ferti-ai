@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SessionHeaderRow } from "@/components/newSession/SessionHeaderRow";
-import { ChartPrepInfoBar } from "@/components/chartPrep/ChartPrepInfoBar";
+import { SessionInfoBar } from "@/components/newSession/SessionInfoBar";
 import { ChartPrepSessionList } from "@/components/chartPrep/ChartPrepSessionList";
 import { ChartPrepRightPanel } from "@/components/chartPrep/ChartPrepRightPanel";
-import { Patient, NoteTab, Session } from "@/types/session";
+import { Patient, NoteTab, Session, RecordingMode } from "@/types/session";
 import { useToast } from "@/hooks/use-toast";
 import { useSessions } from "@/contexts/SessionsContext";
 import { usePatients } from "@/contexts/PatientsContext";
@@ -26,6 +26,7 @@ const ChartPrep = () => {
   } = usePatients();
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patientRequired, setPatientRequired] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<string | null>(null);
   const [selectedPhysician, setSelectedPhysician] = useState<string | null>(null);
@@ -33,6 +34,14 @@ const ChartPrep = () => {
   const [outputLanguage, setOutputLanguage] = useState("en");
   const [contextContent, setContextContent] = useState("");
   const [transcriptContent, setTranscriptContent] = useState("");
+  
+  // Recording state - same as NewSession
+  const [recordingMode, setRecordingMode] = useState<RecordingMode>("transcribe");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [selectedMicrophoneId, setSelectedMicrophoneId] = useState("");
+  const [audioLevel, setAudioLevel] = useState(0);
+  
   const [noteTabs, setNoteTabs] = useState<NoteTab[]>([{
     id: "1",
     title: "Chart Prep",
@@ -42,6 +51,26 @@ const ChartPrep = () => {
   const [activeNoteTabId, setActiveNoteTabId] = useState("1");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
+
+  // Recording timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => setRecordingDuration(prev => prev + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
+
+  // Audio level simulation effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRecording) {
+      interval = setInterval(() => setAudioLevel(Math.random() * 100), 100);
+    } else {
+      setAudioLevel(0);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
 
   // Load session data when a session is selected
   const handleSessionSelect = useCallback((sessionId: string) => {
@@ -65,8 +94,34 @@ const ChartPrep = () => {
     }
   }, [getSession, patients]);
 
+  const handleToggleRecording = useCallback(() => {
+    if (!isRecording && !selectedPatient) {
+      setPatientRequired(true);
+      toast({
+        title: "Patient required",
+        description: "Please add patient details before starting transcription.",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (!isRecording) setRecordingDuration(0);
+    setIsRecording(!isRecording);
+    toast({
+      title: isRecording ? "Recording stopped" : "Recording started",
+      description: isRecording ? "Your recording has been saved." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
+    });
+  }, [isRecording, recordingMode, toast, selectedPatient]);
+
+  const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
+  
+  const handleUploadAudio = () => toast({
+    title: "Upload audio",
+    description: "Audio upload feature coming soon."
+  });
+
   const handleSelectPatient = (patient: Patient | null) => {
     setSelectedPatient(patient);
+    if (patient) setPatientRequired(false);
   };
 
   const handleCreatePatient = (patientData: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -151,43 +206,53 @@ const ChartPrep = () => {
             onCreatePatient={handleCreatePatient}
             onUpdatePatient={handleUpdatePatient}
             onDeletePatient={handleDeletePatient}
+            isPatientHighlighted={patientRequired}
             selectedPartner={selectedPartner}
             onPartnerChange={setSelectedPartner}
             selectedPhysician={selectedPhysician}
             onPhysicianChange={setSelectedPhysician}
           />
 
-          {/* Secondary Header Row - Date & Language (no recording controls) */}
-          <ChartPrepInfoBar 
+          {/* Secondary Header Row - Same as New Session with recording controls */}
+          <SessionInfoBar 
             sessionDate={sessionDate}
-            inputLanguage={inputLanguage}
-            outputLanguage={outputLanguage}
-            onInputLanguageChange={setInputLanguage}
-            onOutputLanguageChange={setOutputLanguage}
+            recordingDuration={recordingDuration}
+            selectedMicrophoneId={selectedMicrophoneId}
+            onMicrophoneChange={setSelectedMicrophoneId}
+            audioLevel={audioLevel}
+            recordingMode={recordingMode}
+            isRecording={isRecording}
+            onModeChange={handleModeChange}
+            onToggleRecording={handleToggleRecording}
+            onUploadAudio={handleUploadAudio}
           />
 
           {/* Two column layout with transcript and context/note */}
           <div className="flex-1 overflow-hidden">
             <ResizablePanelGroup direction="horizontal" className="h-full">
-              {/* Left Column - Transcript */}
+              {/* Left Column - Transcript/Dictation */}
               <ResizablePanel defaultSize={40} minSize={25}>
                 <div className="flex flex-col h-full border-r border-border">
-                  {/* Left Pane Header */}
+                  {/* Left Pane Header - dynamic based on recording mode */}
                   <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
                     <div className={cn(
                       "flex items-center gap-2 px-3 py-1 rounded-full",
                       "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
                     )}>
-                      <span className="text-sm font-medium">Transcript</span>
+                      <span className="text-sm font-medium">
+                        {recordingMode === "transcribe" ? "Transcript" : "Dictation"}
+                      </span>
                     </div>
                   </div>
                   
-                  {/* Transcript Content */}
+                  {/* Transcript/Dictation Content */}
                   <div className="flex-1 overflow-auto p-4">
                     <Textarea
                       value={transcriptContent}
                       onChange={(e) => setTranscriptContent(e.target.value)}
-                      placeholder="Paste or view transcript from previous sessions here..."
+                      placeholder={recordingMode === "transcribe" 
+                        ? "Paste or view transcript from previous sessions here..." 
+                        : "Start dictating or paste your notes here..."}
                       className="w-full h-full min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed bg-white"
                     />
                   </div>
