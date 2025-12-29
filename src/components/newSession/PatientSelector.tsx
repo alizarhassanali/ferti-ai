@@ -52,7 +52,9 @@ export const PatientSelector = ({
   // Create form state
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [emrId, setEmrId] = useState('');
+  const [cnpId, setCnpId] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
   const [partnerFirstName, setPartnerFirstName] = useState('');
   const [partnerLastName, setPartnerLastName] = useState('');
@@ -65,7 +67,9 @@ export const PatientSelector = ({
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [editFirstName, setEditFirstName] = useState('');
   const [editLastName, setEditLastName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
   const [editEmrId, setEditEmrId] = useState('');
+  const [editCnpId, setEditCnpId] = useState('');
   const [editDateOfBirth, setEditDateOfBirth] = useState<Date | undefined>(undefined);
   const [editPartnerFirstName, setEditPartnerFirstName] = useState('');
   const [editPartnerLastName, setEditPartnerLastName] = useState('');
@@ -118,7 +122,9 @@ export const PatientSelector = ({
         name: fullName,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        email: email.trim() || undefined,
         emrId: emrId.trim() || undefined,
+        cnpId: cnpId.trim() || undefined,
         dateOfBirth: dateOfBirth,
         partnerFirstName: partnerFirstName.trim() || undefined,
         partnerLastName: partnerLastName.trim() || undefined,
@@ -136,7 +142,9 @@ export const PatientSelector = ({
   const resetCreateForm = () => {
     setFirstName('');
     setLastName('');
+    setEmail('');
     setEmrId('');
+    setCnpId('');
     setDateOfBirth(undefined);
     setPartnerFirstName('');
     setPartnerLastName('');
@@ -151,7 +159,9 @@ export const PatientSelector = ({
     setEditingPatient(patient);
     setEditFirstName(patient.firstName || patient.name.split(' ')[0] || '');
     setEditLastName(patient.lastName || patient.name.split(' ').slice(1).join(' ') || '');
+    setEditEmail(patient.email || '');
     setEditEmrId(patient.emrId || '');
+    setEditCnpId(patient.cnpId || '');
     setEditDateOfBirth(patient.dateOfBirth ? new Date(patient.dateOfBirth) : undefined);
     setEditPartnerFirstName(patient.partnerFirstName || '');
     setEditPartnerLastName(patient.partnerLastName || '');
@@ -182,7 +192,9 @@ export const PatientSelector = ({
         name: fullName,
         firstName: editFirstName.trim(),
         lastName: editLastName.trim(),
+        email: editEmail.trim() || undefined,
         emrId: editEmrId.trim() || undefined,
+        cnpId: editCnpId.trim() || undefined,
         dateOfBirth: editDateOfBirth,
         partnerFirstName: editPartnerFirstName.trim() || undefined,
         partnerLastName: editPartnerLastName.trim() || undefined,
@@ -403,17 +415,38 @@ export const PatientSelector = ({
               {filteredPatients.map(patient => (
                 <DropdownMenuItem
                   key={patient.id}
-                  className="flex justify-between text-foreground hover:bg-muted"
+                  className="flex items-center gap-3 py-3 px-3 text-foreground hover:bg-muted cursor-pointer"
                   onClick={() => {
                     onSelectPatient(patient);
                     setSearchQuery('');
                   }}
                 >
-                  <span>{patient.name}</span>
+                  {/* Avatar */}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#2D3A5C] flex items-center justify-center">
+                    <span className="text-white font-medium text-sm">
+                      {patient.firstName?.charAt(0) || patient.name.charAt(0)}
+                    </span>
+                  </div>
+                  
+                  {/* Name and Email */}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-foreground truncate">{patient.name}</div>
+                    {patient.email && (
+                      <div className="text-sm text-muted-foreground truncate">{patient.email}</div>
+                    )}
+                  </div>
+                  
+                  {/* EMR ID and CNP ID */}
+                  <div className="flex-shrink-0 text-right text-xs text-muted-foreground">
+                    {patient.emrId && <div>EMR ID: {patient.emrId}</div>}
+                    {patient.cnpId && <div>CNP ID: {patient.cnpId}</div>}
+                  </div>
+                  
+                  {/* Edit Button */}
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="flex-shrink-0 h-7 px-2 text-xs text-muted-foreground hover:text-foreground hover:bg-background"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEditPatient(patient);
@@ -470,6 +503,16 @@ export const PatientSelector = ({
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label className="text-foreground">Email</Label>
+                <Input 
+                  type="email"
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="patient@email.com"
+                  className="bg-background border-border"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label className="text-foreground">EMR ID</Label>
@@ -480,9 +523,17 @@ export const PatientSelector = ({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-foreground">Date of birth</Label>
-                  <DatePickerField value={dateOfBirth} onChange={setDateOfBirth} />
+                  <Label className="text-foreground">CNP ID</Label>
+                  <Input 
+                    value={cnpId} 
+                    onChange={(e) => setCnpId(e.target.value)}
+                    className="bg-background border-border"
+                  />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-foreground">Date of birth</Label>
+                <DatePickerField value={dateOfBirth} onChange={setDateOfBirth} />
               </div>
             </div>
 
@@ -591,6 +642,16 @@ export const PatientSelector = ({
                   />
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label className="text-foreground">Email</Label>
+                <Input 
+                  type="email"
+                  value={editEmail} 
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  placeholder="patient@email.com"
+                  className="bg-background border-border"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label className="text-foreground">EMR ID</Label>
@@ -601,9 +662,17 @@ export const PatientSelector = ({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-foreground">Date of birth</Label>
-                  <DatePickerField value={editDateOfBirth} onChange={setEditDateOfBirth} />
+                  <Label className="text-foreground">CNP ID</Label>
+                  <Input 
+                    value={editCnpId} 
+                    onChange={(e) => setEditCnpId(e.target.value)}
+                    className="bg-background border-border"
+                  />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-foreground">Date of birth</Label>
+                <DatePickerField value={editDateOfBirth} onChange={setEditDateOfBirth} />
               </div>
             </div>
 
