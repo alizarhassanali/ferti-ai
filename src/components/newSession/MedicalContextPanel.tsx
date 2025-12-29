@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Paperclip, Plus, X, Mail, FileDown, Pencil, Copy, FileText, Maximize2, Minimize2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
 
 interface MedicalContextPanelProps {
   medicalContext: string;
@@ -157,16 +157,18 @@ export const MedicalContextPanel = ({ medicalContext, onMedicalContextChange }: 
 
       {/* Fullscreen Dialog */}
       <Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
-        <DialogContent className="max-w-5xl h-[90vh]">
+        <DialogContent className="max-w-5xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Medical Context - {templates.find(t => t.id === activeTemplate)?.name}</DialogTitle>
           </DialogHeader>
-          <Textarea
-            value={medicalContext}
-            onChange={(e) => onMedicalContextChange(e.target.value)}
-            placeholder="Enter patient information, vitals, lab results, etc..."
-            className="w-full h-[calc(100%-60px)] resize-none text-base"
-          />
+          <DialogBody className="p-0">
+            <Textarea
+              value={medicalContext}
+              onChange={(e) => onMedicalContextChange(e.target.value)}
+              placeholder="Enter patient information, vitals, lab results, etc..."
+              className="w-full h-full min-h-[60vh] resize-none text-base border-0 focus-visible:ring-0"
+            />
+          </DialogBody>
         </DialogContent>
       </Dialog>
     </div>
