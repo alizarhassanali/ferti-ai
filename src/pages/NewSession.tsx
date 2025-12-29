@@ -150,22 +150,13 @@ const NewSession = () => {
     return () => clearInterval(interval);
   }, [isRecording]);
   const handleToggleRecording = useCallback(() => {
-    if (!isRecording && !selectedPatient) {
-      setPatientRequired(true);
-      toast({
-        title: "Patient required",
-        description: "Please add patient details before starting transcription.",
-        variant: "destructive"
-      });
-      return;
-    }
     if (!isRecording) setRecordingDuration(0);
     setIsRecording(!isRecording);
     toast({
       title: isRecording ? "Recording stopped" : "Recording started",
       description: isRecording ? "Your recording has been saved." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
     });
-  }, [isRecording, recordingMode, toast, selectedPatient]);
+  }, [isRecording, recordingMode, toast]);
   const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
   const handleUploadAudio = () => toast({
     title: "Upload audio",
