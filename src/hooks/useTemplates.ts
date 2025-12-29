@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Template, TemplatesState, CreateModalStep, TemplateCreationType } from '@/types/template';
+import { Template, TemplatesState, CreateModalStep, TemplateCreationType, TemplateVisibility } from '@/types/template';
 
 const mockTemplates: Template[] = [
   { id: '1', name: "Letter to GP", type: "Document", uses: 2, lastUsed: "1 day ago", creator: "Community", visibility: "Just me" },
@@ -84,6 +84,15 @@ export const useTemplates = () => {
     }));
   };
 
+  const shareTemplate = (id: string, visibility: TemplateVisibility) => {
+    setState(prev => ({
+      ...prev,
+      templates: prev.templates.map(t =>
+        t.id === id ? { ...t, visibility } : t
+      ),
+    }));
+  };
+
   const filteredTemplates = state.templates.filter(template =>
     template.name.toLowerCase().includes(state.searchQuery.toLowerCase())
   );
@@ -115,5 +124,6 @@ export const useTemplates = () => {
     setSelectedTemplateType,
     toggleFavorite,
     deleteTemplate,
+    shareTemplate,
   };
 };

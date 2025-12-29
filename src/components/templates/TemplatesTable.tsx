@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { TemplateRow } from './TemplateRow';
-import { Template } from '@/types/template';
+import { Template, TemplateVisibility } from '@/types/template';
 import {
   Pagination,
   PaginationContent,
@@ -21,8 +21,8 @@ import {
 interface TemplatesTableProps {
   templates: Template[];
   onSort: (column: 'uses' | 'lastUsed' | 'name') => void;
-  onToggleFavorite: (id: string) => void;
   onDelete: (id: string) => void;
+  onShare: (id: string, visibility: TemplateVisibility) => void;
   currentPage: number;
   onPageChange: (page: number) => void;
 }
@@ -30,8 +30,8 @@ interface TemplatesTableProps {
 export const TemplatesTable = ({
   templates,
   onSort,
-  onToggleFavorite,
   onDelete,
+  onShare,
   currentPage,
   onPageChange,
 }: TemplatesTableProps) => {
@@ -86,8 +86,8 @@ export const TemplatesTable = ({
               <TemplateRow
                 key={template.id}
                 template={template}
-                onToggleFavorite={onToggleFavorite}
                 onDelete={onDelete}
+                onShare={onShare}
               />
             ))}
           </TableBody>
