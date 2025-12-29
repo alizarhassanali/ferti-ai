@@ -53,29 +53,17 @@ export const PrivacySettings = () => {
       </div>
 
       <div className="space-y-8">
-        {/* Consent Settings */}
+{/* Consent Settings */}
         <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-1">Consent Settings</h4>
-          <p className="text-sm text-muted-foreground mb-6">
-            Configure patient consent and notification preferences.
-          </p>
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="consentPopup" className="text-sm font-medium">
-                  Consent popup
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Show consent popup before starting a session recording
-                </p>
-              </div>
-              <Switch
-                id="consentPopup"
-                checked={formData.consentPopupEnabled}
-                onCheckedChange={(checked) => setFormData({ ...formData, consentPopupEnabled: checked })}
-              />
-            </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="consentPopup" className="text-sm font-medium">
+              Consent popup
+            </Label>
+            <Switch
+              id="consentPopup"
+              checked={formData.consentPopupEnabled}
+              onCheckedChange={(checked) => setFormData({ ...formData, consentPopupEnabled: checked })}
+            />
           </div>
         </div>
 

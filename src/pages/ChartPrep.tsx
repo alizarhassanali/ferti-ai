@@ -4,11 +4,13 @@ import { SessionHeaderRow } from "@/components/newSession/SessionHeaderRow";
 import { SessionInfoBar } from "@/components/newSession/SessionInfoBar";
 import { ChartPrepSessionList } from "@/components/chartPrep/ChartPrepSessionList";
 import { ChartPrepRightPanel } from "@/components/chartPrep/ChartPrepRightPanel";
+import { ConsentPopupDialog } from "@/components/newSession/ConsentPopupDialog";
 import { Patient, NoteTab, Session, RecordingMode } from "@/types/session";
 import { useToast } from "@/hooks/use-toast";
 import { useSessions } from "@/contexts/SessionsContext";
 import { usePatients } from "@/contexts/PatientsContext";
 import { useChartPrepLayout } from "@/contexts/ChartPrepLayoutContext";
+import { useSettings } from "@/contexts/SettingsContext";
 import { format } from "date-fns";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,12 +20,15 @@ const ChartPrep = () => {
   const { toast } = useToast();
   const { sessions, getSession } = useSessions();
   const { isSessionsListVisible } = useChartPrepLayout();
+  const { privacySettings } = useSettings();
   const {
     patients,
     addPatient,
     updatePatient: updatePatientInContext,
     deletePatient: deletePatientInContext
   } = usePatients();
+
+  const [showConsentDialog, setShowConsentDialog] = useState(false);
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [patientRequired, setPatientRequired] = useState(false);
@@ -94,14 +99,32 @@ const ChartPrep = () => {
     }
   }, [getSession, patients]);
 
-  const handleToggleRecording = useCallback(() => {
-    if (!isRecording) setRecordingDuration(0);
-    setIsRecording(!isRecording);
+  const startRecording = useCallback(() => {
+    setRecordingDuration(0);
+    setIsRecording(true);
     toast({
-      title: isRecording ? "Recording stopped" : "Recording started",
-      description: isRecording ? "Your recording has been saved." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
+      title: "Recording started",
+      description: `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
     });
-  }, [isRecording, recordingMode, toast]);
+  }, [recordingMode, toast]);
+
+  const handleToggleRecording = useCallback(() => {
+    if (!isRecording) {
+      // Starting recording - check if consent popup is enabled
+      if (privacySettings.consentPopupEnabled) {
+        setShowConsentDialog(true);
+      } else {
+        startRecording();
+      }
+    } else {
+      // Stopping recording
+      setIsRecording(false);
+      toast({
+        title: "Recording stopped",
+        description: "Your recording has been saved."
+      });
+    }
+  }, [isRecording, privacySettings.consentPopupEnabled, startRecording, toast]);
 
   const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
   
@@ -281,6 +304,13 @@ const ChartPrep = () => {
           </div>
         </div>
       </div>
+
+      {/* Consent Popup Dialog */}
+      <ConsentPopupDialog
+        open={showConsentDialog}
+        onOpenChange={setShowConsentDialog}
+        onConfirm={startRecording}
+      />
     </AppLayout>
   );
 };

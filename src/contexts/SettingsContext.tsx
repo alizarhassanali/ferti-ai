@@ -1,6 +1,10 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { UserProfile, ProfileFormData, SecuritySettings } from '@/types/user';
 
+interface PrivacySettings {
+  consentPopupEnabled: boolean;
+}
+
 interface SettingsContextValue {
   user: UserProfile;
   selectedCategory: string;
@@ -11,6 +15,8 @@ interface SettingsContextValue {
   changePassword: (current: string, newPassword: string) => Promise<void>;
   securitySettings: SecuritySettings;
   updateSecuritySettings: (settings: Partial<SecuritySettings>) => Promise<void>;
+  privacySettings: PrivacySettings;
+  updatePrivacySettings: (settings: Partial<PrivacySettings>) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
@@ -30,6 +36,20 @@ const mockUser: UserProfile = {
   country: 'Canada',
 };
 
+const PRIVACY_STORAGE_KEY = 'medical-scribe-privacy-settings';
+
+const getInitialPrivacySettings = (): PrivacySettings => {
+  try {
+    const saved = localStorage.getItem(PRIVACY_STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error('Failed to load privacy settings:', e);
+  }
+  return { consentPopupEnabled: true };
+};
+
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [user] = useState<UserProfile>(mockUser);
   const [selectedCategory, setSelectedCategory] = useState('profile');
@@ -39,6 +59,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     twoFactorEnabled: false,
     sessionTimeout: '30 minutes',
   });
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>(getInitialPrivacySettings);
 
   const updateProfile = async (data: Partial<ProfileFormData>) => {
     setIsSaving(true);
@@ -84,6 +105,22 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updatePrivacySettings = async (settings: Partial<PrivacySettings>) => {
+    setIsSaving(true);
+    setError(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const newSettings = { ...privacySettings, ...settings };
+      setPrivacySettings(newSettings);
+      localStorage.setItem(PRIVACY_STORAGE_KEY, JSON.stringify(newSettings));
+    } catch (err) {
+      setError('Failed to update privacy settings');
+      throw err;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <SettingsContext.Provider
       value={{
@@ -96,6 +133,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         changePassword,
         securitySettings,
         updateSecuritySettings,
+        privacySettings,
+        updatePrivacySettings,
       }}
     >
       {children}
