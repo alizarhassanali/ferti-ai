@@ -9,6 +9,7 @@ import { SessionsPanelProvider } from "./contexts/SessionsPanelContext";
 import { ChartPrepLayoutProvider } from "./contexts/ChartPrepLayoutContext";
 import { LettersProvider } from "./contexts/LettersContext";
 import { OnboardingTourProvider } from "./contexts/OnboardingTourContext";
+import { SettingsProvider } from "./contexts/SettingsContext";
 import { TourOverlay } from "./components/onboarding/TourOverlay";
 import { KeyboardShortcutsHandler } from "./components/KeyboardShortcutsHandler";
 import Index from "./pages/Index";
@@ -31,11 +32,12 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <SessionsProvider>
-      <PatientsProvider>
-        <LettersProvider>
-          <OnboardingTourProvider>
-            <TooltipProvider>
+    <SettingsProvider>
+      <SessionsProvider>
+        <PatientsProvider>
+          <LettersProvider>
+            <OnboardingTourProvider>
+              <TooltipProvider>
               <Toaster />
               <Sonner />
               <TourOverlay />
@@ -66,11 +68,12 @@ const App = () => (
                   </ChartPrepLayoutProvider>
                 </SessionsPanelProvider>
               </BrowserRouter>
-            </TooltipProvider>
-          </OnboardingTourProvider>
-        </LettersProvider>
-      </PatientsProvider>
-    </SessionsProvider>
+              </TooltipProvider>
+            </OnboardingTourProvider>
+          </LettersProvider>
+        </PatientsProvider>
+      </SessionsProvider>
+    </SettingsProvider>
   </QueryClientProvider>
 );
 
