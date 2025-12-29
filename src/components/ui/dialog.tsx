@@ -32,7 +32,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-0 border bg-background shadow-xl duration-200 data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out sm:rounded-2xl overflow-hidden",
+        "fixed left-[50%] top-[50%] z-50 flex flex-col w-full max-w-lg max-h-[90vh] translate-x-[-50%] translate-y-[-50%] gap-0 border bg-background shadow-xl duration-200 data-[state=open]:animate-scale-in data-[state=closed]:animate-scale-out sm:rounded-2xl overflow-hidden",
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 p-6 pb-4 text-left border-b border-border",
+      "flex flex-col space-y-1.5 p-6 pb-4 text-left border-b border-border flex-shrink-0",
       className
     )}
     {...props}
@@ -66,7 +66,7 @@ const DialogBody = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("p-6", className)}
+    className={cn("p-6 flex-1 overflow-y-auto min-h-0", className)}
     {...props}
   />
 );
@@ -78,7 +78,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-row justify-between items-center gap-3 p-6 pt-4 border-t border-border bg-muted/30",
+      "flex flex-row justify-between items-center gap-3 p-6 pt-4 border-t border-border bg-muted/30 flex-shrink-0",
       className
     )}
     {...props}

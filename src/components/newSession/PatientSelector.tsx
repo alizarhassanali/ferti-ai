@@ -15,6 +15,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogBody,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -481,7 +482,7 @@ export const PatientSelector = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-6 py-4 max-h-[60vh] overflow-y-auto">
+          <DialogBody className="space-y-6">
             {/* Primary Patient */}
             <div className="space-y-4">
               <h4 className="font-medium text-sm text-foreground">Primary patient</h4>
@@ -593,7 +594,7 @@ export const PatientSelector = ({
                 setShowDropdown={setShowPhysicianDropdown}
               />
             </div>
-          </div>
+          </DialogBody>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateModalOpen(false)}>
@@ -620,7 +621,7 @@ export const PatientSelector = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-6 py-4 max-h-[60vh] overflow-y-auto">
+          <DialogBody className="space-y-6">
             {/* Primary Patient */}
             <div className="space-y-4">
               <h4 className="font-medium text-sm text-foreground">Primary patient</h4>
@@ -755,7 +756,7 @@ export const PatientSelector = ({
                 />
               </div>
             </div>
-          </div>
+          </DialogBody>
 
           <DialogFooter className="flex justify-between">
             <Button variant="destructive" onClick={handleDeletePatient}>
