@@ -1,4 +1,4 @@
-import { Search, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface TemplatesFiltersProps {
@@ -18,17 +18,6 @@ export const TemplatesFilters = ({ searchQuery, onSearchChange }: TemplatesFilte
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-11 pr-4 py-2.5 h-11 rounded-xl"
         />
-      </div>
-      
-      <div className="flex gap-2">
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-primary text-sm font-medium text-foreground hover:bg-muted transition-all shadow-sm">
-          Date
-          <ChevronDown className="h-3.5 w-3.5 text-foreground" />
-        </button>
-        <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-primary text-sm font-medium text-foreground hover:bg-muted transition-all shadow-sm">
-          Created by
-          <ChevronDown className="h-3.5 w-3.5 text-foreground" />
-        </button>
       </div>
     </div>
   );

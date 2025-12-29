@@ -641,9 +641,7 @@ export const RightColumnPanel = ({
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
                           <CheckCircle className="h-3 w-3" />
-                          {existingLetter.status === 'sent' ? 'Sent' : 
-                           existingLetter.status === 'returned' ? 'Returned by admin' : 
-                           'Approved & pending'}
+                          {existingLetter.status === 'sent' ? 'Sent' : 'Approved & pending'}
                         </Badge>
                         <span className="text-sm text-muted-foreground">
                           This note has been sent to Letters
