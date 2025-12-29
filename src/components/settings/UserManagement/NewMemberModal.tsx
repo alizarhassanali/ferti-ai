@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogBody,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -144,7 +145,7 @@ export const NewMemberModal = ({ open, onOpenChange, onSuccess }: NewMemberModal
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <DialogBody className="space-y-4">
             <p className="text-sm text-foreground">
               Share this link with the new team member to complete their registration:
             </p>
@@ -162,7 +163,7 @@ export const NewMemberModal = ({ open, onOpenChange, onSuccess }: NewMemberModal
             <p className="text-xs text-muted-foreground">
               This link will expire in 7 days.
             </p>
-          </div>
+          </DialogBody>
 
           <DialogFooter>
             <Button onClick={handleDone}>Done</Button>
@@ -182,8 +183,9 @@ export const NewMemberModal = ({ open, onOpenChange, onSuccess }: NewMemberModal
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="contents">
+          <DialogBody className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First name *</Label>
               <Input
@@ -268,8 +270,9 @@ export const NewMemberModal = ({ open, onOpenChange, onSuccess }: NewMemberModal
               <p className="text-xs text-destructive">{errors.role}</p>
             )}
           </div>
+          </DialogBody>
 
-          <DialogFooter className="pt-4">
+          <DialogFooter>
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
