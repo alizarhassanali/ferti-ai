@@ -28,7 +28,7 @@ export const TemplatesHeader = ({ onCreateTemplate }: TemplatesHeaderProps) => {
           onClick={() => navigate('/template-hub')}
         >
           <Globe className="h-4 w-4" />
-          Browse community
+          Template Hub
         </Button>
         <Button 
           onClick={onCreateTemplate} 
