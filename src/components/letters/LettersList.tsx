@@ -14,7 +14,7 @@ export const LettersList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
 
-  const toBeSentLetters = letters.filter(l => l.status === 'to_be_sent' || l.status === 'returned');
+  const toBeSentLetters = letters.filter(l => l.status === 'to_be_sent');
   const sentLetters = letters.filter(l => l.status === 'sent');
 
   const filterLetters = (lettersList: typeof letters) => {

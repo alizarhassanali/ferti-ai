@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Letter } from '@/types/letter';
-import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { CheckCircle, Clock } from 'lucide-react';
 
 interface LetterCardProps {
   letter: Letter;
@@ -16,13 +16,6 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
           <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 gap-1">
             <Clock className="h-3 w-3" />
             To be sent
-          </Badge>
-        );
-      case 'returned':
-        return (
-          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 gap-1">
-            <AlertCircle className="h-3 w-3" />
-            Returned
           </Badge>
         );
       case 'sent':
@@ -55,12 +48,6 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
         <p className="text-muted-foreground">{letter.templateType}</p>
         <p className="text-muted-foreground/80 text-xs">From: {letter.originatingDoctor}</p>
       </div>
-
-      {letter.status === 'returned' && letter.returnReason && (
-        <div className="mt-2 p-2 bg-red-50 rounded text-xs text-red-700 border border-red-100">
-          <span className="font-medium">Return reason:</span> {letter.returnReason}
-        </div>
-      )}
     </div>
   );
 };

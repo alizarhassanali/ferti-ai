@@ -10,8 +10,6 @@ interface LettersContextType {
   createLetter: (data: LetterFormData) => Letter;
   updateLetterContent: (id: string, content: string) => void;
   markAsSent: (id: string) => void;
-  returnToDoctor: (id: string, reason: string) => void;
-  resubmitLetter: (id: string, content: string) => void;
   getLetterBySessionId: (sessionId: string) => Letter | undefined;
 }
 
@@ -62,7 +60,7 @@ Consultant in Reproductive Medicine`,
     sessionDate: new Date('2024-12-14'),
     templateType: 'Consult Letter',
     originatingDoctor: 'Dr. Sarah Johnson',
-    status: 'returned',
+    status: 'to_be_sent',
     content: `Dear Colleague,
 
 Re: Michael Chen - Initial Consultation
@@ -81,7 +79,6 @@ Patient to return in 4 weeks with results.
 
 Kind regards,
 Dr. Sarah Johnson`,
-    returnReason: 'Please add the patient date of birth and NHS number.',
     approvedAt: new Date('2024-12-14T10:00:00'),
     createdAt: new Date('2024-12-14T10:00:00'),
     updatedAt: new Date('2024-12-16T09:00:00'),
@@ -177,27 +174,6 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
     ));
   };
 
-  const returnToDoctor = (id: string, reason: string) => {
-    setLetters(prev => prev.map(letter =>
-      letter.id === id
-        ? { ...letter, status: 'returned' as LetterStatus, returnReason: reason, updatedAt: new Date() }
-        : letter
-    ));
-  };
-
-  const resubmitLetter = (id: string, content: string) => {
-    setLetters(prev => prev.map(letter =>
-      letter.id === id
-        ? { 
-            ...letter, 
-            status: 'to_be_sent' as LetterStatus, 
-            content, 
-            returnReason: undefined,
-            updatedAt: new Date() 
-          }
-        : letter
-    ));
-  };
 
   return (
     <LettersContext.Provider value={{
@@ -209,8 +185,6 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       createLetter,
       updateLetterContent,
       markAsSent,
-      returnToDoctor,
-      resubmitLetter,
       getLetterBySessionId,
     }}>
       {children}

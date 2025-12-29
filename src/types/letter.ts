@@ -1,4 +1,4 @@
-export type LetterStatus = 'to_be_sent' | 'returned' | 'sent';
+export type LetterStatus = 'to_be_sent' | 'sent';
 
 export interface Letter {
   id: string;
@@ -10,7 +10,6 @@ export interface Letter {
   originatingDoctor: string;
   status: LetterStatus;
   content: string;
-  returnReason?: string;
   sentAt?: Date;
   approvedAt: Date;
   createdAt: Date;

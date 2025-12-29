@@ -17,7 +17,7 @@ interface BlankTemplateEditorProps {
 }
 
 export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
-  const [title, setTitle] = useState('Untitled template');
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [visibility, setVisibility] = useState('Just me');
   const [type, setType] = useState('Note');
@@ -28,14 +28,18 @@ export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
       {/* Left Side - Editor */}
       <div className="flex-1 flex flex-col min-h-0">
         <div className="mb-6">
+          <Label className="text-sm font-semibold text-foreground mb-2 block">
+            Template Name <span className="text-red-500">*</span>
+          </Label>
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-3xl font-semibold border-none px-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder="Enter template name..."
+            className="text-xl font-semibold border border-border rounded-lg px-3 py-2 bg-muted/30 focus:bg-background focus:border-primary"
           />
           
-          <p className="text-sm text-muted-foreground mt-2">
-            Add your template content here
+          <p className="text-sm text-muted-foreground mt-3">
+            Add your template content below
           </p>
         </div>
 

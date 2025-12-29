@@ -2,25 +2,14 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { useLetters } from '@/contexts/LettersContext';
 import { useToast } from '@/hooks/use-toast';
-import { Send, RotateCcw, Copy, Calendar, User, FileText, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Send, Copy, Calendar, User, FileText, CheckCircle, Clock } from 'lucide-react';
 
 export const LetterDetail = () => {
-  const { selectedLetterId, getLetter, updateLetterContent, markAsSent, returnToDoctor } = useLetters();
+  const { selectedLetterId, getLetter, updateLetterContent, markAsSent } = useLetters();
   const { toast } = useToast();
   const [editedContent, setEditedContent] = useState<string | null>(null);
-  const [showReturnDialog, setShowReturnDialog] = useState(false);
-  const [returnReason, setReturnReason] = useState('');
 
   const letter = selectedLetterId ? getLetter(selectedLetterId) : null;
 
@@ -57,18 +46,6 @@ export const LetterDetail = () => {
     }
   };
 
-  const handleReturn = () => {
-    if (letter && returnReason.trim()) {
-      returnToDoctor(letter.id, returnReason.trim());
-      setShowReturnDialog(false);
-      setReturnReason('');
-      toast({
-        title: 'Letter returned',
-        description: `Letter has been returned to ${letter.originatingDoctor}.`,
-      });
-    }
-  };
-
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       weekday: 'long',
@@ -97,13 +74,6 @@ export const LetterDetail = () => {
           <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 gap-1">
             <Clock className="h-3 w-3" />
             To be sent
-          </Badge>
-        );
-      case 'returned':
-        return (
-          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 gap-1">
-            <AlertCircle className="h-3 w-3" />
-            Returned
           </Badge>
         );
       case 'sent':
@@ -159,12 +129,6 @@ export const LetterDetail = () => {
           <Badge variant="secondary">{letter.templateType}</Badge>
         </div>
 
-        {letter.status === 'returned' && letter.returnReason && (
-          <div className="p-3 bg-red-50 rounded-lg border border-red-200 text-sm text-red-700">
-            <span className="font-medium">Return reason:</span> {letter.returnReason}
-          </div>
-        )}
-
         {letter.status === 'sent' && letter.sentAt && (
           <div className="p-3 bg-green-50 rounded-lg border border-green-200 text-sm text-green-700">
             <span className="font-medium">Sent:</span> {formatDateTime(letter.sentAt)}
@@ -188,15 +152,7 @@ export const LetterDetail = () => {
       {/* Footer Actions */}
       {isEditable && (
         <div className="border-t border-border p-4">
-          <div className="max-w-3xl mx-auto flex items-center justify-between">
-            <Button 
-              variant="outline" 
-              className="gap-2"
-              onClick={() => setShowReturnDialog(true)}
-            >
-              <RotateCcw className="h-4 w-4" />
-              Return to doctor
-            </Button>
+          <div className="max-w-3xl mx-auto flex items-center justify-end">
             <div className="flex items-center gap-2">
               {editedContent !== null && editedContent !== letter.content && (
                 <Button variant="outline" onClick={handleSave}>
@@ -211,37 +167,6 @@ export const LetterDetail = () => {
           </div>
         </div>
       )}
-
-      {/* Return Dialog */}
-      <Dialog open={showReturnDialog} onOpenChange={setShowReturnDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Return to doctor</DialogTitle>
-            <DialogDescription>
-              Provide a reason for returning this letter to {letter.originatingDoctor}.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <Textarea
-              value={returnReason}
-              onChange={(e) => setReturnReason(e.target.value)}
-              placeholder="Please explain why this letter needs revision..."
-              className="min-h-[100px]"
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowReturnDialog(false)}>
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleReturn}
-              disabled={!returnReason.trim()}
-            >
-              Return letter
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

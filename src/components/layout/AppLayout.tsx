@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { LeftPane } from '@/components/settings/LeftPane';
 import { GlobalSessionsPanel } from './GlobalSessionsPanel';
+import { AppFooter } from './AppFooter';
 import { useLocation } from 'react-router-dom';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 
@@ -30,8 +31,11 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
           <GlobalSessionsPanel />
         </div>
       )}
-      <div className="flex-1 overflow-y-auto">
-        {children}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
+          {children}
+        </div>
+        <AppFooter />
       </div>
     </div>
   );
