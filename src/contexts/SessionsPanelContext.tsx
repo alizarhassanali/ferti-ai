@@ -16,7 +16,7 @@ interface SessionsPanelContextType {
 const SessionsPanelContext = createContext<SessionsPanelContextType | undefined>(undefined);
 
 // Routes where the sessions panel is NOT allowed
-const DISALLOWED_ROUTES = ['/settings'];
+const DISALLOWED_ROUTES: string[] = [];
 
 export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
