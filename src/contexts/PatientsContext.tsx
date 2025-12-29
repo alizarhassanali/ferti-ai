@@ -12,6 +12,8 @@ interface PatientsContextType {
 const PatientsContext = createContext<PatientsContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'medical-scribe-patients';
+const STORAGE_VERSION_KEY = 'medical-scribe-patients-version';
+const CURRENT_VERSION = 2; // Increment when patient data structure changes
 
 const defaultPatients: Patient[] = [
   { id: 'p1', name: 'John Smith', firstName: 'John', lastName: 'Smith', email: 'john.smith@mailinator.com', emrId: '11111', cnpId: 'CNP-001', identifier: 'JS-001', additionalContext: 'Type 2 Diabetes, Hypertension', createdAt: new Date(), updatedAt: new Date() },
@@ -27,6 +29,15 @@ const defaultPatients: Patient[] = [
 export const PatientsProvider = ({ children }: { children: ReactNode }) => {
   const [patients, setPatients] = useState<Patient[]>(() => {
     try {
+      const savedVersion = localStorage.getItem(STORAGE_VERSION_KEY);
+      const version = savedVersion ? parseInt(savedVersion, 10) : 0;
+      
+      // Reset to defaults if version mismatch (data structure changed)
+      if (version < CURRENT_VERSION) {
+        localStorage.setItem(STORAGE_VERSION_KEY, CURRENT_VERSION.toString());
+        return defaultPatients;
+      }
+      
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
