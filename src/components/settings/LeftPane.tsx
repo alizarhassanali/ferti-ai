@@ -300,7 +300,7 @@ export const LeftPane = () => {
                         <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
                       </div>
                       <span className="flex-1 text-left transition-all duration-200">{displayLabel}</span>
-                      {ArrowIcon && <ArrowIcon className="h-4 w-4" />}
+                      {ArrowIcon}
                     </button>}
                 </li>;
           })}
