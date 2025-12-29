@@ -16,6 +16,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogBody,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -354,7 +355,7 @@ export const SessionHeaderRow = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
+          <DialogBody className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label className="text-foreground">First name *</Label>
@@ -390,7 +391,7 @@ export const SessionHeaderRow = ({
                 />
               </div>
             </div>
-          </div>
+          </DialogBody>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setPartnerModalOpen(false)}>

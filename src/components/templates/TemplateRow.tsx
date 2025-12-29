@@ -15,6 +15,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogBody,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -120,7 +121,7 @@ export const TemplateRow = ({ template, onDelete, onShare }: TemplateRowProps) =
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4">
+          <DialogBody>
             <Select value={shareVisibility} onValueChange={(value) => setShareVisibility(value as TemplateVisibility)}>
               <SelectTrigger className="w-full border-border">
                 <SelectValue placeholder="Select visibility" />
@@ -146,7 +147,7 @@ export const TemplateRow = ({ template, onDelete, onShare }: TemplateRowProps) =
                 </SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </DialogBody>
           
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setShowShareDialog(false)} className="border-border">
