@@ -9,7 +9,7 @@ export interface TemplateSection {
 export interface TemplateDefinition {
   id: string;
   name: string;
-  type: 'Note' | 'Document';
+  type: 'Note' | 'Document' | 'Letter' | 'Chart Prep';
   sections: TemplateSection[];
   content?: string; // For flat content format (like Letter to GP)
 }
@@ -17,7 +17,7 @@ export interface TemplateDefinition {
 export interface TemplateListItem {
   id: string;
   name: string;
-  type: 'Note' | 'Document';
+  type: 'Note' | 'Document' | 'Letter' | 'Chart Prep';
   icon: string;
 }
 
@@ -67,7 +67,7 @@ export const soapNoteWithContent: TemplateDefinition = {
 export const consultLetterTemplate: TemplateDefinition = {
   id: "consult-letter",
   name: "My Consult Letter",
-  type: "Document",
+  type: "Letter",
   sections: [
     { name: "Header", content: "Dear Colleague, thank you for referring this patient." },
     { name: "ID/CC", content: "", placeholder: "Not documented" },
@@ -116,7 +116,7 @@ export const dictationWithContent: TemplateDefinition = {
 export const letterToGPTemplate: TemplateDefinition = {
   id: "letter-to-gp",
   name: "Letter to GP",
-  type: "Document",
+  type: "Letter",
   sections: [
     { name: "Address", content: "GP Address" },
     { name: "Salutation", content: "Dear Doctor" },
@@ -137,7 +137,7 @@ export const letterToGPTemplate: TemplateDefinition = {
 export const letterToGPWithContent: TemplateDefinition = {
   id: "letter-to-gp",
   name: "Letter to GP",
-  type: "Document",
+  type: "Letter",
   sections: [
     { name: "Address", content: "GP Address" },
     { name: "Salutation", content: "Dear Doctor" },
@@ -223,7 +223,7 @@ export const procedureNoteTemplate: TemplateDefinition = {
 export const referralLetterTemplate: TemplateDefinition = {
   id: "referral-letter",
   name: "Referral Letter",
-  type: "Document",
+  type: "Letter",
   sections: [
     { name: "To", content: "", placeholder: "Not documented" },
     { name: "Re", content: "", placeholder: "Not documented" },
@@ -239,12 +239,13 @@ export const referralLetterTemplate: TemplateDefinition = {
 export const availableTemplates: TemplateListItem[] = [
   { id: "soap-standard", name: "SOAP Note (Standard)", type: "Note", icon: "📋" },
   { id: "my-dictation", name: "My Dictation", type: "Note", icon: "🎙️" },
-  { id: "consult-letter", name: "My Consult Letter", type: "Document", icon: "📄" },
-  { id: "letter-to-gp", name: "Letter to GP", type: "Document", icon: "✉️" },
+  { id: "consult-letter", name: "My Consult Letter", type: "Letter", icon: "📄" },
+  { id: "letter-to-gp", name: "Letter to GP", type: "Letter", icon: "✉️" },
   { id: "progress-note", name: "Progress Note", type: "Note", icon: "📝" },
   { id: "h-and-p", name: "H & P", type: "Note", icon: "🏥" },
   { id: "procedure-note", name: "Procedure Note", type: "Note", icon: "⚕️" },
-  { id: "referral-letter", name: "Referral Letter", type: "Document", icon: "📨" }
+  { id: "referral-letter", name: "Referral Letter", type: "Letter", icon: "📨" },
+  { id: "chart-prep", name: "Chart Prep", type: "Chart Prep", icon: "📊" }
 ];
 
 // Template map for easy lookup

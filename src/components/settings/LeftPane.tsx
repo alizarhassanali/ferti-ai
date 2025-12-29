@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
-import { useChartPrepLayout } from '@/contexts/ChartPrepLayoutContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -34,13 +33,7 @@ export const LeftPane = () => {
     isSessionsPanelAllowed
   } = useSessionsPanel();
 
-  // Get chart prep layout context
-  const {
-    isSessionsListVisible: isChartPrepListVisible,
-    toggleSessionsList: toggleChartPrepList
-  } = useChartPrepLayout();
   const isSessionsPage = location.pathname === '/sessions';
-  const isChartPrepPage = location.pathname === '/chart-prep';
   const toggleSidebar = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
@@ -66,8 +59,7 @@ export const LeftPane = () => {
     icon: FileCode,
     label: 'Chart Prep',
     id: 'chart-prep',
-    route: '/chart-prep',
-    isChartPrepToggle: true
+    route: '/chart-prep'
   }, {
     icon: MessageSquare,
     label: 'AI Assistant',
@@ -224,17 +216,11 @@ export const LeftPane = () => {
             // For toggleable items (View sessions), show different label when panel is open
             // and we're on an allowed page (not settings, not /sessions page itself)
             const canToggle = item.isToggleable && isSessionsPanelAllowed && !isSessionsPage;
-
-            // For Chart Prep toggle - only show toggle when on chart-prep page
-            const canToggleChartPrep = item.isChartPrepToggle && isChartPrepPage;
             let displayLabel = item.label;
             let ArrowIcon: typeof ChevronLeft | null = null;
             if (canToggle) {
               displayLabel = sessionsPaneOpen ? 'Hide sessions' : item.label;
               ArrowIcon = sessionsPaneOpen ? ChevronLeft : ChevronRight;
-            } else if (canToggleChartPrep) {
-              displayLabel = 'Chart Prep';
-              ArrowIcon = isChartPrepListVisible ? ChevronLeft : ChevronRight;
             }
             const handleClick = () => {
               // Close mobile menu when navigating
@@ -256,13 +242,7 @@ export const LeftPane = () => {
                   navigate('/sessions');
                 }
               } else if (item.id === 'chart-prep') {
-                // If we're on chart-prep page, toggle the sessions list
-                // Otherwise, navigate to chart-prep
-                if (isChartPrepPage) {
-                  toggleChartPrepList();
-                } else {
-                  navigate('/chart-prep');
-                }
+                navigate('/chart-prep');
               } else if (item.route) {
                 navigate(item.route);
               }

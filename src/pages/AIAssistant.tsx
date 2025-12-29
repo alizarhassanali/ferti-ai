@@ -3,15 +3,25 @@ import { ConversationList } from '@/components/aiAssistant/ConversationList';
 import { ChatView } from '@/components/aiAssistant/ChatView';
 import { AIAssistantProvider } from '@/contexts/AIAssistantContext';
 import { Separator } from '@/components/ui/separator';
+import { GlobalSessionsPanel } from '@/components/layout/GlobalSessionsPanel';
+import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 
 const AIAssistantContent = () => {
+  const { isSessionsPanelVisible } = useSessionsPanel();
+
   return (
     <AppLayout hideGlobalSessionsPanel>
       <div className="flex h-screen overflow-hidden bg-background w-full">
-        {/* Middle Pane - Conversation List */}
-        <div className="w-80 flex-shrink-0 overflow-hidden border-r border-border">
-          <ConversationList />
-        </div>
+        {/* Middle Pane - Show either sessions panel or conversation list */}
+        {isSessionsPanelVisible ? (
+          <div className="w-80 flex-shrink-0 h-full">
+            <GlobalSessionsPanel />
+          </div>
+        ) : (
+          <div className="w-80 flex-shrink-0 overflow-hidden border-r border-border">
+            <ConversationList />
+          </div>
+        )}
 
         {/* Vertical Divider */}
         <Separator orientation="vertical" className="h-full" />

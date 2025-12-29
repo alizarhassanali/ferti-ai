@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SessionsPanelContextType {
   isSessionsPanelVisible: boolean;
@@ -10,6 +10,7 @@ interface SessionsPanelContextType {
   isSessionsPanelAllowed: boolean;
   selectedSessionId: string | null;
   setSelectedSessionId: (id: string | null) => void;
+  navigateToSession: (sessionId: string) => void;
 }
 
 const SessionsPanelContext = createContext<SessionsPanelContextType | undefined>(undefined);
@@ -19,6 +20,7 @@ const DISALLOWED_ROUTES = ['/settings'];
 
 export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Persist the open/closed state in localStorage
   const [sessionsPaneOpen, setSessionsPaneOpen] = useState(() => {
@@ -56,6 +58,15 @@ export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => 
     localStorage.setItem('sessions-pane-open', 'false');
   }, []);
 
+  // Navigate to session detail page when a session is selected
+  const navigateToSession = useCallback((sessionId: string) => {
+    setSelectedSessionId(sessionId);
+    // Close the sessions panel and navigate to the sessions page
+    setSessionsPaneOpen(false);
+    localStorage.setItem('sessions-pane-open', 'false');
+    navigate('/sessions');
+  }, [navigate]);
+
   return (
     <SessionsPanelContext.Provider 
       value={{ 
@@ -66,7 +77,8 @@ export const SessionsPanelProvider = ({ children }: { children: ReactNode }) => 
         hideSessionsPanel,
         isSessionsPanelAllowed,
         selectedSessionId,
-        setSelectedSessionId
+        setSelectedSessionId,
+        navigateToSession
       }}
     >
       {children}
@@ -86,7 +98,8 @@ export const useSessionsPanel = () => {
       hideSessionsPanel: () => {},
       isSessionsPanelAllowed: false,
       selectedSessionId: null,
-      setSelectedSessionId: () => {}
+      setSelectedSessionId: () => {},
+      navigateToSession: () => {}
     };
   }
   return context;

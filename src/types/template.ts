@@ -1,4 +1,4 @@
-export type TemplateType = 'Note' | 'Document';
+export type TemplateType = 'Note' | 'Document' | 'Letter' | 'Chart Prep';
 export type TemplateVisibility = 'Just me' | 'My team' | 'Organization';
 export type CreateModalStep = 'type' | 'prompt' | 'blank' | 'existing';
 export type TemplateCreationType = 'note' | 'pdf' | null;

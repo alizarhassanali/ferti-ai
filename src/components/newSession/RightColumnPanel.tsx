@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, Download, CheckCircle, Globe } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, CheckCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -107,36 +107,13 @@ export const RightColumnPanel = ({
   const existingLetter = sessionId ? getLetterBySessionId(sessionId) : undefined;
   const hasGeneratedContent = activeTab?.content && activeTab.content.trim().length > 0;
 
-  const handleSendNow = () => {
-    if (activeTab?.content && sessionId) {
-      const letter = createLetter({
-        sessionId,
-        patientName: patientName || 'Unknown Patient',
-        sessionDate: sessionDate || new Date(),
-        templateType: selectedTemplate?.name || 'Clinical Note',
-        content: activeTab.content,
-      });
-      toast({
-        title: "Letter sent",
-        description: "The letter has been sent directly.",
-      });
-    }
+  const handleMarkReviewed = () => {
+    toast({
+      title: "Note reviewed",
+      description: "The note has been marked as reviewed.",
+    });
   };
 
-  const handleDownloadNote = () => {
-    if (activeTab?.content) {
-      const blob = new Blob([activeTab.content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${patientName || 'note'}-${selectedTemplate?.name || 'clinical-note'}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast({ title: "Downloaded", description: "Note has been downloaded." });
-    }
-  };
 
   const handleApproveAndSendToLetters = () => {
     if (activeTab?.content && sessionId) {
@@ -674,18 +651,16 @@ export const RightColumnPanel = ({
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-2" onClick={handleSendNow}>
-                          <Send className="h-4 w-4" />
-                          Send now
-                        </Button>
-                        <Button variant="outline" size="sm" className="gap-2" onClick={handleDownloadNote}>
-                          <Download className="h-4 w-4" />
-                          Download
-                        </Button>
-                        <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                        <Button variant="outline" size="sm" className="gap-2" onClick={handleMarkReviewed}>
                           <CheckCircle className="h-4 w-4" />
-                          Approve & send to Letters
+                          Reviewed
                         </Button>
+                        {selectedTemplate?.type === 'Letter' && (
+                          <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                            <Send className="h-4 w-4" />
+                            Send to Letters
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>
