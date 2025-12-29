@@ -44,7 +44,11 @@ const demoMeetings: ScheduledMeeting[] = [{
   meetingLink: "https://teams.microsoft.com/..."
 }];
 
-export const SessionList = () => {
+interface SessionListProps {
+  onSessionSelect?: (sessionId: string) => void;
+}
+
+export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
   const navigate = useNavigate();
   const {
     sessions,
@@ -107,8 +111,12 @@ export const SessionList = () => {
 
   const handleSessionClick = (id: string) => {
     setSelectedSessionId(id);
-    // Navigate to NewSession workspace with this session loaded
-    navigate(`/new-session?id=${id}`);
+    if (onSessionSelect) {
+      onSessionSelect(id);
+    } else {
+      // Navigate to NewSession workspace with this session loaded
+      navigate(`/new-session?id=${id}`);
+    }
   };
 
   const handleCancelSelection = () => {

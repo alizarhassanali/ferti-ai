@@ -3,14 +3,14 @@ import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { SessionsLayoutProvider } from '@/contexts/SessionsLayoutContext';
 
 export const GlobalSessionsPanel = () => {
-  const { isSessionsPanelVisible } = useSessionsPanel();
+  const { isSessionsPanelVisible, navigateToSession } = useSessionsPanel();
 
   if (!isSessionsPanelVisible) return null;
 
   return (
     <SessionsLayoutProvider>
       <div className="h-full w-full overflow-hidden">
-        <SessionList />
+        <SessionList onSessionSelect={navigateToSession} />
       </div>
     </SessionsLayoutProvider>
   );

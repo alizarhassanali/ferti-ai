@@ -1,11 +1,39 @@
-import { FileText } from 'lucide-react';
+import { FileText, Mail, FileCode, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TemplateTypeCard } from '../TemplateTypeCard';
+import { TemplateType } from '@/types/template';
 
 interface TypeSelectionProps {
-  onSelectType: () => void;
+  onSelectType: (type: TemplateType) => void;
   onCancel: () => void;
 }
+
+const templateTypes: { type: TemplateType; icon: typeof FileText; title: string; description: string }[] = [
+  {
+    type: 'Note',
+    icon: FileText,
+    title: 'Note',
+    description: 'Clinical notes, SOAP notes, progress notes',
+  },
+  {
+    type: 'Document',
+    icon: ClipboardList,
+    title: 'Document',
+    description: 'General medical documents and forms',
+  },
+  {
+    type: 'Letter',
+    icon: Mail,
+    title: 'Letter',
+    description: 'Referral letters, GP letters, correspondence',
+  },
+  {
+    type: 'Chart Prep',
+    icon: FileCode,
+    title: 'Chart Prep',
+    description: 'Pre-visit preparation templates',
+  },
+];
 
 export const TypeSelection = ({
   onSelectType,
@@ -19,14 +47,17 @@ export const TypeSelection = ({
         </h2>
       </div>
 
-      <div className="flex justify-center">
-        <TemplateTypeCard
-          icon={FileText}
-          title="Note or document"
-          description="Create a freeform template using text instructions and formatting"
-          isSelected={false}
-          onClick={onSelectType}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        {templateTypes.map(({ type, icon, title, description }) => (
+          <TemplateTypeCard
+            key={type}
+            icon={icon}
+            title={title}
+            description={description}
+            isSelected={false}
+            onClick={() => onSelectType(type)}
+          />
+        ))}
       </div>
 
       <div className="flex justify-end pt-4 border-t">
