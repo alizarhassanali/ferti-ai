@@ -8,6 +8,9 @@ import { PatientsProvider } from "./contexts/PatientsContext";
 import { SessionsPanelProvider } from "./contexts/SessionsPanelContext";
 import { ChartPrepLayoutProvider } from "./contexts/ChartPrepLayoutContext";
 import { LettersProvider } from "./contexts/LettersContext";
+import { OnboardingTourProvider } from "./contexts/OnboardingTourContext";
+import { TourOverlay } from "./components/onboarding/TourOverlay";
+import { KeyboardShortcutsHandler } from "./components/KeyboardShortcutsHandler";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
@@ -23,6 +26,7 @@ import CompleteProfile from "./pages/onboarding/CompleteProfile";
 import CreatePasswordPage from "./pages/onboarding/CreatePasswordPage";
 import CompleteProfilePage from "./pages/onboarding/CompleteProfilePage";
 import NotFound from "./pages/NotFound";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -30,36 +34,40 @@ const App = () => (
     <SessionsProvider>
       <PatientsProvider>
         <LettersProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <SessionsPanelProvider>
-                <ChartPrepLayoutProvider>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/new-session" element={<NewSession />} />
-                    <Route path="/sessions" element={<ViewSessions />} />
-                    <Route path="/chart-prep" element={<ChartPrep />} />
-                    <Route path="/ai-assistant" element={<AIAssistant />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/my-templates" element={<MyTemplates />} />
-                    <Route path="/template-hub" element={<TemplateHub />} />
-                    <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
-                    <Route path="/letters" element={<Letters />} />
-                    {/* Onboarding routes - with token validation */}
-                    <Route path="/invite" element={<SetPassword />} />
-                    <Route path="/complete-profile" element={<CompleteProfile />} />
-                    {/* Onboarding routes - static UI (no backend) */}
-                    <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
-                    <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </ChartPrepLayoutProvider>
-              </SessionsPanelProvider>
-            </BrowserRouter>
-          </TooltipProvider>
+          <OnboardingTourProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <TourOverlay />
+              <BrowserRouter>
+                <KeyboardShortcutsHandler />
+                <SessionsPanelProvider>
+                  <ChartPrepLayoutProvider>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/new-session" element={<NewSession />} />
+                      <Route path="/sessions" element={<ViewSessions />} />
+                      <Route path="/chart-prep" element={<ChartPrep />} />
+                      <Route path="/ai-assistant" element={<AIAssistant />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/my-templates" element={<MyTemplates />} />
+                      <Route path="/template-hub" element={<TemplateHub />} />
+                      <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
+                      <Route path="/letters" element={<Letters />} />
+                      {/* Onboarding routes - with token validation */}
+                      <Route path="/invite" element={<SetPassword />} />
+                      <Route path="/complete-profile" element={<CompleteProfile />} />
+                      {/* Onboarding routes - static UI (no backend) */}
+                      <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
+                      <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
+                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </ChartPrepLayoutProvider>
+                </SessionsPanelProvider>
+              </BrowserRouter>
+            </TooltipProvider>
+          </OnboardingTourProvider>
         </LettersProvider>
       </PatientsProvider>
     </SessionsProvider>
