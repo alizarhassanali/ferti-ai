@@ -29,9 +29,11 @@ export interface Patient {
   name: string;
   firstName?: string;
   lastName?: string;
+  email?: string;
   identifier?: string;
   additionalContext?: string;
   emrId?: string;
+  cnpId?: string;
   dateOfBirth?: Date;
   partnerFirstName?: string;
   partnerLastName?: string;
