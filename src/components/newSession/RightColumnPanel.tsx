@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, CheckCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,6 +20,8 @@ import { NoteTab as NoteTabType } from '@/types/session';
 import { useToast } from '@/hooks/use-toast';
 import { availableTemplates } from '@/data/templates';
 import { useLetters } from '@/contexts/LettersContext';
+import { useDocumentOCR } from '@/hooks/useDocumentOCR';
+import { FileProcessingItem } from './FileProcessingItem';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -38,12 +40,6 @@ interface ExtendedTabState {
   language: string;
   undoStack: string[];
   redoStack: string[];
-}
-
-interface AttachedFile {
-  id: string;
-  name: string;
-  size: number;
 }
 
 interface RightColumnPanelProps {
@@ -81,9 +77,8 @@ export const RightColumnPanel = ({
 }: RightColumnPanelProps) => {
   const { toast } = useToast();
   const { createLetter, getLetterBySessionId } = useLetters();
-  const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const { files: attachedFiles, addFiles, removeFile, retryProcessing } = useDocumentOCR();
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Per-tab state for language and undo/redo history
   const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
@@ -134,26 +129,17 @@ export const RightColumnPanel = ({
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const newFiles: AttachedFile[] = Array.from(files).map(file => ({
-        id: crypto.randomUUID(),
-        name: file.name,
-        size: file.size,
-      }));
-      setAttachedFiles(prev => [...prev, ...newFiles]);
+      addFiles(Array.from(files));
     }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    e.target.value = '';
   };
 
-  const removeFile = (fileId: string) => {
-    setAttachedFiles(prev => prev.filter(f => f.id !== fileId));
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      addFiles(Array.from(files));
+    }
   };
 
   const handleTemplateSelect = (templateId: string) => {
@@ -543,23 +529,12 @@ export const RightColumnPanel = ({
                   "border-2 border-dashed border-border rounded-lg p-4 text-center",
                   "hover:border-primary/50 transition-colors cursor-pointer"
                 )}
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => document.getElementById('right-panel-file-input')?.click()}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const files = e.dataTransfer.files;
-                  if (files.length > 0) {
-                    const newFiles: AttachedFile[] = Array.from(files).map(file => ({
-                      id: crypto.randomUUID(),
-                      name: file.name,
-                      size: file.size,
-                    }));
-                    setAttachedFiles(prev => [...prev, ...newFiles]);
-                  }
-                }}
+                onDrop={handleFileDrop}
               >
                 <input
-                  ref={fileInputRef}
+                  id="right-panel-file-input"
                   type="file"
                   multiple
                   className="hidden"
@@ -571,30 +546,16 @@ export const RightColumnPanel = ({
                 </div>
               </div>
 
-              {/* Attached files list */}
+              {/* Files list with processing status */}
               {attachedFiles.length > 0 && (
                 <div className="mt-3 space-y-2">
                   {attachedFiles.map(file => (
-                    <div
+                    <FileProcessingItem
                       key={file.id}
-                      className="flex items-center justify-between p-2 bg-muted rounded-md"
-                    >
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm truncate max-w-[200px]">{file.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          ({formatFileSize(file.size)})
-                        </span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0"
-                        onClick={() => removeFile(file.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      file={file}
+                      onRemove={removeFile}
+                      onRetry={retryProcessing}
+                    />
                   ))}
                 </div>
               )}
