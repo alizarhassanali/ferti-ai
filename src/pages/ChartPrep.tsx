@@ -43,6 +43,7 @@ const ChartPrep = () => {
   // Recording state - same as NewSession
   const [recordingMode, setRecordingMode] = useState<RecordingMode>("transcribe");
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [selectedMicrophoneId, setSelectedMicrophoneId] = useState("");
   const [audioLevel, setAudioLevel] = useState(0);
@@ -60,22 +61,22 @@ const ChartPrep = () => {
   // Recording timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRecording) {
+    if (isRecording && !isPaused) {
       interval = setInterval(() => setRecordingDuration(prev => prev + 1), 1000);
     }
     return () => clearInterval(interval);
-  }, [isRecording]);
+  }, [isRecording, isPaused]);
 
   // Audio level simulation effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRecording) {
+    if (isRecording && !isPaused) {
       interval = setInterval(() => setAudioLevel(Math.random() * 100), 100);
     } else {
       setAudioLevel(0);
     }
     return () => clearInterval(interval);
-  }, [isRecording]);
+  }, [isRecording, isPaused]);
 
   // Load session data when a session is selected
   const handleSessionSelect = useCallback((sessionId: string) => {
@@ -101,6 +102,7 @@ const ChartPrep = () => {
 
   const startRecording = useCallback(() => {
     setRecordingDuration(0);
+    setIsPaused(false);
     setIsRecording(true);
     toast({
       title: "Recording started",
@@ -119,12 +121,24 @@ const ChartPrep = () => {
     } else {
       // Stopping recording
       setIsRecording(false);
+      setIsPaused(false);
       toast({
         title: "Recording stopped",
         description: "Your recording has been saved."
       });
     }
   }, [isRecording, privacySettings.consentPopupEnabled, startRecording, toast]);
+
+  const handleTogglePause = useCallback(() => {
+    setIsPaused(prev => {
+      const newPaused = !prev;
+      toast({
+        title: newPaused ? "Recording paused" : "Recording resumed",
+        description: newPaused ? "Click Resume to continue." : `${recordingMode === "transcribe" ? "Transcribing" : "Dictating"}...`
+      });
+      return newPaused;
+    });
+  }, [recordingMode, toast]);
 
   const handleModeChange = (mode: RecordingMode) => setRecordingMode(mode);
   
@@ -236,8 +250,10 @@ const ChartPrep = () => {
             audioLevel={audioLevel}
             recordingMode={recordingMode}
             isRecording={isRecording}
+            isPaused={isPaused}
             onModeChange={handleModeChange}
             onToggleRecording={handleToggleRecording}
+            onTogglePause={handleTogglePause}
             onUploadAudio={handleUploadAudio}
           />
 

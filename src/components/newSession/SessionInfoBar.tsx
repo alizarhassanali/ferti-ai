@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { MicrophoneSelector } from './MicrophoneSelector';
 import { RecordingModeButton } from './RecordingModeButton';
 import { RecordingMode } from '@/types/session';
+import { cn } from '@/lib/utils';
 
 interface SessionInfoBarProps {
   sessionDate: Date;
@@ -12,8 +13,10 @@ interface SessionInfoBarProps {
   audioLevel: number;
   recordingMode: RecordingMode;
   isRecording: boolean;
+  isPaused: boolean;
   onModeChange: (mode: RecordingMode) => void;
   onToggleRecording: () => void;
+  onTogglePause: () => void;
   onUploadAudio: () => void;
 }
 
@@ -25,8 +28,10 @@ export const SessionInfoBar = ({
   audioLevel,
   recordingMode,
   isRecording,
+  isPaused,
   onModeChange,
   onToggleRecording,
+  onTogglePause,
   onUploadAudio
 }: SessionInfoBarProps) => {
   const formatDuration = (seconds: number) => {
@@ -48,9 +53,13 @@ export const SessionInfoBar = ({
 
       {/* Right side: Timer, Mic, Record button with mode selector */}
       <div className="flex items-center gap-4">
-        {/* Timer */}
-        <span className="font-medium text-[13px] text-foreground/80 tabular-nums">
+        {/* Timer with paused indicator */}
+        <span className={cn(
+          "font-medium text-[13px] tabular-nums",
+          isPaused ? "text-amber-500" : "text-foreground/80"
+        )}>
           {formatDuration(recordingDuration)}
+          {isPaused && <span className="ml-1 text-xs">(paused)</span>}
         </span>
         
         <MicrophoneSelector 
@@ -61,9 +70,11 @@ export const SessionInfoBar = ({
         
         <RecordingModeButton 
           mode={recordingMode} 
-          isRecording={isRecording} 
+          isRecording={isRecording}
+          isPaused={isPaused}
           onModeChange={onModeChange} 
-          onToggleRecording={onToggleRecording} 
+          onToggleRecording={onToggleRecording}
+          onTogglePause={onTogglePause}
           onUploadAudio={onUploadAudio} 
         />
       </div>
