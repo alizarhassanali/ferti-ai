@@ -60,7 +60,7 @@ interface OnboardingTourContextType {
 
 const OnboardingTourContext = createContext<OnboardingTourContextType | undefined>(undefined);
 
-const TOUR_COMPLETED_KEY = 'fertiai_onboarding_completed';
+const TOUR_COMPLETED_KEY = 'ottonotes_onboarding_completed';
 
 export const OnboardingTourProvider = ({ children }: { children: ReactNode }) => {
   const [isActive, setIsActive] = useState(false);

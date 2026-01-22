@@ -46,7 +46,7 @@ export const HelpPanel = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-lg">FertiAI</span>
+            <span className="font-semibold text-lg">Otto Notes</span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -63,9 +63,9 @@ export const HelpPanel = ({
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-6">
                 <Book className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">FertiAI Guides</h3>
+              <h3 className="text-xl font-semibold mb-2">Otto Notes Guides</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Detailed courses to help you get the most out of FertiAI.
+                Detailed courses to help you get the most out of Otto Notes.
               </p>
               <Badge variant="secondary" className="text-xs">
                 Coming Soon

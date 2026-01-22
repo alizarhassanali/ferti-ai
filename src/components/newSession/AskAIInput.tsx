@@ -26,7 +26,7 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              placeholder="Ask FertiAI to do anything..."
+              placeholder="Ask Otto to do anything..."
               className="pr-20"
             />
             <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
