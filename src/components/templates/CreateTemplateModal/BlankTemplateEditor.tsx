@@ -119,7 +119,7 @@ export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
             <div>
               <h4 className="font-medium mb-2 text-foreground">Placeholders</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Wrap text with [ ] to create areas FertiAI will try to fill in. For greater flexibility or optional content, use instructions instead.
+                Wrap text with [ ] to create areas Otto will try to fill in. For greater flexibility or optional content, use instructions instead.
               </p>
               <div className="p-3 bg-background border rounded-md">
                 <code className="text-sm">[Mention patient's past medical history]</code>
@@ -139,7 +139,7 @@ export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
             <div>
               <h4 className="font-medium mb-2 text-foreground">Instructions</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Wrap instructions in <strong>round brackets</strong> to indicate how FertiAI should treat information that is / is not mentioned in your session.
+                Wrap instructions in <strong>round brackets</strong> to indicate how Otto should treat information that is / is not mentioned in your session.
               </p>
               <div className="p-3 bg-background border rounded-md">
                 <code className="text-sm text-wrap">

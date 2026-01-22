@@ -20,7 +20,7 @@ export const AIAssistant = () => {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="🤖 Ask FertiAI to do anything..."
+          placeholder="🤖 Ask Otto to do anything..."
           className="pr-10"
         />
         <Button

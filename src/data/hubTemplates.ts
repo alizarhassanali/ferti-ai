@@ -30,7 +30,7 @@ export const hubTemplates: HubTemplate[] = [
     },
     usageCount: 5125,
     lastEdited: '12/04/2025',
-    about: "Need a clear and concise way to document patient consultations? This NHS GP Consult template is designed for General Practitioners to efficiently record patient encounters. It covers all essential aspects of a consultation, from presenting complaints and medical history to examination findings, assessment, and a detailed plan. This template ensures comprehensive documentation, helping GPs maintain accurate records and provide optimal patient care. With FertiAI, this template can be quickly populated from a consultation transcript, saving valuable time and improving the quality of your clinical notes.",
+    about: "Need a clear and concise way to document patient consultations? This NHS GP Consult template is designed for General Practitioners to efficiently record patient encounters. It covers all essential aspects of a consultation, from presenting complaints and medical history to examination findings, assessment, and a detailed plan. This template ensures comprehensive documentation, helping GPs maintain accurate records and provide optimal patient care. With Otto Notes, this template can be quickly populated from a consultation transcript, saving valuable time and improving the quality of your clinical notes.",
     exampleNote: `F2F
 Seen alone
 Reason for visit: Follow up

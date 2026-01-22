@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
+import ottoIcon from '@/assets/otto-icon.png';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
@@ -129,12 +130,24 @@ export const LeftPane = () => {
           <X className="h-5 w-5" />
         </button>
 
-        {/* Collapse Toggle Button - positioned at top left */}
+        {/* Logo and Collapse Toggle */}
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-4 pt-4 pb-2`}>
+          {/* Logo */}
+          <div className={`flex items-center gap-2 ${isCollapsed ? 'hidden' : ''}`}>
+            <img src={ottoIcon} alt="Otto Notes" className="h-8 w-8 rounded-lg" />
+            <span className="font-semibold text-foreground">Otto Notes</span>
+          </div>
+          
+          {/* Collapsed state: just show icon */}
+          {isCollapsed && (
+            <img src={ottoIcon} alt="Otto Notes" className="h-8 w-8 rounded-lg" />
+          )}
+          
+          {/* Collapse Toggle Button */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button onClick={toggleSidebar} className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card border border-border shadow-subtle hover:shadow-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200" aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}>
+                <button onClick={toggleSidebar} className={`hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-card border border-border shadow-subtle hover:shadow-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 ${isCollapsed ? 'mt-2' : ''}`} aria-label={isCollapsed ? "Expand sidebar" : "Minimise sidebar"}>
                   <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${isCollapsed ? '' : 'rotate-180'}`} />
                 </button>
               </TooltipTrigger>

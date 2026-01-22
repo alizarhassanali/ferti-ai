@@ -365,7 +365,7 @@ export const SessionDetail = () => {
       <div className="border-t border-border p-4 space-y-2">
         <div className="flex items-center gap-2">
           <Input
-            placeholder="🤖 Ask FertiAI to do anything..."
+            placeholder="🤖 Ask Otto to do anything..."
             className="flex-1"
           />
           <Button size="icon" variant="ghost">
