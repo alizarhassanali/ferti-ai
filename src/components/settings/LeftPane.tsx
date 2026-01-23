@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
-import ottoLogo from '@/assets/otto-logo.svg';
+import ottoLogo from '@/assets/otto-logo.png';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
