@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
-import ottoIcon from '@/assets/otto-icon.png';
+import ottoLogo from '@/assets/otto-logo.svg';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
@@ -133,14 +133,13 @@ export const LeftPane = () => {
         {/* Logo and Collapse Toggle */}
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-4 pt-4 pb-2`}>
           {/* Logo */}
-          <div className={`flex items-center gap-2 ${isCollapsed ? 'hidden' : ''}`}>
-            <img src={ottoIcon} alt="Otto Notes" className="h-8 w-8 rounded-lg" />
-            <span className="font-semibold text-foreground">Otto Notes</span>
+          <div className={`flex items-center ${isCollapsed ? 'hidden' : ''}`}>
+            <img src={ottoLogo} alt="Otto Notes" className="h-7" />
           </div>
           
-          {/* Collapsed state: just show icon */}
+          {/* Collapsed state: just show icon mark */}
           {isCollapsed && (
-            <img src={ottoIcon} alt="Otto Notes" className="h-8 w-8 rounded-lg" />
+            <img src={ottoLogo} alt="Otto Notes" className="h-6 w-auto" style={{ clipPath: 'inset(0 75% 0 0)' }} />
           )}
           
           {/* Collapse Toggle Button */}
