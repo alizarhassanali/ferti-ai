@@ -134,7 +134,7 @@ export const LeftPane = () => {
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} px-4 pt-4 pb-2`}>
           {/* Logo */}
           <div className={`flex items-center ${isCollapsed ? 'hidden' : ''}`}>
-            <img src={ottoLogo} alt="Otto Notes" className="h-7" />
+            <img src={ottoLogo} alt="Otto Notes" className="h-9" />
           </div>
           
           {/* Collapsed state: just show icon mark */}
