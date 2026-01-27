@@ -145,7 +145,7 @@ export const LettersList = () => {
         <TabsList className="w-full justify-start bg-transparent px-4 h-auto py-2 rounded-none gap-0.5">
           <TabsTrigger 
             value="to-be-sent" 
-            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+            className="rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
           >
             To be sent
             {toBeSentLetters.length > 0 && (
@@ -156,7 +156,7 @@ export const LettersList = () => {
           </TabsTrigger>
           <TabsTrigger 
             value="sent" 
-            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+            className="rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
           >
             Sent
           </TabsTrigger>
