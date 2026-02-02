@@ -105,16 +105,6 @@ export const ProfileSettings = () => {
       </div>
 
       <div className="space-y-8">
-        {/* Account Info */}
-        <div className="pb-6 border-b border-border">
-          <h4 className="text-sm font-semibold text-foreground mb-2">Account</h4>
-          <div className="text-sm text-muted-foreground space-y-1">
-            <p><span className="font-medium">Email:</span> {user.email}</p>
-            <p><span className="font-medium">Clinic:</span> {user.clinic}</p>
-            <p><span className="font-medium">Role:</span> {user.role}</p>
-          </div>
-        </div>
-
         {/* About You Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-6">About you</h4>
@@ -173,25 +163,23 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Specialty */}
-          <div className="mb-4">
-            <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
-            <Select value={formData.specialty} onValueChange={value => setFormData({ ...formData, specialty: value })}>
-              <SelectTrigger id="specialty">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Fertility Specialist">Fertility Specialist</SelectItem>
-                <SelectItem value="Reproductive Endocrinologist">Reproductive Endocrinologist</SelectItem>
-                <SelectItem value="OB/GYN">OB/GYN</SelectItem>
-                <SelectItem value="Urologist">Urologist</SelectItem>
-                <SelectItem value="Embryologist">Embryologist</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Clinic Name and Role */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* Specialty, Clinic Name, and Role - same row, equal sizing */}
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            <div>
+              <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
+              <Select value={formData.specialty} onValueChange={value => setFormData({ ...formData, specialty: value })}>
+                <SelectTrigger id="specialty">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Fertility Specialist">Fertility Specialist</SelectItem>
+                  <SelectItem value="Reproductive Endocrinologist">Reproductive Endocrinologist</SelectItem>
+                  <SelectItem value="OB/GYN">OB/GYN</SelectItem>
+                  <SelectItem value="Urologist">Urologist</SelectItem>
+                  <SelectItem value="Embryologist">Embryologist</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
               <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
@@ -215,7 +203,7 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Phone Number */}
-          <div className="mb-4">
+          <div className="mb-6">
             <Label className="text-sm font-medium mb-2 block">Phone number</Label>
             <div className="flex gap-2">
               <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
@@ -234,19 +222,39 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Country Field */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <Label className="text-sm font-medium">Country</Label>
-              <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors" onClick={() => toast({
-                title: "Country setting",
-                description: "Your country is set during registration and determines your data privacy jurisdiction. Contact support to change it."
-              })}>
-                Why can't I change this?
-              </button>
-            </div>
-            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md px-4 py-3">
-              <span className="text-sm text-foreground">{user.country || 'Canada'}</span>
+          {/* Language & Time Section - moved here */}
+          <div className="pt-6 border-t border-border mb-6">
+            <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Change the language used in the interface.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
+                <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
+                  <SelectTrigger id="displayLanguage">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="English">English</SelectItem>
+                    <SelectItem value="French">French</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">Date format</Label>
+                <Select value={formData.dateFormat} onValueChange={(value) => setFormData({ ...formData, dateFormat: value })}>
+                  <SelectTrigger id="dateFormat">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                    <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                    <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -260,42 +268,6 @@ export const ProfileSettings = () => {
             <Label htmlFor="useInfoForSignature" className="text-sm font-medium cursor-pointer">
               Use this information for my signature
             </Label>
-          </div>
-        </div>
-
-        {/* Language & Time Section */}
-        <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
-          <p className="text-sm text-muted-foreground mb-6">
-            Change the language used in the interface.
-          </p>
-          
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
-              <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
-                <SelectTrigger id="displayLanguage">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">Date format</Label>
-              <Select value={formData.dateFormat} onValueChange={(value) => setFormData({ ...formData, dateFormat: value })}>
-                <SelectTrigger id="dateFormat">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
-                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
-                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
         </div>
 
