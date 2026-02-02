@@ -257,18 +257,6 @@ export const ProfileSettings = () => {
               </div>
             </div>
           </div>
-
-          {/* Use for Signature Checkbox */}
-          <div className="flex items-center space-x-2 pt-4 border-t border-border">
-            <Checkbox 
-              id="useInfoForSignature" 
-              checked={formData.useInfoForSignature} 
-              onCheckedChange={(checked) => setFormData({ ...formData, useInfoForSignature: checked as boolean })} 
-            />
-            <Label htmlFor="useInfoForSignature" className="text-sm font-medium cursor-pointer">
-              Use this information for my signature
-            </Label>
-          </div>
         </div>
 
         {/* Save / Cancel Buttons */}
