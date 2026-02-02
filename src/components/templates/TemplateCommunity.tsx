@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Globe } from 'lucide-react';
 import { hubTemplates } from '@/data/hubTemplates';
 import { TemplateCard } from './hub/TemplateCard';
 import { TemplateFilters } from './hub/TemplateFilters';
+import { Input } from '@/components/ui/input';
 
 export const TemplateCommunity = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,26 +46,30 @@ export const TemplateCommunity = () => {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="mx-auto px-8 lg:px-16 py-6 max-w-7xl">
+      <div className="mx-auto px-10 lg:px-14 py-10 max-w-7xl">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <h1 className="text-3xl lg:text-4xl font-sans font-semibold text-foreground tracking-tight">
-            Template Hub
-          </h1>
-          <div className="relative w-full sm:w-80">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-foreground" />
-            <input
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <Globe className="h-7 w-7 text-foreground" />
+            <h1 className="font-sans text-[32px] font-semibold text-foreground tracking-tight">
+              Template Hub
+            </h1>
+          </div>
+          <p className="text-sm text-muted-foreground ml-10">Community</p>
+        </div>
+
+        {/* Search and Filters Row */}
+        <div className="flex items-center justify-between gap-4 mb-8">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground" />
+            <Input
               type="text"
               placeholder="Search for a template..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 pl-11 pr-4 rounded-xl bg-white border border-border shadow-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="pl-11 pr-4 py-2.5 h-11 rounded-xl"
             />
           </div>
-        </div>
-
-        {/* Filters */}
-        <div className="flex justify-center mb-10">
           <TemplateFilters
             sortBy={sortBy}
             location={location}
