@@ -94,13 +94,6 @@ export const LeftPane = () => {
     label: 'Settings',
     id: 'settings',
     route: '/settings'
-  },
-  // Dev-only: Onboarding preview link
-  {
-    icon: Plus,
-    label: 'Onboarding (dev)',
-    id: 'onboarding-dev',
-    route: '/onboarding/create-password'
   }];
   const footerItems = [{
     icon: HelpCircle,
