@@ -33,7 +33,6 @@ export const LeftPane = () => {
     toggleSessionsPanel,
     isSessionsPanelAllowed
   } = useSessionsPanel();
-
   const isSessionsPage = location.pathname === '/sessions';
   const toggleSidebar = () => {
     const newState = !isCollapsed;
@@ -138,9 +137,9 @@ export const LeftPane = () => {
           </div>
           
           {/* Collapsed state: just show icon mark */}
-          {isCollapsed && (
-            <img src={ottoLogo} alt="Otto Notes" className="h-6 w-auto" style={{ clipPath: 'inset(0 75% 0 0)' }} />
-          )}
+          {isCollapsed && <img src={ottoLogo} alt="Otto Notes" className="h-6 w-auto" style={{
+          clipPath: 'inset(0 75% 0 0)'
+        }} />}
           
           {/* Collapse Toggle Button */}
           <TooltipProvider>
