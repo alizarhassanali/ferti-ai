@@ -157,7 +157,7 @@ export const LeftPane = () => {
                   <div className="flex items-center gap-3 p-2 -m-2 rounded-xl hover:bg-muted cursor-pointer group transition-all duration-200">
                     <Avatar className="h-10 w-10 flex-shrink-0 shadow-subtle ring-2 ring-card">
                       <AvatarImage src={user.profileImage} />
-                      <AvatarFallback className="relative text-session-action-foreground font-semibold text-sm">
+                      <AvatarFallback className="relative bg-transparent text-session-action-foreground font-semibold text-sm">
                         <div className="absolute inset-0 bg-session-action/50 rounded-full" />
                         <span className="relative z-10">{getInitials(user.name)}</span>
                       </AvatarFallback>
@@ -186,7 +186,7 @@ export const LeftPane = () => {
                     <div className="flex items-center justify-center">
                       <Avatar className="h-10 w-10 shadow-subtle ring-2 ring-card cursor-pointer hover:scale-105 transition-transform">
                         <AvatarImage src={user.profileImage} />
-                        <AvatarFallback className="relative text-session-action-foreground font-semibold text-sm">
+                        <AvatarFallback className="relative bg-transparent text-session-action-foreground font-semibold text-sm">
                           <div className="absolute inset-0 bg-session-action/50 rounded-full" />
                           <span className="relative z-10">{getInitials(user.name)}</span>
                         </AvatarFallback>
