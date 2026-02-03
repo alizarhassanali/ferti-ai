@@ -1,41 +1,46 @@
 
+## Update Letters Middle Pane Card Styling
 
-## Fix Avatar Initials Opacity in Sidebar
+Update the LetterCard component to match the View Sessions card styling while removing the template type and keeping doctor names visible.
 
-The avatar currently shows the initials ("DSS") appearing faded because the semi-transparent background (`bg-session-action/50`) allows the sidebar to show through, making the text visually appear less prominent.
+### Changes Overview
 
-### Solution
-
-Change the AvatarFallback to use a layered approach:
-1. Use a pseudo-element or wrapper for the semi-transparent background
-2. Keep the initials text as a separate layer with full opacity
+| Current LetterCard | New LetterCard |
+|---|---|
+| White background with border | Transparent background, no border |
+| Status badge (amber/green) | No status badge (tabs indicate status) |
+| Template type displayed | Removed |
+| Doctor name with "From:" prefix | Doctor name visible (simplified) |
+| Hover: subtle border change | Hover: white bg, border, shadow |
+| Active: ring effect | Active: light orange bg with subtle border |
 
 ### Implementation
 
-**File: `src/components/settings/LeftPane.tsx`**
+**File: `src/components/letters/LetterCard.tsx`**
 
-Update both AvatarFallback instances (expanded and collapsed states) to use `relative` positioning with a background overlay:
+1. Remove the `getStatusBadge` function entirely
+2. Remove the Badge import and status icons (Clock, CheckCircle)
+3. Update the card container styling to match SessionCard:
+   - Default: `bg-transparent border-transparent`
+   - Hover: `hover:bg-white hover:border-[hsl(216_20%_90%)] hover:shadow-md`
+   - Active: `bg-[hsl(5_85%_92%)] border-brand/30 shadow-sm`
+4. Simplify layout:
+   - Patient name on the left
+   - Doctor name below patient name (no "From:" prefix, smaller text)
+   - Time on the right (using session date/time formatting)
+5. Remove the template type line completely
 
-```tsx
-// Before
-<AvatarFallback className="bg-session-action/50 text-session-action-foreground font-semibold text-sm">
-  {getInitials(user.name)}
-</AvatarFallback>
+### Updated Component Structure
 
-// After - using relative positioning with a background div
-<AvatarFallback className="relative text-session-action-foreground font-semibold text-sm">
-  <div className="absolute inset-0 bg-session-action/50 rounded-full" />
-  <span className="relative z-10">{getInitials(user.name)}</span>
-</AvatarFallback>
 ```
-
-This creates two layers:
-- **Background layer**: The `div` with `absolute inset-0` fills the avatar with the semi-transparent navy blue
-- **Text layer**: The `span` with `relative z-10` ensures the initials sit on top at full opacity
+┌─────────────────────────────────────┐
+│ Patient Name                  Time  │
+│ Dr. Shahid Saya                     │
+└─────────────────────────────────────┘
+```
 
 ### Files to Modify
 
 | File | Change |
 |------|--------|
-| `src/components/settings/LeftPane.tsx` | Update both AvatarFallback components (lines 160-162 and 188-190) to use layered structure |
-
+| `src/components/letters/LetterCard.tsx` | Update styling to match SessionCard, remove template type and status badges |
