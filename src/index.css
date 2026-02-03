@@ -203,12 +203,12 @@ All colors MUST be HSL.
 /* Focus outline styles for keyboard navigation */
 @layer base {
   *:focus-visible {
-    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-background;
+    @apply outline-none;
   }
   
   /* Remove focus ring for mouse users */
   *:focus:not(:focus-visible) {
-    @apply outline-none ring-0;
+    @apply outline-none;
   }
 }
 
