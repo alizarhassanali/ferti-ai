@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 import ottoLogo from '@/assets/otto-logo.png';
+import { SwitchAppPopover } from '@/components/sidebar/SwitchAppPopover';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
@@ -289,6 +290,11 @@ export const LeftPane = () => {
         {/* Footer Section */}
         <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
           <ul className="space-y-1">
+            {/* Switch App button */}
+            <li>
+              <SwitchAppPopover isCollapsed={isCollapsed} />
+            </li>
+            
             {footerItems.map(item => {
             const Icon = item.icon;
             const handleClick = () => {
