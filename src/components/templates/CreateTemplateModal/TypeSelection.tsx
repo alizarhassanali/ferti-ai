@@ -1,4 +1,4 @@
-import { FileText, Mail, FileCode, ClipboardList } from 'lucide-react';
+import { FileText, Mail, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TemplateTypeCard } from '../TemplateTypeCard';
 import { TemplateType } from '@/types/template';
@@ -26,12 +26,6 @@ const templateTypes: { type: TemplateType; icon: typeof FileText; title: string;
     icon: Mail,
     title: 'Letter',
     description: 'Referral letters, GP letters, correspondence',
-  },
-  {
-    type: 'Chart Prep',
-    icon: FileCode,
-    title: 'Chart Prep',
-    description: 'Pre-visit preparation templates',
   },
 ];
 

@@ -9,7 +9,7 @@ export interface TemplateSection {
 export interface TemplateDefinition {
   id: string;
   name: string;
-  type: 'Note' | 'Document' | 'Letter' | 'Chart Prep';
+  type: 'Note' | 'Document' | 'Letter';
   sections: TemplateSection[];
   content?: string; // For flat content format (like Letter to GP)
 }
@@ -17,7 +17,7 @@ export interface TemplateDefinition {
 export interface TemplateListItem {
   id: string;
   name: string;
-  type: 'Note' | 'Document' | 'Letter' | 'Chart Prep';
+  type: 'Note' | 'Document' | 'Letter';
   icon: string;
 }
 
@@ -244,8 +244,7 @@ export const availableTemplates: TemplateListItem[] = [
   { id: "progress-note", name: "Progress Note", type: "Note", icon: "📝" },
   { id: "h-and-p", name: "H & P", type: "Note", icon: "🏥" },
   { id: "procedure-note", name: "Procedure Note", type: "Note", icon: "⚕️" },
-  { id: "referral-letter", name: "Referral Letter", type: "Letter", icon: "📨" },
-  { id: "chart-prep", name: "Chart Prep", type: "Chart Prep", icon: "📊" }
+  { id: "referral-letter", name: "Referral Letter", type: "Letter", icon: "📨" }
 ];
 
 // Template map for easy lookup

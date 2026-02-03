@@ -76,7 +76,6 @@ export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
                   <SelectItem value="Note">Note</SelectItem>
                   <SelectItem value="Document">Document</SelectItem>
                   <SelectItem value="Letter">Letter</SelectItem>
-                  <SelectItem value="Chart Prep">Chart Prep</SelectItem>
                 </SelectContent>
               </Select>
             </div>
