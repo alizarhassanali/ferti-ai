@@ -40,30 +40,30 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
       side="right" 
       align="end"
       sideOffset={8}
-      className="w-52 p-4 bg-card border-border shadow-lg rounded-xl"
+      className="w-56 p-5 bg-white border border-border/50 shadow-xl rounded-2xl"
     >
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {apps.map((app) => (
           <button
             key={app.id}
             onClick={() => handleAppClick(app.id)}
-            className="flex flex-col items-center gap-2 p-2 rounded-lg hover:bg-muted transition-colors"
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-muted/50 transition-colors"
           >
             <div className={`
-              w-12 h-12 rounded-full ${app.color} 
+              w-14 h-14 rounded-full ${app.color} 
               flex items-center justify-center 
-              text-white text-xs font-bold
+              text-white text-[11px] font-bold shadow-sm
             `}>
               {app.initials}
             </div>
-            <span className="text-xs text-foreground font-medium text-center truncate w-full">
+            <span className="text-xs text-foreground/80 font-medium text-center truncate w-full">
               {app.name}
             </span>
           </button>
         ))}
       </div>
-      <div className="mt-4 pt-3 border-t border-border">
-        <div className="flex items-center gap-2 text-sm text-primary font-medium">
+      <div className="mt-4 pt-3 border-t border-border/50">
+        <div className="flex items-center gap-2 text-sm text-[#2DD4BF] font-medium">
           <LayoutGrid className="h-4 w-4" />
           <span>Switch App</span>
         </div>
