@@ -62,12 +62,6 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
           </button>
         ))}
       </div>
-      <div className="mt-4 pt-3 border-t border-border/50">
-        <div className="flex items-center gap-2 text-sm text-[#2DD4BF] font-medium">
-          <LayoutGrid className="h-4 w-4" />
-          <span>Switch App</span>
-        </div>
-      </div>
     </PopoverContent>
   );
 
