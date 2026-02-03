@@ -1,90 +1,74 @@
 
 
-## Template Hub Page Consistency Update
+## Remove Red/Salmon Focus Ring Borders Globally
 
-This plan will update the Template Hub page to match the visual structure and layout of the My Templates page for a consistent user experience.
+This plan will remove the salmon-colored focus ring borders that appear around form elements, dropdown items, and buttons throughout the application.
 
-### Current Differences Identified
+### Root Cause
 
-| Element | My Templates | Template Hub |
-|---------|-------------|--------------|
-| Container padding | `px-10 lg:px-14 py-10` | `px-8 lg:px-16 py-6` |
-| Icon | FileText icon next to title | No icon |
-| Title size | `text-[32px]` | `text-3xl lg:text-4xl` |
-| Subtitle | "Library" below title | None |
-| Search bar position | Separate row, left-aligned | Inline with title, right-aligned |
-| Filters position | N/A | Centered below header |
-| Section spacing | `mb-8` | `mb-6`, `mb-10` |
+The red borders are caused by:
+1. **Global CSS rule** in `src/index.css` (lines 204-212) that applies `ring-2 ring-brand` to all `:focus-visible` elements
+2. The `--brand` CSS variable is set to salmon (#FF887C), creating the red appearance
+3. Individual component styles also add their own focus ring classes
 
-### Layout Changes
+### Files to Modify
 
-The new layout structure will be:
-
-```text
-+--------------------------------------------------+
-| [Globe Icon] Template Hub                        |
-|              Community                           |
-+--------------------------------------------------+
-| [Search Bar.............]     [Filter] [Filter]  |
-+--------------------------------------------------+
-| Template Grid                                    |
-+--------------------------------------------------+
-```
+| File | Change |
+|------|--------|
+| `src/index.css` | Remove global focus-visible ring rules |
+| `src/components/ui/input.tsx` | Remove ring focus styles |
+| `src/components/ui/textarea.tsx` | Remove ring focus styles |
+| `src/components/ui/button.tsx` | Remove ring focus styles |
+| `src/components/ui/select.tsx` | Remove ring focus styles from trigger |
+| `src/components/ui/checkbox.tsx` | Remove ring focus styles |
+| `src/components/ui/radio-group.tsx` | Remove ring focus styles |
+| `src/components/ui/switch.tsx` | Remove ring focus styles |
 
 ### Implementation Steps
 
-1. **Update container padding** - Match `px-10 lg:px-14 py-10` from My Templates
+1. **Update `src/index.css`** (lines 204-212)
+   - Remove or comment out the global focus-visible ring styles:
+   ```css
+   /* Before */
+   *:focus-visible {
+     @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-background;
+   }
+   
+   /* After - Remove ring styles, keep outline-none */
+   *:focus-visible {
+     @apply outline-none;
+   }
+   ```
 
-2. **Add Globe icon to header** - Add `Globe` icon (h-7 w-7) next to "Template Hub" title, matching the FileText icon style in My Templates
+2. **Update `src/components/ui/input.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary`
+   - Keep only `focus-visible:outline-none`
 
-3. **Fix title font size** - Change from `text-3xl lg:text-4xl` to `text-[32px]` to match My Templates
+3. **Update `src/components/ui/textarea.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary`
+   - Keep only `focus-visible:outline-none`
 
-4. **Add subtitle** - Add "Community" subtitle below the title with `text-sm text-muted-foreground ml-10` styling
+4. **Update `src/components/ui/button.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2` from `buttonVariants`
+   - Keep only `focus-visible:outline-none`
 
-5. **Reorganize search and filters row** - Create a single row with:
-   - Search bar on the left (matching My Templates styling with `max-w-md`)
-   - Filters on the right (justified to end)
+5. **Update `src/components/ui/select.tsx`**
+   - Remove `focus:ring-2 focus:ring-primary focus:border-primary` from SelectTrigger
+   - Keep only `focus:outline-none`
 
-6. **Standardize spacing** - Use `mb-8` for consistent vertical rhythm
+6. **Update `src/components/ui/checkbox.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
+   - Keep only `focus-visible:outline-none`
 
-### Technical Details
+7. **Update `src/components/ui/radio-group.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
+   - Keep only `focus:outline-none`
 
-**File to modify:** `src/components/templates/TemplateCommunity.tsx`
+8. **Update `src/components/ui/switch.tsx`**
+   - Remove `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`
+   - Keep only `focus-visible:outline-none`
 
-The header section will be restructured from:
-```tsx
-// Current: Title + search inline, filters centered below
-<div className="flex ... justify-between ...">
-  <h1>Template Hub</h1>
-  <input ... />
-</div>
-<div className="flex justify-center ...">
-  <TemplateFilters ... />
-</div>
-```
+### Accessibility Consideration
 
-To:
-```tsx
-// New: Icon + title with subtitle, then search + filters inline
-<div className="mb-8">
-  <div className="flex items-center gap-3 mb-2">
-    <Globe className="h-7 w-7 text-foreground" />
-    <h1 className="font-sans text-[32px] font-semibold text-foreground tracking-tight">
-      Template Hub
-    </h1>
-  </div>
-  <p className="text-sm text-muted-foreground ml-10">Community</p>
-</div>
-
-<div className="flex items-center justify-between gap-4 mb-8">
-  <div className="relative flex-1 max-w-md">
-    <!-- Search input -->
-  </div>
-  <TemplateFilters ... />
-</div>
-```
-
-**TemplateFilters component update:** `src/components/templates/hub/TemplateFilters.tsx`
-- Remove `justify-center` from the parent container since alignment will be handled by the parent
-- Keep filter pills as-is
+Removing focus rings reduces visibility for keyboard navigation. The implementation keeps `outline-none` to prevent browser default outlines. If keyboard accessibility becomes a concern later, a subtle focus indicator (like a slight shadow or border color change) can be re-added as a more visually subtle alternative.
 
