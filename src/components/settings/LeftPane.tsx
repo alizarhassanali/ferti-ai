@@ -300,7 +300,7 @@ export const LeftPane = () => {
         </nav>
 
         {/* Footer Section */}
-        <div className={`border-t border-sidebar-border ${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-5'}`}>
           <ul className="space-y-1">
             {footerItems.map(item => {
             const Icon = item.icon;
