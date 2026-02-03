@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, FileText, MessageSquare, FileCode, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Mail, FileText, MessageSquare, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -55,11 +55,6 @@ export const LeftPane = () => {
     isToggleable: true
   }, {
     type: 'separator'
-  }, {
-    icon: FileCode,
-    label: 'Chart Prep',
-    id: 'chart-prep',
-    route: '/chart-prep'
   }, {
     icon: MessageSquare,
     label: 'AI Assistant',
@@ -247,8 +242,6 @@ export const LeftPane = () => {
                   // On a disallowed page (settings), navigate to sessions
                   navigate('/sessions');
                 }
-              } else if (item.id === 'chart-prep') {
-                navigate('/chart-prep');
               } else if (item.route) {
                 navigate(item.route);
               }

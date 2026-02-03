@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionsProvider } from "./contexts/SessionsContext";
 import { PatientsProvider } from "./contexts/PatientsContext";
 import { SessionsPanelProvider } from "./contexts/SessionsPanelContext";
-import { ChartPrepLayoutProvider } from "./contexts/ChartPrepLayoutContext";
 import { LettersProvider } from "./contexts/LettersContext";
 import { OnboardingTourProvider } from "./contexts/OnboardingTourContext";
 import { SettingsProvider } from "./contexts/SettingsContext";
@@ -19,7 +18,6 @@ import TemplateHub from "./pages/TemplateHub";
 import TemplateDetail from "./pages/TemplateDetail";
 import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
-import ChartPrep from "./pages/ChartPrep";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
 import SetPassword from "./pages/onboarding/SetPassword";
@@ -44,28 +42,25 @@ const App = () => (
               <BrowserRouter>
                 <KeyboardShortcutsHandler />
                 <SessionsPanelProvider>
-                  <ChartPrepLayoutProvider>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/new-session" element={<NewSession />} />
-                      <Route path="/sessions" element={<ViewSessions />} />
-                      <Route path="/chart-prep" element={<ChartPrep />} />
-                      <Route path="/ai-assistant" element={<AIAssistant />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/my-templates" element={<MyTemplates />} />
-                      <Route path="/template-hub" element={<TemplateHub />} />
-                      <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
-                      <Route path="/letters" element={<Letters />} />
-                      {/* Onboarding routes - with token validation */}
-                      <Route path="/invite" element={<SetPassword />} />
-                      <Route path="/complete-profile" element={<CompleteProfile />} />
-                      {/* Onboarding routes - static UI (no backend) */}
-                      <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
-                      <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </ChartPrepLayoutProvider>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/new-session" element={<NewSession />} />
+                    <Route path="/sessions" element={<ViewSessions />} />
+                    <Route path="/ai-assistant" element={<AIAssistant />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/my-templates" element={<MyTemplates />} />
+                    <Route path="/template-hub" element={<TemplateHub />} />
+                    <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
+                    <Route path="/letters" element={<Letters />} />
+                    {/* Onboarding routes - with token validation */}
+                    <Route path="/invite" element={<SetPassword />} />
+                    <Route path="/complete-profile" element={<CompleteProfile />} />
+                    {/* Onboarding routes - static UI (no backend) */}
+                    <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
+                    <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
                 </SessionsPanelProvider>
               </BrowserRouter>
               </TooltipProvider>
