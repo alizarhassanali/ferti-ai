@@ -18,20 +18,7 @@ export const useTeamMembers = (options: UseTeamMembersOptions = {}) => {
     setError(null);
 
     try {
-      const params = new URLSearchParams();
-      if (options.search) params.set('search', options.search);
-      if (options.status && options.status !== 'all') params.set('status', options.status);
-      if (options.role && options.role !== 'all') params.set('role', options.role);
-
-      const { data, error: fnError } = await supabase.functions.invoke('list-team-members', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: null,
-      });
-
-      // For now, fetch directly from table since edge function needs query params handling
+      // Query team_members directly (RLS now restricts to authenticated users)
       let query = supabase
         .from('team_members')
         .select('*')

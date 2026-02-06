@@ -6,10 +6,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface AcceptInviteRequest {
-  token: string;
-  password: string;
-}
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 serve(async (req: Request) => {
   // Handle CORS preflight
@@ -25,18 +22,36 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { token, password }: AcceptInviteRequest = await req.json();
-
-    if (!token || !password) {
+    // ---- Input validation ----
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
       return new Response(
-        JSON.stringify({ error: "Token and password are required" }),
+        JSON.stringify({ error: "Invalid request body" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    if (password.length < 8) {
+    if (!body || typeof body !== "object") {
       return new Response(
-        JSON.stringify({ error: "Password must be at least 8 characters" }),
+        JSON.stringify({ error: "Invalid request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const { token, password } = body as Record<string, unknown>;
+
+    if (typeof token !== "string" || !UUID_REGEX.test(token)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid invite token" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (typeof password !== "string" || password.length < 8 || password.length > 128) {
+      return new Response(
+        JSON.stringify({ error: "Password must be between 8 and 128 characters" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -106,7 +121,7 @@ serve(async (req: Request) => {
     if (authError) {
       console.error("Error creating user:", authError);
       return new Response(
-        JSON.stringify({ error: authError.message || "Failed to create account" }),
+        JSON.stringify({ error: "Failed to create account" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
