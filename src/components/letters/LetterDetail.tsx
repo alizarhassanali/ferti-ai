@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useLetters } from '@/contexts/LettersContext';
 import { useToast } from '@/hooks/use-toast';
-import { Send, Copy, Calendar, User, FileText, CheckCircle, Clock } from 'lucide-react';
+import { Send, Copy, Calendar, User, FileText, CheckCircle, Clock, Download } from 'lucide-react';
 
 export const LetterDetail = () => {
   const { selectedLetterId, getLetter, updateLetterContent, markAsSent } = useLetters();
@@ -109,12 +109,7 @@ export const LetterDetail = () => {
             <h2 className="text-xl font-semibold text-foreground">{letter.patientName}</h2>
             {getStatusBadge()}
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="gap-2" onClick={handleCopy}>
-              <Copy className="h-4 w-4" />
-              Copy
-            </Button>
-          </div>
+          <div className="flex items-center gap-2" />
         </div>
 
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -152,13 +147,23 @@ export const LetterDetail = () => {
       {/* Footer Actions */}
       {isEditable && (
         <div className="border-t border-border p-4">
-          <div className="max-w-3xl mx-auto flex items-center justify-end">
+          <div className="max-w-3xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
               {editedContent !== null && editedContent !== letter.content && (
                 <Button variant="outline" onClick={handleSave}>
                   Save changes
                 </Button>
               )}
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="gap-2" onClick={handleCopy}>
+                <Copy className="h-4 w-4" />
+                Copy
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => window.print()}>
+                <Download className="h-4 w-4" />
+                Save as PDF
+              </Button>
               <Button className="gap-2" onClick={handleSend}>
                 <Send className="h-4 w-4" />
                 Send letter
