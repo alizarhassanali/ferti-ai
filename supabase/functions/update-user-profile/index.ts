@@ -6,18 +6,43 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface UpdateProfileRequest {
-  first_name?: string;
-  last_name?: string;
-  phone_country_code?: string;
-  phone_number?: string;
-  language?: string;
-  signature_title?: string;
-  signature_specialty?: string;
-  signature_preferred_name?: string;
-  signature_email?: string;
-  include_clinic_name?: boolean;
-  profile_completed?: boolean;
+const ALLOWED_FIELDS = new Set([
+  "first_name",
+  "last_name",
+  "phone_country_code",
+  "phone_number",
+  "language",
+  "signature_title",
+  "signature_specialty",
+  "signature_preferred_name",
+  "signature_email",
+  "include_clinic_name",
+  "profile_completed",
+]);
+
+const MAX_STRING_LENGTH = 255;
+const VALID_LANGUAGES = ["English", "French", "Spanish", "German", "Portuguese", "Italian", "Dutch", "Arabic", "Chinese", "Japanese", "Korean"];
+
+function validateStringField(value: unknown, maxLen = MAX_STRING_LENGTH): string | null {
+  if (value === null || value === undefined) return null;
+  if (typeof value !== "string") return null;
+  return value.slice(0, maxLen).trim();
+}
+
+function isValidPhoneCountryCode(code: unknown): boolean {
+  if (typeof code !== "string") return false;
+  return /^\+\d{1,4}$/.test(code);
+}
+
+function isValidPhoneNumber(phone: unknown): boolean {
+  if (typeof phone !== "string") return false;
+  return /^[\d\s\-().]{0,20}$/.test(phone);
+}
+
+function isValidEmail(email: unknown): boolean {
+  if (typeof email !== "string") return false;
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email) && email.length <= 255;
 }
 
 serve(async (req: Request) => {
@@ -59,7 +84,82 @@ serve(async (req: Request) => {
     }
 
     const userId = userData.user.id;
-    const updateData: UpdateProfileRequest = await req.json();
+
+    // ---- Input validation ----
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const inputData = rawBody as Record<string, unknown>;
+
+    // Only allow whitelisted fields
+    const sanitizedData: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(inputData)) {
+      if (!ALLOWED_FIELDS.has(key)) continue;
+
+      switch (key) {
+        case "first_name":
+        case "last_name": {
+          const v = validateStringField(value, 100);
+          if (v !== null) sanitizedData[key] = v;
+          break;
+        }
+        case "phone_country_code":
+          if (value === null || (typeof value === "string" && isValidPhoneCountryCode(value))) {
+            sanitizedData[key] = value;
+          }
+          break;
+        case "phone_number":
+          if (value === null || (typeof value === "string" && isValidPhoneNumber(value))) {
+            sanitizedData[key] = value;
+          }
+          break;
+        case "language":
+          if (typeof value === "string" && VALID_LANGUAGES.includes(value)) {
+            sanitizedData[key] = value;
+          }
+          break;
+        case "signature_email":
+          if (value === null || (typeof value === "string" && isValidEmail(value))) {
+            sanitizedData[key] = value;
+          }
+          break;
+        case "signature_title":
+        case "signature_specialty":
+        case "signature_preferred_name": {
+          const v = validateStringField(value);
+          if (v !== null) sanitizedData[key] = v;
+          break;
+        }
+        case "include_clinic_name":
+        case "profile_completed":
+          if (typeof value === "boolean") {
+            sanitizedData[key] = value;
+          }
+          break;
+      }
+    }
+
+    if (Object.keys(sanitizedData).length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No valid fields to update" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Check if profile exists
     const { data: existingProfile } = await supabase
@@ -74,7 +174,7 @@ serve(async (req: Request) => {
       result = await supabase
         .from("user_profiles")
         .update({
-          ...updateData,
+          ...sanitizedData,
           updated_at: new Date().toISOString(),
         })
         .eq("user_id", userId)
@@ -88,7 +188,7 @@ serve(async (req: Request) => {
           user_id: userId,
           email: userData.user.email!,
           role: userData.user.user_metadata?.role || "staff",
-          ...updateData,
+          ...sanitizedData,
         })
         .select()
         .single();
