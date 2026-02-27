@@ -6,7 +6,13 @@ export const useUnseenReleases = () => {
   return useQuery<boolean>({
     queryKey: ['unseen-releases'],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      let user = null;
+      try {
+        const { data } = await supabase.auth.getUser();
+        user = data?.user ?? null;
+      } catch {
+        user = null;
+      }
 
       // If no user logged in, check seed data — always show badge
       if (!user) {
