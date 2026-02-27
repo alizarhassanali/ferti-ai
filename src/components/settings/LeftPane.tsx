@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, FileText, MessageSquare, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X } from 'lucide-react';
+import { Mail, FileText, MessageSquare, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, Sparkles } from 'lucide-react';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -8,6 +8,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 import ottoLogo from '@/assets/otto-logo.png';
 import { SwitchAppPopover } from '@/components/sidebar/SwitchAppPopover';
+import { ReleaseNotesPanel } from '@/components/releaseNotes/ReleaseNotesPanel';
+import { useUnseenReleases } from '@/hooks/useUnseenReleases';
 
 // Mock user - in production, this would come from auth context
 const mockUser = {
@@ -22,6 +24,8 @@ export const LeftPane = () => {
   const location = useLocation();
   const user = mockUser;
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  const [releaseNotesPanelOpen, setReleaseNotesPanelOpen] = useState(false);
+  const { data: hasUnseen } = useUnseenReleases();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebar-collapsed');
@@ -92,6 +96,10 @@ export const LeftPane = () => {
     route: '/settings'
   }];
   const footerItems = [{
+    icon: Sparkles,
+    label: "What's New",
+    id: 'whats-new'
+  }, {
     icon: HelpCircle,
     label: 'Help',
     id: 'help'
@@ -301,26 +309,31 @@ export const LeftPane = () => {
               setIsMobileMenuOpen(false);
               if (item.id === 'help') {
                 setHelpPanelOpen(true);
+              } else if (item.id === 'whats-new') {
+                setReleaseNotesPanelOpen(true);
               }
             };
+            const showBadge = item.id === 'whats-new' && hasUnseen;
             return <li key={item.id}>
                   {isCollapsed ? <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button onClick={handleClick} className="w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground">
-                            <div className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 group-hover:scale-105">
-                              <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-                            </div>
-                          </button>
+                          <button onClick={handleClick} className="relative w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground">
+                             <div className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 group-hover:scale-105">
+                               <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                             </div>
+                             {showBadge && <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-sidebar" />}
+                           </button>
                         </TooltipTrigger>
                         <TooltipContent side="right" className="bg-card border-border text-foreground shadow-lg font-medium">
                           <p>{item.label}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider> : <button onClick={handleClick} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground font-medium">
-                      <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-                      <span className="flex-1 text-left">{item.label}</span>
-                    </button>}
+                    </TooltipProvider> : <button onClick={handleClick} className="relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground font-medium">
+                       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                       <span className="flex-1 text-left">{item.label}</span>
+                       {showBadge && <span className="h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-sidebar" />}
+                     </button>}
                 </li>;
           })}
           </ul>
@@ -328,5 +341,6 @@ export const LeftPane = () => {
       </div>
       
       <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
+      <ReleaseNotesPanel open={releaseNotesPanelOpen} onOpenChange={setReleaseNotesPanelOpen} />
     </>;
 };

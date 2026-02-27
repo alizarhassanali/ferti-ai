@@ -100,6 +100,57 @@ export type Database = {
         }
         Relationships: []
       }
+      release_notes: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          release_date: string
+          summary: string
+          tag: Database["public"]["Enums"]["release_note_tag"]
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          release_date?: string
+          summary: string
+          tag?: Database["public"]["Enums"]["release_note_tag"]
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          release_date?: string
+          summary?: string
+          tag?: Database["public"]["Enums"]["release_note_tag"]
+          title?: string
+        }
+        Relationships: []
+      }
+      release_notes_dismissed: {
+        Row: {
+          id: string
+          last_seen_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_seen_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_seen_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           created_at: string
@@ -229,6 +280,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "physician" | "nurse" | "staff"
+      release_note_tag: "new" | "improvement" | "fix"
       team_member_role: "admin" | "physician" | "nurse" | "staff"
       team_member_status: "pending" | "active" | "disabled"
     }
@@ -359,6 +411,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "physician", "nurse", "staff"],
+      release_note_tag: ["new", "improvement", "fix"],
       team_member_role: ["admin", "physician", "nurse", "staff"],
       team_member_status: ["pending", "active", "disabled"],
     },
