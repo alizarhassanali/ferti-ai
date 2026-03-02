@@ -1,34 +1,20 @@
 
 
-## Fix: Red Dot Badge Not Showing
+## Remove Shadow from Letters Tab Pills
 
-**Root Cause:** The `useUnseenReleases` hook calls `supabase.auth.getUser()` which can throw or return an error when there's no active session, causing the React Query to fail silently. When the query errors, `data` is `undefined` (falsy), so the badge never renders.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Changes
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/hooks/useUnseenReleases.ts`**
-- Wrap the `supabase.auth.getUser()` call in a try-catch
-- If it errors, fall through to the localStorage-based check (same as no-user path)
-- This ensures unauthenticated users always see the badge on first visit
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**`src/components/settings/LeftPane.tsx`**
-- No changes needed — the rendering logic is correct, the issue is purely in the data hook
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-### Technical Detail
-
-```typescript
-// Current (can fail silently):
-const { data: { user } } = await supabase.auth.getUser();
-
-// Fix: handle auth errors gracefully
-let user = null;
-try {
-  const { data } = await supabase.auth.getUser();
-  user = data?.user ?? null;
-} catch {
-  user = null;
-}
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-This ensures the localStorage fallback path is always reached for unauthenticated users, making the red dot badge visible.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
