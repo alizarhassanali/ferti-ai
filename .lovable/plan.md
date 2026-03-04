@@ -1,20 +1,56 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Conditional Label Visibility in Filter Pills
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**File:** `src/components/templates/hub/TemplateFilters.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Changes
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+**1. Sort pill — remove the "Sort" label entirely**, only show icon + value + chevron. Add a `hideLabel` prop or handle it inline.
 
+**2. Location/Specialty/Category pills — conditionally hide label** based on whether the value is "All":
+- When value is "All" → show label (e.g., "Location"), hide the value text
+- When a specific item is selected → hide the label, show only icon + truncated value
+
+### Implementation
+
+Update the `FilterPill` component to accept a `hideLabel` boolean prop. Then adjust the rendering:
+
+```tsx
+interface FilterPillProps {
+  // ...existing props
+  hideLabel?: boolean;  // Sort pill always hides label
+}
+
+const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName, hideLabel }: FilterPillProps) => {
+  const isDefault = value === 'All';
+  const showLabel = !hideLabel && isDefault;
+  const showValue = hideLabel || !isDefault;
+
+  return (
+    // ...
+    <button ...>
+      {icon}
+      {showLabel && <span>{label}</span>}
+      {showValue && <span className="text-xs max-w-[80px] truncate inline-block">{value}</span>}
+      <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+    </button>
+    // ...
+  );
+};
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+Then pass `hideLabel` to the Sort pill:
+```tsx
+<FilterPill
+  icon={<ArrowUpDown className="h-4 w-4" />}
+  label="Sort"
+  value={sortBy}
+  options={sortOptions}
+  onChange={onSortChange}
+  hideLabel
+/>
 ```
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+The other three pills keep their current usage unchanged — the logic is automatic based on whether the value is "All".
 
