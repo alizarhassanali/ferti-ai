@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw, Calendar } from 'lucide-react';
+import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useLetters } from '@/contexts/LettersContext';
 import { LetterCard } from './LetterCard';
@@ -26,18 +27,22 @@ export const LettersList = () => {
     );
   };
 
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
-    });
+  const getOrdinalSuffix = (day: number) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th';
+    }
+  };
+
+  const formatGroupDate = (date: Date) => {
+    const day = date.getDate();
+    return `${day}${getOrdinalSuffix(day)} ${format(date, "MMM ''yy")}`;
   };
 
   const groupByDate = (lettersList: typeof letters) => {
     const grouped: Record<string, typeof letters> = {};
     lettersList.forEach(letter => {
-      const dateKey = formatDate(letter.sessionDate);
+      const dateKey = format(new Date(letter.sessionDate), 'yyyy-MM-dd');
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
@@ -170,8 +175,12 @@ export const LettersList = () => {
           ) : (
             Object.entries(groupByDate(filterLetters(toBeSentLetters))).map(([date, dateLetters]) => (
               <div key={date} className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
-                  <span>📅</span> <span>{date}</span>
+                <div className="flex items-center justify-between text-xs text-foreground/50 px-2 font-medium">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{format(new Date(date), 'EEEE')}</span>
+                  </div>
+                  <span>{formatGroupDate(new Date(date))}</span>
                 </div>
                 <div className="space-y-1">
                   {dateLetters.map(letter => (
@@ -196,8 +205,12 @@ export const LettersList = () => {
           ) : (
             Object.entries(groupByDate(filterLetters(sentLetters))).map(([date, dateLetters]) => (
               <div key={date} className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
-                  <span>📅</span> <span>{date}</span>
+                <div className="flex items-center justify-between text-xs text-foreground/50 px-2 font-medium">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{format(new Date(date), 'EEEE')}</span>
+                  </div>
+                  <span>{formatGroupDate(new Date(date))}</span>
                 </div>
                 <div className="space-y-1">
                   {dateLetters.map(letter => (
