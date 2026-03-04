@@ -152,10 +152,10 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2">
+              <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all border bg-white text-foreground border-border hover:bg-muted">
                 {roleOptions.find(r => r.value === roleFilter)?.label}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-popover">
               {roleOptions.map(option => (
