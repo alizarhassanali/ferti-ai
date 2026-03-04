@@ -7,10 +7,10 @@ interface SwitchAppPopoverProps {
 }
 
 const apps = [
-  { id: 'cnp', name: 'Onboarding', initials: 'CNP', color: 'bg-[#2DD4BF]' },
-  { id: 'sop', name: 'SOP AI', initials: 'SOP', color: 'bg-[#F472B6]' },
-  { id: 'otto-notes', name: 'Otto Notes', initials: 'ON', color: 'bg-[#2DD4BF]', current: true },
-  { id: 'pulse', name: 'Otto Pulse', initials: 'NPS', color: 'bg-[#F59E0B]' },
+  { id: 'cnp', name: 'Onboarding Platform', initials: 'CNP', color: 'bg-[#263F6A]' },
+  { id: 'fertiwise', name: 'Fertiwise', initials: 'FF', color: 'bg-[#263F6A]' },
+  { id: 'sop', name: 'SOP AI', initials: 'SOP', color: 'bg-[#263F6A]' },
+  { id: 'pulse', name: 'Otto Pulse', initials: 'OP', color: 'bg-[#263F6A]' },
 ];
 
 export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
