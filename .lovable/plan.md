@@ -1,44 +1,20 @@
 
 
-## Add Progress Bar & Status Label to File Processing Tiles
+## Remove Shadow from Letters Tab Pills
 
-**File:** `src/components/newSession/FileProcessingItem.tsx`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-Add a thin progress bar at the bottom of each file tile and a small status label, without changing existing styling.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-### Changes
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-1. **Add a progress bar** — a thin absolute-positioned bar at the bottom of the tile that fills based on `file.progress` (0-100). Only visible when `status` is `uploading` or `processing`.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-2. **Add a status label** — a tiny text label between the filename and the X button showing:
-   - `"Uploading…"` when status is `uploading` (progress 0-30%)
-   - `"Reading…"` when status is `processing` (progress 30-100%)
-   - Nothing when `complete`
-
-3. **Green checkmark on complete** — swap the `FileText` icon to a green `Check` icon when status is `complete` (already have the `SpinnerSuccess` component but we'll keep it simpler with just a Check icon to preserve existing styling).
-
-### Implementation detail
-
-```tsx
-// Inside the tile div, add at the bottom (before closing </div>):
-{isProcessing && (
-  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary/10 rounded-b-md overflow-hidden">
-    <div 
-      className="h-full bg-primary transition-all duration-300"
-      style={{ width: `${file.progress}%` }}
-    />
-  </div>
-)}
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-Status label between filename and X button:
-```tsx
-{isProcessing && (
-  <span className="text-[10px] text-muted-foreground flex-shrink-0">
-    {file.status === 'uploading' ? 'Uploading…' : 'Reading…'}
-  </span>
-)}
-```
-
-No other files or styling changes needed — the `useDocumentOCR` hook already simulates uploading (0-30%) then processing/OCR (30-100%) phases with the correct status transitions.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

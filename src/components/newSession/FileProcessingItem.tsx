@@ -1,4 +1,4 @@
-import { FileText, X, RotateCcw, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, X, RotateCcw, AlertCircle, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AttachedFile } from '@/types/attachedFile';
@@ -12,6 +12,7 @@ interface FileProcessingItemProps {
 export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingItemProps) => {
   const isProcessing = file.status === 'uploading' || file.status === 'processing';
   const isError = file.status === 'error';
+  const isComplete = file.status === 'complete';
 
   return (
     <div
@@ -28,6 +29,8 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
           <Loader2 className="h-4 w-4 text-primary animate-spin" />
         ) : isError ? (
           <AlertCircle className="h-4 w-4 text-destructive" />
+        ) : isComplete ? (
+          <Check className="h-4 w-4 text-green-500" />
         ) : (
           <FileText className="h-4 w-4 text-muted-foreground" />
         )}
@@ -37,6 +40,13 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
       <span className="text-xs text-foreground truncate max-w-[100px] leading-tight">
         {file.name}
       </span>
+
+      {/* Status label */}
+      {isProcessing && (
+        <span className="text-[10px] text-muted-foreground flex-shrink-0">
+          {file.status === 'uploading' ? 'Uploading…' : 'Reading…'}
+        </span>
+      )}
 
       {/* Remove button */}
       <Button
@@ -56,6 +66,16 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
         >
           <RotateCcw className="h-2.5 w-2.5" />
         </button>
+      )}
+
+      {/* Progress bar */}
+      {isProcessing && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary/10 rounded-b-md overflow-hidden">
+          <div
+            className="h-full bg-primary transition-all duration-300"
+            style={{ width: `${file.progress}%` }}
+          />
+        </div>
       )}
     </div>
   );
