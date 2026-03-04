@@ -92,8 +92,6 @@ export const TemplateFilters = ({
         value={sortBy}
         options={sortOptions}
         onChange={onSortChange}
-        hideLabel
-      />
       />
       <FilterPill
         icon={<MapPin className="h-4 w-4" />}
