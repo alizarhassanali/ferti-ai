@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, CheckCircle } from 'lucide-react';
 import { HubTemplate } from '@/data/hubTemplates';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface TemplateCardProps {
   template: HubTemplate;
