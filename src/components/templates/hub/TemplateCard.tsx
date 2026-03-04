@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Users, CheckCircle } from 'lucide-react';
 import { HubTemplate } from '@/data/hubTemplates';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface TemplateCardProps {
   template: HubTemplate;
@@ -20,7 +21,11 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
       className="group flex flex-col h-full bg-white border border-border rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-[3px] transition-all duration-200 cursor-pointer"
     >
       {/* Category Badge */}
-      <span className="inline-block self-start px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider bg-brand/15 text-brand rounded-full mb-3">
+      <span className={cn(
+        "inline-block self-start px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider rounded-full mb-3 border",
+        template.type === 'Note' && 'bg-amber-100 text-amber-700 border-amber-200',
+        template.type === 'Document' && 'bg-purple-100 text-purple-700 border-purple-200',
+      )}>
         {template.type}
       </span>
       

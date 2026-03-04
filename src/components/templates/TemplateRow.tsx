@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Edit, MoreVertical, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,12 +46,17 @@ export const TemplateRow = ({ template, onDelete, onShare }: TemplateRowProps) =
   return (
     <>
       <TableRow className="group border-b border-[hsl(35_20%_94%)] hover:bg-[hsl(40_30%_98%)] transition-colors">
-        <TableCell className="py-3.5">
+      <TableCell className="py-3.5">
           <div className="flex items-center gap-2.5">
-            <span className="font-medium text-[15px] text-[hsl(25_30%_25%)]">{template.name}</span>
+            <span className="font-medium text-[15px] text-foreground">{template.name}</span>
             <Badge 
               variant="secondary" 
-              className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[hsl(40_25%_93%)] text-[hsl(25_25%_45%)] border border-[hsl(35_20%_88%)]"
+              className={cn(
+                "text-[11px] font-medium px-2.5 py-0.5 rounded-full border",
+                template.type === 'Note' && 'bg-amber-100 text-amber-700 border-amber-200',
+                template.type === 'Letter' && 'bg-blue-100 text-blue-700 border-blue-200',
+                template.type === 'Document' && 'bg-purple-100 text-purple-700 border-purple-200',
+              )}
             >
               {template.type}
             </Badge>
