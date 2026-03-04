@@ -671,7 +671,7 @@ Special Considerations:
 ];
 
 export const sortOptions = ['Most Popular', 'Newest', 'Most Used', 'A-Z'] as const;
-export const locationOptions = ['All', 'Canada', 'USA', 'UK', 'Australia', 'Other'] as const;
+export const locationOptions = ['All', 'Generation Fertility', 'Grace Fertility', 'Olive Fertility Centre', 'Ottawa Fertility Centre', 'Repromed', 'The Fertility Partners', 'The Reproductive Care Centre'] as const;
 export const specialtyOptions = [
   'All',
   'Admin Assistant',

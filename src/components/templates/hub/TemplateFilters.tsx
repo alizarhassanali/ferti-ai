@@ -94,6 +94,7 @@ export const TemplateFilters = ({
         value={location}
         options={locationOptions}
         onChange={onLocationChange}
+        dropdownClassName="min-w-[340px]"
       />
       <FilterPill
         icon={<Stethoscope className="h-4 w-4" />}
