@@ -1,20 +1,22 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Remove Active-State Orange Highlight from Filter Pills
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**File:** `src/components/templates/hub/TemplateFilters.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+**Problem:** When a filter value other than the default is selected, the pill turns orange (`bg-brand text-brand-foreground border-brand`). It should always remain the same white/default style regardless of selection.
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+**Change:** In the `FilterPill` component, remove the `hasActiveFilter` conditional and always use the inactive style for the button:
 
+```tsx
+// Before (lines ~39-46)
+hasActiveFilter
+  ? "bg-brand text-brand-foreground border-brand hover:bg-brand/90"
+  : "bg-white text-foreground border-primary hover:bg-muted"
+
+// After — always use the default style
+"bg-white text-foreground border-primary hover:bg-muted"
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+Remove the `hasActiveFilter` variable as it's no longer needed.
 
