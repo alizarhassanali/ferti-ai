@@ -29,7 +29,7 @@ interface FilterPillProps {
   dropdownClassName?: string;
 }
 
-const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterPillProps) => {
+const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName }: FilterPillProps) => {
   const hasActiveFilter = value !== 'All' && value !== 'Most Popular';
   
   return (
