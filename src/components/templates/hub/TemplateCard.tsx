@@ -24,7 +24,6 @@ export const TemplateCard = ({ template }: TemplateCardProps) => {
       <span className={cn(
         "inline-block self-start px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider rounded-full mb-3 border",
         template.type === 'Note' && 'bg-amber-100 text-amber-700 border-amber-200',
-        template.type === 'Letter' && 'bg-blue-100 text-blue-700 border-blue-200',
         template.type === 'Document' && 'bg-purple-100 text-purple-700 border-purple-200',
       )}>
         {template.type}
