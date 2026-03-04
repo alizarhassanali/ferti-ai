@@ -7,9 +7,9 @@ interface SwitchAppPopoverProps {
 }
 
 const apps = [
-  { id: 'cnp', name: 'Onboarding...', initials: 'CNP', color: 'bg-[#2DD4BF]' },
+  { id: 'cnp', name: 'Onboarding', initials: 'CNP', color: 'bg-[#2DD4BF]' },
   { id: 'sop', name: 'SOP AI', initials: 'SOP', color: 'bg-[#F472B6]' },
-  { id: 'ferti', name: 'Ferti AI', initials: 'SN', color: 'bg-[#2DD4BF]' },
+  { id: 'otto-notes', name: 'Otto Notes', initials: 'ON', color: 'bg-[#2DD4BF]', current: true },
   { id: 'pulse', name: 'Otto Pulse', initials: 'NPS', color: 'bg-[#F59E0B]' },
 ];
 
