@@ -1,9 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { LeftPane } from '@/components/settings/LeftPane';
 import { GlobalSessionsPanel } from './GlobalSessionsPanel';
 import { AppFooter } from './AppFooter';
 import { useLocation } from 'react-router-dom';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
+import { MessageCircle } from 'lucide-react';
+import { HelpPanel } from '@/components/help/HelpPanel';
 
 interface AppLayoutProps {
   children: ReactNode;
