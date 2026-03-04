@@ -1,20 +1,20 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Convert File Attachments from List to Tile View
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Problem
+Attached files display as a vertical list, each taking a full row. With 3-4+ files, the context text area shrinks to nothing.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Changes
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+**1. `src/components/newSession/FileProcessingItem.tsx`** — Redesign as a compact tile
+- Change from full-width row to a small fixed-size tile (~140px wide)
+- Show a file icon, truncated filename (max ~12 chars visible), and an X button in the top-right corner
+- Add `title={file.name}` on the container so full name shows on hover
+- For processing state, show a small spinner overlay instead of a progress bar
+- For error state, show red border with retry on click
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**2. `src/components/newSession/ContextTab.tsx`** — Change files container to horizontal flex-wrap
+- Replace `<div className="mt-3 space-y-2">` with `<div className="mt-3 flex flex-wrap gap-2">`
+- Files flow left-to-right and wrap, taking minimal vertical space
 
