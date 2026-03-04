@@ -8,7 +8,7 @@ interface SwitchAppPopoverProps {
 
 const apps = [
   { id: 'cnp', name: 'Onboarding Platform', initials: 'CNP', color: 'bg-[#263F6A]' },
-  { id: 'fertiwise', name: 'Fertiwise', initials: 'FF', color: 'bg-[#263F6A]' },
+  { id: 'fertiwise', name: 'Fertiwise', initials: 'FW', color: 'bg-[#263F6A]' },
   { id: 'sop', name: 'SOP AI', initials: 'SOP', color: 'bg-[#263F6A]' },
   { id: 'pulse', name: 'Otto Pulse', initials: 'OP', color: 'bg-[#263F6A]' },
 ];
@@ -59,7 +59,7 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
             `}>
               {app.initials}
             </div>
-            <span className="text-[11px] text-foreground/80 font-medium text-center truncate w-full">
+            <span className="text-[11px] text-foreground/80 font-medium text-center w-full">
               {app.name}
             </span>
           </button>
