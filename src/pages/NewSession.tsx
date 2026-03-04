@@ -44,6 +44,7 @@ const NewSession = () => {
   } = usePatients();
   const { privacySettings } = useSettings();
   const [showConsentDialog, setShowConsentDialog] = useState(false);
+  const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(() => {
     return searchParams.get("id");
   });
