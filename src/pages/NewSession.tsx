@@ -371,6 +371,27 @@ const NewSession = () => {
         onOpenChange={setShowConsentDialog}
         onConfirm={startRecording}
       />
+
+      {/* Restart Confirmation Dialog */}
+      <AlertDialog open={showRestartDialog} onOpenChange={setShowRestartDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Existing {recordingMode === 'transcribe' ? 'transcript' : 'dictation'} found</AlertDialogTitle>
+            <AlertDialogDescription>
+              You already have content from a previous recording. Would you like to keep it and continue, or start fresh?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="outline" onClick={handleRestartKeep}>
+              Keep &amp; Continue
+            </AlertDialogAction>
+            <AlertDialogAction onClick={handleRestartFresh}>
+              Start Fresh
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>;
 };
 export default NewSession;
