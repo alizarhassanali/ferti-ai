@@ -42,7 +42,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
         >
           {icon}
           <span>{label}</span>
-          <span className="text-xs">{value}</span>
+          <span className="text-xs max-w-[80px] truncate inline-block">{value}</span>
           <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </button>
       </DropdownMenuTrigger>
