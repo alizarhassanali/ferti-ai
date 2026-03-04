@@ -29,6 +29,8 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
           <Loader2 className="h-4 w-4 text-primary animate-spin" />
         ) : isError ? (
           <AlertCircle className="h-4 w-4 text-destructive" />
+        ) : isComplete ? (
+          <Check className="h-4 w-4 text-green-500" />
         ) : (
           <FileText className="h-4 w-4 text-muted-foreground" />
         )}
