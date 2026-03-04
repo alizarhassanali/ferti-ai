@@ -39,7 +39,7 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         </div>
         <button
           onClick={() => setHelpOpen(true)}
-          className="fixed bottom-12 right-6 z-50 w-12 h-12 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
+          className="fixed bottom-16 right-6 z-50 w-12 h-12 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
         >
           <MessageCircle className="h-6 w-6" />
         </button>
