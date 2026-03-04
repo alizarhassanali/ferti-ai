@@ -80,7 +80,7 @@ export const RecordingModeButton = ({
               : "bg-white text-foreground/70 hover:bg-sidebar"
           )}
         >
-          Transcribing
+          Transcribe
         </button>
         <button
           onClick={() => onModeChange('dictate')}
