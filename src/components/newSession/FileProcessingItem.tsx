@@ -1,6 +1,5 @@
-import { FileText, X, RotateCcw, AlertCircle, Check, Loader2 } from 'lucide-react';
+import { FileText, X, RotateCcw, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { AttachedFile } from '@/types/attachedFile';
 
@@ -10,102 +9,54 @@ interface FileProcessingItemProps {
   onRetry?: (fileId: string) => void;
 }
 
-const formatFileSize = (bytes: number) => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
 export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingItemProps) => {
   const isProcessing = file.status === 'uploading' || file.status === 'processing';
-  const isComplete = file.status === 'complete';
   const isError = file.status === 'error';
-
-  const getStatusText = () => {
-    switch (file.status) {
-      case 'uploading':
-        return 'Uploading...';
-      case 'processing':
-        return 'Processing OCR...';
-      case 'complete':
-        return formatFileSize(file.size);
-      case 'error':
-        return file.errorMessage || 'Processing failed';
-      default:
-        return '';
-    }
-  };
 
   return (
     <div
+      title={file.name}
       className={cn(
-        "flex flex-col gap-2 p-3 rounded-lg border transition-all",
-        isComplete && "bg-muted/50 border-border",
-        isProcessing && "bg-primary/5 border-primary/20",
-        isError && "bg-destructive/5 border-destructive/20"
+        "relative flex flex-col items-center gap-1 p-2 rounded-lg border w-[130px] min-w-[130px] transition-all",
+        isError ? "border-destructive/40 bg-destructive/5" : "border-border bg-muted/50",
+        isProcessing && "border-primary/30 bg-primary/5"
       )}
     >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          {/* Status icon */}
-          <div className="shrink-0">
-            {isComplete && (
-              <div className="h-5 w-5 rounded-full bg-green-500/10 flex items-center justify-center">
-                <Check className="h-3 w-3 text-green-600" strokeWidth={3} />
-              </div>
-            )}
-            {isProcessing && (
-              <Loader2 className="h-4 w-4 text-primary animate-spin" />
-            )}
-            {isError && (
-              <AlertCircle className="h-4 w-4 text-destructive" />
-            )}
-          </div>
+      {/* Remove button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        className="absolute -top-1.5 -right-1.5 h-5 w-5 p-0 rounded-full bg-muted border border-border hover:bg-destructive/10"
+        onClick={() => onRemove(file.id)}
+      >
+        <X className="h-3 w-3" />
+      </Button>
 
-          {/* File info */}
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium truncate">{file.name}</p>
-            <p className={cn(
-              "text-xs",
-              isError ? "text-destructive" : "text-muted-foreground"
-            )}>
-              {getStatusText()}
-            </p>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-1 shrink-0">
-          {isError && onRetry && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 px-2 text-xs"
-              onClick={() => onRetry(file.id)}
-            >
-              <RotateCcw className="h-3 w-3 mr-1" />
-              Retry
-            </Button>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 p-0"
-            onClick={() => onRemove(file.id)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+      {/* Icon area */}
+      <div className="relative h-8 w-8 flex items-center justify-center">
+        {isProcessing ? (
+          <Loader2 className="h-5 w-5 text-primary animate-spin" />
+        ) : isError ? (
+          <AlertCircle className="h-5 w-5 text-destructive" />
+        ) : (
+          <FileText className="h-5 w-5 text-muted-foreground" />
+        )}
       </div>
 
-      {/* Progress bar - only show during upload/processing */}
-      {isProcessing && (
-        <div className="space-y-1">
-          <Progress value={file.progress} className="h-1.5" />
-          <p className="text-[10px] text-muted-foreground text-right">
-            {Math.round(file.progress)}%
-          </p>
-        </div>
+      {/* Truncated filename */}
+      <span className="text-xs text-foreground truncate w-full text-center leading-tight">
+        {file.name}
+      </span>
+
+      {/* Error retry */}
+      {isError && onRetry && (
+        <button
+          className="text-[10px] text-destructive hover:underline flex items-center gap-0.5"
+          onClick={() => onRetry(file.id)}
+        >
+          <RotateCcw className="h-2.5 w-2.5" />
+          Retry
+        </button>
       )}
     </div>
   );
