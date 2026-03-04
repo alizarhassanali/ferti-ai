@@ -6,6 +6,16 @@ import { SessionInfoBar } from "@/components/newSession/SessionInfoBar";
 import { TwoColumnLayout } from "@/components/newSession/TwoColumnLayout";
 import { AskAIInput } from "@/components/newSession/AskAIInput";
 import { ConsentPopupDialog } from "@/components/newSession/ConsentPopupDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import { Patient, RecordingMode, NoteTab, Session } from "@/types/session";
 import { useToast } from "@/hooks/use-toast";
 import { useSessions } from "@/contexts/SessionsContext";
