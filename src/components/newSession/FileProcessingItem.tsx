@@ -17,7 +17,7 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
     <div
       title={file.name}
       className={cn(
-        "relative flex items-center gap-2 px-2.5 py-1.5 rounded-md border transition-all",
+        "relative inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md border transition-all w-auto flex-shrink-0",
         isError ? "border-destructive/40 bg-destructive/5" : "border-border bg-muted/50",
         isProcessing && "border-primary/30 bg-primary/5"
       )}
