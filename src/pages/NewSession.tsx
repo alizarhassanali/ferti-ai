@@ -383,7 +383,7 @@ const NewSession = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="outline" onClick={handleRestartKeep}>
+            <AlertDialogAction className="bg-secondary text-secondary-foreground hover:bg-secondary/80" onClick={handleRestartKeep}>
               Keep &amp; Continue
             </AlertDialogAction>
             <AlertDialogAction onClick={handleRestartFresh}>
