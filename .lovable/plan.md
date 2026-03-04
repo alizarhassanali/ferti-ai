@@ -1,16 +1,20 @@
 
 
-## Fix Double Footer Appearance
+## Remove Shadow from Letters Tab Pills
 
-The problem: The chat support button sits in its own `div` row (lines 40-47) between the content and footer. This div inherits the background and takes up vertical space, creating the appearance of two stacked footers.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Fix in `src/components/layout/AppLayout.tsx`
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-Remove the wrapper `div` around the chat button and make the button `fixed` positioned so it floats above the footer without taking any layout space:
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-- Remove the `<div className="flex justify-end px-6 pb-2">` wrapper (lines 40-47)
-- Make the button `fixed bottom-12 right-6 z-50` so it sits just above the footer
-- Keep the `<AppFooter />` as the only element after the scrollable content
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-Result: Only one footer visible, with the chat button floating above it.
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

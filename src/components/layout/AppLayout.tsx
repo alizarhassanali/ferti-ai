@@ -37,14 +37,12 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         <div className="flex-1 overflow-y-auto">
           {children}
         </div>
-        <div className="flex justify-end px-6 pb-2">
-          <button
-            onClick={() => setHelpOpen(true)}
-            className="w-12 h-12 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
-          >
-            <MessageCircle className="h-6 w-6" />
-          </button>
-        </div>
+        <button
+          onClick={() => setHelpOpen(true)}
+          className="fixed bottom-12 right-6 z-50 w-12 h-12 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
         <AppFooter />
       </div>
       <HelpPanel open={helpOpen} onOpenChange={setHelpOpen} />
