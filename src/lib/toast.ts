@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 export const showSuccessToast = (message: string) => {
   toast.success(message, {
-    duration: 3000,
+    duration: 2000,
     position: "top-right",
     className: "toast-success",
   });
@@ -16,7 +16,7 @@ export const showSuccessToast = (message: string) => {
 
 export const showErrorToast = (message: string = "Something went wrong. Please try again.") => {
   toast.error(message, {
-    duration: 3000,
+    duration: 2000,
     position: "top-right",
     className: "toast-error",
   });

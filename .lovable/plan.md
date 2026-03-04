@@ -1,25 +1,20 @@
 
 
-## Make Toast Notifications Smaller, Tighter, and Faster
+## Remove Shadow from Letters Tab Pills
 
-Two toast systems are in use: **Sonner** (primary, used via `src/lib/toast.ts`) and **Radix Toast** (legacy `src/components/ui/toast.tsx`). Both need updates.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Changes
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**1. `src/components/ui/sonner.tsx`** — Sonner toaster config
-- Change `duration` from `3000` to `2000`
-- Add compact padding and smaller text: `group-[.toaster]:py-2 group-[.toaster]:px-3 group-[.toaster]:text-xs group-[.toaster]:shadow-sm group-[.toaster]:rounded-lg group-[.toaster]:gap-1.5`
-- Reduce shadow from `shadow-lg` to `shadow-sm`
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**2. `src/lib/toast.ts`** — Toast helper functions
-- Change all `duration: 3000` to `duration: 2000`
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**3. `src/components/ui/toast.tsx`** — Radix toast (fallback)
-- In `toastVariants`, change padding from `p-6 pr-8` to `p-3 pr-6`
-- Change `space-x-4` to `space-x-2`
-- Change `shadow-lg` to `shadow-sm`
-- Change `rounded-md` to `rounded-lg`
-- Reduce max-width in ToastViewport from `md:max-w-[420px]` to `md:max-w-[320px]`
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-This makes all notification popups compact, minimal, and auto-dismiss in 2 seconds.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
