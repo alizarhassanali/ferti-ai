@@ -67,6 +67,16 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
           <RotateCcw className="h-2.5 w-2.5" />
         </button>
       )}
+
+      {/* Progress bar */}
+      {isProcessing && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary/10 rounded-b-md overflow-hidden">
+          <div
+            className="h-full bg-primary transition-all duration-300"
+            style={{ width: `${file.progress}%` }}
+          />
+        </div>
+      )}
     </div>
   );
 };
