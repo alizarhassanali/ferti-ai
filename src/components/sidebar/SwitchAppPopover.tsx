@@ -50,19 +50,10 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
           <button
             key={app.id}
             onClick={() => handleAppClick(app.id)}
-            className={`
-              relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl 
-              border transition-all duration-200
-              ${app.current 
-                ? 'bg-muted/60 border-border' 
-                : 'border-transparent hover:bg-muted/50 hover:border-border'}
-            `}
+            className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl border border-transparent hover:bg-muted/50 hover:border-border transition-all duration-200"
           >
-            {app.current && (
-              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
-            )}
             <div className={`
-              w-10 h-10 rounded-xl ${app.color} 
+              w-9 h-9 rounded-full ${app.color} 
               flex items-center justify-center 
               text-white text-[10px] font-bold shadow-sm
             `}>
