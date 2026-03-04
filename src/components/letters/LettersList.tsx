@@ -205,8 +205,12 @@ export const LettersList = () => {
           ) : (
             Object.entries(groupByDate(filterLetters(sentLetters))).map(([date, dateLetters]) => (
               <div key={date} className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs text-foreground/50 px-2 font-medium">
-                  <span>📅</span> <span>{date}</span>
+                <div className="flex items-center justify-between text-xs text-foreground/50 px-2 font-medium">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{format(new Date(date), 'EEEE')}</span>
+                  </div>
+                  <span>{formatGroupDate(new Date(date))}</span>
                 </div>
                 <div className="space-y-1">
                   {dateLetters.map(letter => (
