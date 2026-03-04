@@ -26,6 +26,7 @@ interface FilterPillProps {
   options: readonly string[];
   onChange: (value: string) => void;
   isActive?: boolean;
+  dropdownClassName?: string;
 }
 
 const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterPillProps) => {
