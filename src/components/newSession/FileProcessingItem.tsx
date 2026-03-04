@@ -1,4 +1,4 @@
-import { FileText, X, RotateCcw, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, X, RotateCcw, AlertCircle, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AttachedFile } from '@/types/attachedFile';
