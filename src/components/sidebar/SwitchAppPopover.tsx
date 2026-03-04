@@ -7,9 +7,9 @@ interface SwitchAppPopoverProps {
 }
 
 const apps = [
-  { id: 'cnp', name: 'Onboarding...', initials: 'CNP', color: 'bg-[#2DD4BF]' },
+  { id: 'cnp', name: 'Onboarding', initials: 'CNP', color: 'bg-[#2DD4BF]' },
   { id: 'sop', name: 'SOP AI', initials: 'SOP', color: 'bg-[#F472B6]' },
-  { id: 'ferti', name: 'Ferti AI', initials: 'SN', color: 'bg-[#2DD4BF]' },
+  { id: 'otto-notes', name: 'Otto Notes', initials: 'ON', color: 'bg-[#2DD4BF]', current: true },
   { id: 'pulse', name: 'Otto Pulse', initials: 'NPS', color: 'bg-[#F59E0B]' },
 ];
 
@@ -40,23 +40,35 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
       side="right" 
       align="end"
       sideOffset={8}
-      className="w-56 p-5 bg-white border border-border/50 shadow-xl rounded-2xl"
+      className="w-52 p-3 bg-card border border-border/50 shadow-xl rounded-2xl"
     >
-      <div className="grid grid-cols-2 gap-3">
+      <p className="px-2 pb-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-[0.1em]">
+        Switch to
+      </p>
+      <div className="grid grid-cols-2 gap-2">
         {apps.map((app) => (
           <button
             key={app.id}
             onClick={() => handleAppClick(app.id)}
-            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-muted/50 transition-colors"
+            className={`
+              relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl 
+              border transition-all duration-200
+              ${app.current 
+                ? 'bg-muted/60 border-border' 
+                : 'border-transparent hover:bg-muted/50 hover:border-border'}
+            `}
           >
+            {app.current && (
+              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
+            )}
             <div className={`
-              w-14 h-14 rounded-full ${app.color} 
+              w-10 h-10 rounded-xl ${app.color} 
               flex items-center justify-center 
-              text-white text-[11px] font-bold shadow-sm
+              text-white text-[10px] font-bold shadow-sm
             `}>
               {app.initials}
             </div>
-            <span className="text-xs text-foreground/80 font-medium text-center truncate w-full">
+            <span className="text-[11px] text-foreground/80 font-medium text-center truncate w-full">
               {app.name}
             </span>
           </button>
