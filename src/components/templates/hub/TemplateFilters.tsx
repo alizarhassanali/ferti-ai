@@ -105,6 +105,7 @@ export const TemplateFilters = ({
         value={specialty}
         options={specialtyOptions}
         onChange={onSpecialtyChange}
+        dropdownClassName="min-w-[340px]"
       />
       <FilterPill
         icon={<FolderOpen className="h-4 w-4" />}
