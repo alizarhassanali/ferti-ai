@@ -17,45 +17,44 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
     <div
       title={file.name}
       className={cn(
-        "relative flex flex-col items-center gap-1 p-2 rounded-lg border w-[130px] min-w-[130px] transition-all",
+        "relative flex items-center gap-2 px-2.5 py-1.5 rounded-md border transition-all",
         isError ? "border-destructive/40 bg-destructive/5" : "border-border bg-muted/50",
         isProcessing && "border-primary/30 bg-primary/5"
       )}
     >
+      {/* Icon */}
+      <div className="flex-shrink-0">
+        {isProcessing ? (
+          <Loader2 className="h-4 w-4 text-primary animate-spin" />
+        ) : isError ? (
+          <AlertCircle className="h-4 w-4 text-destructive" />
+        ) : (
+          <FileText className="h-4 w-4 text-muted-foreground" />
+        )}
+      </div>
+
+      {/* Truncated filename */}
+      <span className="text-xs text-foreground truncate max-w-[100px] leading-tight">
+        {file.name}
+      </span>
+
       {/* Remove button */}
       <Button
         variant="ghost"
         size="sm"
-        className="absolute -top-1.5 -right-1.5 h-5 w-5 p-0 rounded-full bg-muted border border-border hover:bg-destructive/10"
+        className="flex-shrink-0 h-4 w-4 p-0 rounded-full hover:bg-destructive/10 ml-0.5"
         onClick={() => onRemove(file.id)}
       >
         <X className="h-3 w-3" />
       </Button>
 
-      {/* Icon area */}
-      <div className="relative h-8 w-8 flex items-center justify-center">
-        {isProcessing ? (
-          <Loader2 className="h-5 w-5 text-primary animate-spin" />
-        ) : isError ? (
-          <AlertCircle className="h-5 w-5 text-destructive" />
-        ) : (
-          <FileText className="h-5 w-5 text-muted-foreground" />
-        )}
-      </div>
-
-      {/* Truncated filename */}
-      <span className="text-xs text-foreground truncate w-full text-center leading-tight">
-        {file.name}
-      </span>
-
       {/* Error retry */}
       {isError && onRetry && (
         <button
-          className="text-[10px] text-destructive hover:underline flex items-center gap-0.5"
+          className="text-[10px] text-destructive hover:underline flex items-center gap-0.5 flex-shrink-0"
           onClick={() => onRetry(file.id)}
         >
           <RotateCcw className="h-2.5 w-2.5" />
-          Retry
         </button>
       )}
     </div>
