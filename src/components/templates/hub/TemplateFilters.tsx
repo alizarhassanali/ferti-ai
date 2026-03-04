@@ -52,7 +52,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="min-w-[160px] bg-white border border-border shadow-lg rounded-xl p-1.5 z-50"
+        className={cn("min-w-[160px] bg-white border border-border shadow-lg rounded-xl p-1.5 z-50", dropdownClassName)}
       >
         {options.map((option) => (
           <DropdownMenuItem 
