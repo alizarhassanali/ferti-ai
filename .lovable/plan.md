@@ -1,40 +1,20 @@
 
 
-## Update Specialty Filter Options in Template Hub
+## Remove Shadow from Letters Tab Pills
 
-### Changes
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**1. `src/data/hubTemplates.ts`** — Replace `specialtyOptions` array with the full list from the screenshots:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-```ts
-export const specialtyOptions = [
-  'All',
-  'Admin Assistant',
-  'Andrologist',
-  'Endocrinologist',
-  'Fellow',
-  'General Practitioner',
-  'Lab Director',
-  'Medical Director',
-  'Medical Office Admin',
-  'Nurse',
-  'Nurse Manager',
-  'Nurse Office Assistant',
-  'Obstetrician-Gynecologist',
-  'Obstetrics and Gynecology Specialist',
-  'Patient Care Coordinator',
-  'Physician',
-  'Physician Assistant',
-  'Physician Dispensary Coordinator',
-  'Referral Coordinator',
-  'Medical Office Assistant',
-  'Reproductive Endocrinologist And Infertility',
-  'Reproductive Endocrinologist and Fertility',
-  'Resource Nurse',
-  'Senior Embryologist',
-  'Urologist',
-] as const;
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-**2. `src/components/templates/hub/TemplateFilters.tsx`** — Widen the specialty dropdown content so long names fit on one line. Add a `minWidth` override specifically for the specialty filter, e.g. `min-w-[320px]` on the `DropdownMenuContent`. This can be done by passing an optional `dropdownClassName` prop to `FilterPill` and applying it only for the Specialty pill.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

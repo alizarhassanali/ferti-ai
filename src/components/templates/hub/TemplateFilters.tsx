@@ -26,9 +26,10 @@ interface FilterPillProps {
   options: readonly string[];
   onChange: (value: string) => void;
   isActive?: boolean;
+  dropdownClassName?: string;
 }
 
-const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterPillProps) => {
+const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName }: FilterPillProps) => {
   const hasActiveFilter = value !== 'All' && value !== 'Most Popular';
   
   return (
@@ -51,7 +52,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="min-w-[160px] bg-white border border-border shadow-lg rounded-xl p-1.5 z-50"
+        className={cn("min-w-[160px] bg-white border border-border shadow-lg rounded-xl p-1.5 z-50", dropdownClassName)}
       >
         {options.map((option) => (
           <DropdownMenuItem 
@@ -104,6 +105,7 @@ export const TemplateFilters = ({
         value={specialty}
         options={specialtyOptions}
         onChange={onSpecialtyChange}
+        dropdownClassName="min-w-[340px]"
       />
       <FilterPill
         icon={<FolderOpen className="h-4 w-4" />}
