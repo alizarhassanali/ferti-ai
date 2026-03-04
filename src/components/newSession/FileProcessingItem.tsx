@@ -41,6 +41,13 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
         {file.name}
       </span>
 
+      {/* Status label */}
+      {isProcessing && (
+        <span className="text-[10px] text-muted-foreground flex-shrink-0">
+          {file.status === 'uploading' ? 'Uploading…' : 'Reading…'}
+        </span>
+      )}
+
       {/* Remove button */}
       <Button
         variant="ghost"
