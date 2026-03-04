@@ -45,7 +45,7 @@ export const TwoColumnLayout = ({
   const [rightView, setRightView] = useState<'context' | 'note'>('context');
   
   // Label for left pane based on recording mode
-  const leftPaneLabel = recordingMode === 'dictate' ? 'Dictate' : 'Transcript';
+  const leftPaneLabel = recordingMode === 'dictate' ? 'Dictation' : 'Transcript';
 
   return (
     <div className="flex flex-col h-full">
