@@ -1,19 +1,20 @@
 
 
-## Polish Switch App Popover
+## Remove Shadow from Letters Tab Pills
 
-### Changes — `src/components/sidebar/SwitchAppPopover.tsx`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**1. Update app list** (remove Otto Notes since it's the current app):
-- Onboarding Platform (CNP)
-- Fertiwise (FF)
-- SOP AI (SOP)
-- Otto Pulse (OP)
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**2. Uniform styling:**
-- All icons use the same dark navy `bg-[#263F6A]` color
-- Shrink icons from `w-10 h-10` to `w-9 h-9`, keep `rounded-full`
-- Remove `current` app logic and indicator dot (current app no longer in list)
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**3. Keep existing popover container styling** (`p-3`, `rounded-2xl`, `bg-card`, etc.)
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
