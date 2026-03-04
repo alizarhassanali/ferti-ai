@@ -6,6 +6,16 @@ import { SessionInfoBar } from "@/components/newSession/SessionInfoBar";
 import { TwoColumnLayout } from "@/components/newSession/TwoColumnLayout";
 import { AskAIInput } from "@/components/newSession/AskAIInput";
 import { ConsentPopupDialog } from "@/components/newSession/ConsentPopupDialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import { Patient, RecordingMode, NoteTab, Session } from "@/types/session";
 import { useToast } from "@/hooks/use-toast";
 import { useSessions } from "@/contexts/SessionsContext";
@@ -34,6 +44,7 @@ const NewSession = () => {
   } = usePatients();
   const { privacySettings } = useSettings();
   const [showConsentDialog, setShowConsentDialog] = useState(false);
+  const [showRestartDialog, setShowRestartDialog] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(() => {
     return searchParams.get("id");
   });
@@ -154,7 +165,14 @@ const NewSession = () => {
     }
     return () => clearInterval(interval);
   }, [isRecording, isPaused]);
-  const startRecording = useCallback(() => {
+  const startRecording = useCallback((clearTranscript = false) => {
+    if (clearTranscript) {
+      if (recordingMode === 'transcribe') {
+        setTranscriptContent("");
+      } else {
+        setDictationContent("");
+      }
+    }
     setRecordingDuration(0);
     setIsPaused(false);
     setIsRecording(true);
@@ -166,7 +184,17 @@ const NewSession = () => {
 
   const handleToggleRecording = useCallback(() => {
     if (!isRecording) {
-      // Starting recording - check if consent popup is enabled
+      // Check if there's existing content
+      const hasExistingContent = recordingMode === 'transcribe'
+        ? transcriptContent.trim().length > 0
+        : dictationContent.trim().length > 0;
+
+      if (hasExistingContent) {
+        setShowRestartDialog(true);
+        return;
+      }
+
+      // No existing content - check consent then start
       if (privacySettings.consentPopupEnabled) {
         setShowConsentDialog(true);
       } else {
@@ -181,7 +209,25 @@ const NewSession = () => {
         description: "Your recording has been saved."
       });
     }
-  }, [isRecording, privacySettings.consentPopupEnabled, startRecording, toast]);
+  }, [isRecording, recordingMode, transcriptContent, dictationContent, privacySettings.consentPopupEnabled, startRecording, toast]);
+
+  const handleRestartKeep = useCallback(() => {
+    setShowRestartDialog(false);
+    if (privacySettings.consentPopupEnabled) {
+      setShowConsentDialog(true);
+    } else {
+      startRecording(false);
+    }
+  }, [privacySettings.consentPopupEnabled, startRecording]);
+
+  const handleRestartFresh = useCallback(() => {
+    setShowRestartDialog(false);
+    if (privacySettings.consentPopupEnabled) {
+      setShowConsentDialog(true);
+    } else {
+      startRecording(true);
+    }
+  }, [privacySettings.consentPopupEnabled, startRecording]);
 
   const handleTogglePause = useCallback(() => {
     setIsPaused(prev => {
@@ -325,6 +371,27 @@ const NewSession = () => {
         onOpenChange={setShowConsentDialog}
         onConfirm={startRecording}
       />
+
+      {/* Restart Confirmation Dialog */}
+      <AlertDialog open={showRestartDialog} onOpenChange={setShowRestartDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Existing {recordingMode === 'transcribe' ? 'transcript' : 'dictation'} found</AlertDialogTitle>
+            <AlertDialogDescription>
+              You already have content from a previous recording. Would you like to keep it and continue, or start fresh?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-secondary text-secondary-foreground hover:bg-secondary/80" onClick={handleRestartKeep}>
+              Keep &amp; Continue
+            </AlertDialogAction>
+            <AlertDialogAction onClick={handleRestartFresh}>
+              Start Fresh
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>;
 };
 export default NewSession;
