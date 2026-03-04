@@ -59,7 +59,7 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
             `}>
               {app.initials}
             </div>
-            <span className="text-[11px] text-foreground/80 font-medium text-center truncate w-full">
+            <span className="text-[11px] text-foreground/80 font-medium text-center w-full">
               {app.name}
             </span>
           </button>
