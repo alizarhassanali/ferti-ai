@@ -12,6 +12,7 @@ interface FileProcessingItemProps {
 export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingItemProps) => {
   const isProcessing = file.status === 'uploading' || file.status === 'processing';
   const isError = file.status === 'error';
+  const isComplete = file.status === 'complete';
 
   return (
     <div
