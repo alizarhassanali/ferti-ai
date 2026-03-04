@@ -165,7 +165,14 @@ const NewSession = () => {
     }
     return () => clearInterval(interval);
   }, [isRecording, isPaused]);
-  const startRecording = useCallback(() => {
+  const startRecording = useCallback((clearTranscript = false) => {
+    if (clearTranscript) {
+      if (recordingMode === 'transcribe') {
+        setTranscriptContent("");
+      } else {
+        setDictationContent("");
+      }
+    }
     setRecordingDuration(0);
     setIsPaused(false);
     setIsRecording(true);
@@ -177,7 +184,17 @@ const NewSession = () => {
 
   const handleToggleRecording = useCallback(() => {
     if (!isRecording) {
-      // Starting recording - check if consent popup is enabled
+      // Check if there's existing content
+      const hasExistingContent = recordingMode === 'transcribe'
+        ? transcriptContent.trim().length > 0
+        : dictationContent.trim().length > 0;
+
+      if (hasExistingContent) {
+        setShowRestartDialog(true);
+        return;
+      }
+
+      // No existing content - check consent then start
       if (privacySettings.consentPopupEnabled) {
         setShowConsentDialog(true);
       } else {
@@ -192,7 +209,25 @@ const NewSession = () => {
         description: "Your recording has been saved."
       });
     }
-  }, [isRecording, privacySettings.consentPopupEnabled, startRecording, toast]);
+  }, [isRecording, recordingMode, transcriptContent, dictationContent, privacySettings.consentPopupEnabled, startRecording, toast]);
+
+  const handleRestartKeep = useCallback(() => {
+    setShowRestartDialog(false);
+    if (privacySettings.consentPopupEnabled) {
+      setShowConsentDialog(true);
+    } else {
+      startRecording(false);
+    }
+  }, [privacySettings.consentPopupEnabled, startRecording]);
+
+  const handleRestartFresh = useCallback(() => {
+    setShowRestartDialog(false);
+    if (privacySettings.consentPopupEnabled) {
+      setShowConsentDialog(true);
+    } else {
+      startRecording(true);
+    }
+  }, [privacySettings.consentPopupEnabled, startRecording]);
 
   const handleTogglePause = useCallback(() => {
     setIsPaused(prev => {
