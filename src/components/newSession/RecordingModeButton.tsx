@@ -91,7 +91,7 @@ export const RecordingModeButton = ({
               : "bg-white text-foreground/70 hover:bg-sidebar"
           )}
         >
-          Dictating
+          Dictate
         </button>
       </div>
     </div>
