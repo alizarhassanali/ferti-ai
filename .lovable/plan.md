@@ -1,28 +1,20 @@
 
-## Fix Toast Auto-Dismiss and Position
 
-### Problem
-1. The Radix toast (`useToast` from `use-toast.ts`) never auto-dismisses — the `toast()` function creates the toast but never calls `dismiss()` on a timer.
-2. The toast viewport overlaps the browser scrollbar because it's pinned to `right-0`.
+## Remove Shadow from Letters Tab Pills
 
-### Changes
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**1. `src/hooks/use-toast.ts`** — Add auto-dismiss timer
-In the `toast()` function, after dispatching `ADD_TOAST`, add a `setTimeout` that calls `dismiss()` after 2000ms:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-```ts
-// After the dispatch ADD_TOAST block, add:
-setTimeout(() => {
-  dismiss();
-}, TOAST_REMOVE_DELAY);
-```
-
-**2. `src/components/ui/toast.tsx`** — Move viewport left of scrollbar
-Change `ToastViewport` classes from `right-0` to `right-4` so it sits inside the app content area, away from the scrollbar:
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
 ```
-"fixed top-0 right-4 z-[100] flex max-h-screen w-full flex-col p-4 md:max-w-[320px]"
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-**3. `src/components/ui/sonner.tsx`** — Adjust Sonner offset too
-Add `offset` prop or adjust the `style` to pull Sonner toasts slightly left as well, ensuring consistency. Add `style={{ right: '16px' }}` or use the `offset` prop.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+
