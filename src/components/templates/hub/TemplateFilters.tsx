@@ -27,9 +27,14 @@ interface FilterPillProps {
   onChange: (value: string) => void;
   isActive?: boolean;
   dropdownClassName?: string;
+  hideLabel?: boolean;
 }
 
-const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName }: FilterPillProps) => {
+const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName, hideLabel }: FilterPillProps) => {
+  const isDefault = value === 'All';
+  const showLabel = !hideLabel && isDefault;
+  const showValue = hideLabel || !isDefault;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,8 +46,8 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
           )}
         >
           {icon}
-          <span>{label}</span>
-          <span className="text-xs max-w-[80px] truncate inline-block">{value}</span>
+          {showLabel && <span>{label}</span>}
+          {showValue && <span className="text-xs max-w-[80px] truncate inline-block">{value}</span>}
           <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </button>
       </DropdownMenuTrigger>
