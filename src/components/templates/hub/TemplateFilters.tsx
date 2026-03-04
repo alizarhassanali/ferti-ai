@@ -30,8 +30,6 @@ interface FilterPillProps {
 }
 
 const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName }: FilterPillProps) => {
-  const hasActiveFilter = value !== 'All' && value !== 'Most Popular';
-  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,9 +37,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
           className={cn(
             "inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all",
             "border shadow-sm hover:shadow-md",
-            hasActiveFilter
-              ? "bg-brand text-brand-foreground border-brand hover:bg-brand/90"
-              : "bg-white text-foreground border-primary hover:bg-muted"
+            "bg-white text-foreground border-primary hover:bg-muted"
           )}
         >
           {icon}
