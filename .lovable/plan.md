@@ -1,21 +1,20 @@
 
 
-## Remove Gray Box from Filter Pills
+## Remove Shadow from Letters Tab Pills
 
-**File:** `src/components/templates/hub/TemplateFilters.tsx`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**Change:** Lines 48-55 — remove the `bg-muted`, `rounded-md`, and `px-1.5 py-0.5` styling from the value `<span>`, replacing it with plain inline text that inherits the pill's text color.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-```tsx
-// Before
-<span className={cn(
-  "text-xs px-1.5 py-0.5 rounded-md",
-  hasActiveFilter ? "bg-white/20 text-brand-foreground" : "bg-muted text-muted-foreground"
-)}>
-  {value}
-</span>
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-// After
-<span className="text-xs">{value}</span>
 ```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

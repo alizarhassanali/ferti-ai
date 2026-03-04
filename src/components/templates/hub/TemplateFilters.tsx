@@ -45,14 +45,7 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive }: FilterP
         >
           {icon}
           <span>{label}</span>
-          <span className={cn(
-            "text-xs px-1.5 py-0.5 rounded-md",
-            hasActiveFilter
-              ? "bg-white/20 text-brand-foreground"
-              : "bg-muted text-muted-foreground"
-          )}>
-            {value}
-          </span>
+          <span className="text-xs">{value}</span>
           <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </button>
       </DropdownMenuTrigger>
