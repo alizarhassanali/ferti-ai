@@ -1,20 +1,18 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Truncate Selected Specialty Value in Filter Pills
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**File:** `src/components/templates/hub/TemplateFilters.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+**Change:** Add a max-width and truncate class to the value `<span>` inside `FilterPill` so long specialty names get truncated with an ellipsis, keeping the pill a consistent size.
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+```tsx
+// Before (line ~48)
+<span className="text-xs">{value}</span>
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+// After
+<span className="text-xs max-w-[80px] truncate inline-block">{value}</span>
 ```
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+This ensures pills like "Reproductive Endocrinologist And Infertility" won't stretch the pill — they'll show as "Reproductive E…" instead.
 
