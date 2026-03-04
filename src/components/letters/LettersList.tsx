@@ -27,18 +27,22 @@ export const LettersList = () => {
     );
   };
 
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
-    });
+  const getOrdinalSuffix = (day: number) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th';
+    }
+  };
+
+  const formatGroupDate = (date: Date) => {
+    const day = date.getDate();
+    return `${day}${getOrdinalSuffix(day)} ${format(date, "MMM ''yy")}`;
   };
 
   const groupByDate = (lettersList: typeof letters) => {
     const grouped: Record<string, typeof letters> = {};
     lettersList.forEach(letter => {
-      const dateKey = formatDate(letter.sessionDate);
+      const dateKey = format(new Date(letter.sessionDate), 'yyyy-MM-dd');
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
