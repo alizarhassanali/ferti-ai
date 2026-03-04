@@ -66,14 +66,22 @@ export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
+  const getOrdinalSuffix = (day: number) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th';
+    }
+  };
+
+  const formatGroupDate = (date: Date) => {
+    const day = date.getDate();
+    return `${day}${getOrdinalSuffix(day)} ${format(date, "MMM ''yy")}`;
+  };
+
   const groupSessionsByDate = (sessionsList: typeof sessions) => {
     const grouped: Record<string, typeof sessions> = {};
     sessionsList.forEach(session => {
-      const dateKey = new Date(session.date).toLocaleDateString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric'
-      });
+      const dateKey = format(new Date(session.date), 'yyyy-MM-dd');
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
