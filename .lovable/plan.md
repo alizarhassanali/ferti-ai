@@ -1,20 +1,20 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Fix Switch App Popover
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**File:** `src/components/sidebar/SwitchAppPopover.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+Three changes:
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+1. **Remove truncate** from the app name `<span>` (line 62) — allow text to wrap naturally
+2. **Change Fertiwise initials** from `'FF'` to `'FW'` (line 11)
+3. **"Onboarding Platform"** will naturally wrap to two lines once truncate is removed — "Onboarding" on top, "Platform" below — since the grid cell is narrow enough.
 
+```tsx
+// Line 11: Change FF → FW
+{ id: 'fertiwise', name: 'Fertiwise', initials: 'FW', color: 'bg-[#263F6A]' },
+
+// Line 62: Remove truncate, allow wrap
+<span className="text-[11px] text-foreground/80 font-medium text-center w-full">
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
