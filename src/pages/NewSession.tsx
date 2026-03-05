@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SessionHeaderRow } from "@/components/newSession/SessionHeaderRow";
@@ -72,6 +72,7 @@ const NewSession = () => {
   const [activeNoteTabId, setActiveNoteTabId] = useState("1");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
+  const pendingClearTranscript = useRef(false);
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
@@ -213,6 +214,7 @@ const NewSession = () => {
 
   const handleRestartKeep = useCallback(() => {
     setShowRestartDialog(false);
+    pendingClearTranscript.current = false;
     if (privacySettings.consentPopupEnabled) {
       setShowConsentDialog(true);
     } else {
@@ -222,6 +224,7 @@ const NewSession = () => {
 
   const handleRestartFresh = useCallback(() => {
     setShowRestartDialog(false);
+    pendingClearTranscript.current = true;
     if (privacySettings.consentPopupEnabled) {
       setShowConsentDialog(true);
     } else {
@@ -369,7 +372,7 @@ const NewSession = () => {
       <ConsentPopupDialog
         open={showConsentDialog}
         onOpenChange={setShowConsentDialog}
-        onConfirm={startRecording}
+        onConfirm={() => startRecording(pendingClearTranscript.current)}
       />
 
       {/* Restart Confirmation Dialog */}
