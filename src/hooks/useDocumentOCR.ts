@@ -81,7 +81,7 @@ export const useDocumentOCR = () => {
     setFiles(prev => {
       const remaining = MAX_ATTACHMENTS - prev.length;
       if (remaining <= 0) {
-        showErrorToast("You can add 15 attachments at most.");
+        toast({ title: "You can add 15 attachments at most." });
         return prev;
       }
 
