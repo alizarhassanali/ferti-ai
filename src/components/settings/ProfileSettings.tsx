@@ -108,8 +108,8 @@ export const ProfileSettings = () => {
         {/* Account Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-4">Account</h4>
-          <div>
-            <Label className="text-sm font-medium mb-1 block">Email</Label>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium">Email</Label>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
         </div>
@@ -213,7 +213,7 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Phone Number */}
-          <div className="mb-6">
+          <div className="mb-4">
             <Label className="text-sm font-medium mb-2 block">Phone number</Label>
             <div className="flex gap-2">
               <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
@@ -233,7 +233,7 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Language & Time Fields */}
-          <div className="pt-6 mb-6">
+          <div className="mb-4">
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>

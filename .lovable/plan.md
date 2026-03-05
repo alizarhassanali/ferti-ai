@@ -1,18 +1,20 @@
 
 
-## Fix Profile Settings Layout
+## Remove Shadow from Letters Tab Pills
 
-**File: `src/components/settings/ProfileSettings.tsx`**
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-Two changes:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-1. **Account section (lines 111-114)**: Put "Email" label and email value on the same line using a flex row instead of stacked layout:
-```tsx
-<div className="flex items-center gap-2">
-  <Label className="text-sm font-medium">Email</Label>
-  <p className="text-sm text-muted-foreground">{user.email}</p>
-</div>
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-2. **Fix spacing between Phone Number and Display Language (lines 233-236)**: The phone number section has `mb-6` and the language section has `pt-6`, creating double spacing. Remove `pt-6` from the language div (line 236) to make spacing consistent with the gap between Title/Specialty rows (which use the parent `space-y` or `mb-4`). Change `mb-6` on phone number div to `mb-4` to match other field spacing.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
