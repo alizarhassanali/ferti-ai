@@ -66,13 +66,19 @@ export const TwoColumnLayout = ({
               )}>
                 <span className="text-sm font-medium">{leftPaneLabel}</span>
               </div>
-              {isRecording && (
+              {isRecording && !isPaused && (
                 <div className="ml-auto flex items-center gap-2">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                   </span>
                   <span className="text-sm text-muted-foreground">Recording...</span>
+                </div>
+              )}
+              {isRecording && isPaused && (
+                <div className="ml-auto flex items-center gap-2">
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                  <span className="text-sm text-amber-500">Paused</span>
                 </div>
               )}
             </div>
