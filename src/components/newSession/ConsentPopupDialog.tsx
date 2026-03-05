@@ -49,7 +49,7 @@ export const ConsentPopupDialog = ({
             using this tool for our visit today?
           </p>
         </DialogBody>
-        <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+        <DialogFooter className="flex flex-col gap-2 sm:flex-col border-0 bg-transparent">
           <Button onClick={handleConfirm} className="w-full">
             Consent provided
           </Button>

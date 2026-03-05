@@ -1,21 +1,20 @@
 
 
-## Fix Consent Popup Animation and Divider
+## Remove Shadow from Letters Tab Pills
 
-### Problems
-1. **Slide-in animation**: The `DialogOverlay` uses `animate-fade-in` which includes a `translateY(-8px)` transform — this can cause a visual shift. The content uses `animate-scale-in`/`animate-scale-out` which are centered scale animations and should be fine, but the overlay shift may give a "sliding" feel.
-2. **Divider line**: `DialogFooter` in `dialog.tsx` includes `border-t border-border` — this adds the unwanted divider between body and buttons.
-3. **Footer background tint**: `DialogFooter` has `bg-muted/30` which adds a subtle background that differs from the screenshot.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Fix in `src/components/newSession/ConsentPopupDialog.tsx`
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-Override the `DialogFooter` className to remove the border and background:
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-```tsx
-<DialogFooter className="flex flex-col gap-2 sm:flex-col border-0 bg-transparent">
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-This keeps the global `DialogFooter` styling intact for other dialogs while making the consent popup match the screenshot (no divider, no background tint on footer).
-
-The animation issue is minor — the `scale-in` animation on `DialogContent` is a standard center-scale popup. If it still feels like a slide, we can also ensure the overlay `animate-fade-in` doesn't include the `translateY` shift by overriding the overlay animation class, but this is likely acceptable as-is since the content itself scales from center.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
