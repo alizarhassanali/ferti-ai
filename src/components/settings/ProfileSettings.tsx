@@ -108,8 +108,8 @@ export const ProfileSettings = () => {
         {/* Account Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-4">Account</h4>
-          <div>
-            <Label className="text-sm font-medium mb-1 block">Email</Label>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm font-medium">Email</Label>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
         </div>
