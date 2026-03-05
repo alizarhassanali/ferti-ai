@@ -213,7 +213,7 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Phone Number */}
-          <div className="mb-6">
+          <div className="mb-4">
             <Label className="text-sm font-medium mb-2 block">Phone number</Label>
             <div className="flex gap-2">
               <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
