@@ -130,7 +130,7 @@ export const ProfileSettings = () => {
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Upload a JPG or PNG image up to 5MB.
+                  Upload a JPG, PNG, GIF, or WebP image up to 5MB.
                 </p>
                 <label htmlFor="image-upload">
                   <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
