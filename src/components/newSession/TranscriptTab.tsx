@@ -6,9 +6,10 @@ interface TranscriptTabProps {
   content: string;
   onContentChange: (content: string) => void;
   isRecording: boolean;
+  isPaused?: boolean;
 }
 
-export const TranscriptTab = ({ content, onContentChange, isRecording }: TranscriptTabProps) => {
+export const TranscriptTab = ({ content, onContentChange, isRecording, isPaused }: TranscriptTabProps) => {
   return (
     <div className="flex flex-col h-full p-4">
       {/* Toolbar */}
