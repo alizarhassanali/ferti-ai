@@ -1,20 +1,20 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Add Paste Hint to File Attachment Area
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+The most natural place is inside the existing drag-and-drop zone (line 540). Update the text from:
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+> "Drag and drop files here or click to attach"
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+to:
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+> "Drag & drop, click to attach, or paste (Ctrl+V) screenshots"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
+This keeps it discoverable without adding extra UI elements. The hint sits right where users interact with attachments.
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**File: `src/components/newSession/RightColumnPanel.tsx`** (line 540)
+- Change the span text to include the paste shortcut hint
+
+**File: `src/components/newSession/ContextTab.tsx`** (line 85, same pattern)
+- Update the matching text there too for consistency
 
