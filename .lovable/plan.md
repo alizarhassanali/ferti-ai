@@ -1,33 +1,20 @@
 
 
-## Add Dummy Users & "Created At" Column to User Management
+## Remove Shadow from Letters Tab Pills
 
-### 1. Add fallback dummy data in `useTeamMembers` hook
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-When the database returns empty results (no auth / no real data), fall back to a hardcoded array of ~10 dummy team members matching the screenshot names (Ahmed Mustafa, Gary Nakhuda, Hassan Jamil, Sami Sohail, etc.) with varied roles, statuses, and `created_at` dates.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-### 2. Add "Created At" column + "Actions" column to table
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**File: `src/components/settings/UserManagement/UserManagementList.tsx`**
-
-- Add `created_at` as a sortable column header with `ArrowUpDown` icon
-- Format dates as `MM/DD/YYYY` using `date-fns` `format()`
-- Add "Actions" column with a `MoreVertical` (⋮) icon button per row containing a dropdown with "Edit user" and "Disable user" options (non-functional for now, just UI)
-- Update `SortField` type to include `'created_at'`
-- Update `colSpan` from 4 to 6 for empty/loading/error states
-- Add sorting logic for `created_at` field
-
-### 3. Add `created_at` to `TeamMember` type
-
-The type already has `created_at: string` — no change needed.
-
-### Dummy data sample
-
-```ts
-const DUMMY_MEMBERS: TeamMember[] = [
-  { id: '1', first_name: 'Ahmed', last_name: 'Mustafa', email: 'ahmed.mustufa@thefertilitypartners.com', role: 'physician', status: 'active', created_at: '2024-03-11', ... },
-  { id: '2', first_name: 'Gary', last_name: 'Nakhuda', email: 'gary.nakhuda@thefertilitypartners.com', role: 'admin', status: 'active', created_at: '2026-01-30', ... },
-  // ... ~8 more matching the screenshot
-];
 ```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

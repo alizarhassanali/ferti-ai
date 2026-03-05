@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical } from 'lucide-react';
+import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +25,7 @@ interface UserManagementListProps {
   onAddMember: () => void;
 }
 
-type SortField = 'name' | 'status';
+type SortField = 'name' | 'status' | 'created_at';
 type SortDirection = 'asc' | 'desc';
 
 const statusOptions = [
@@ -91,6 +92,8 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
         comparison = nameA.localeCompare(nameB);
       } else if (sortField === 'status') {
         comparison = a.status.localeCompare(b.status);
+      } else if (sortField === 'created_at') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       }
       return sortDirection === 'asc' ? comparison : -comparison;
     });
@@ -196,24 +199,34 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                   <ArrowUpDown className="h-4 w-4" />
                 </button>
               </TableHead>
+              <TableHead>
+                <button
+                  onClick={() => handleSort('created_at')}
+                  className="flex items-center gap-1 hover:text-foreground transition-colors"
+                >
+                  Created At
+                  <ArrowUpDown className="h-4 w-4" />
+                </button>
+              </TableHead>
+              <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Loading team members...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-destructive">
+                <TableCell colSpan={6} className="text-center py-8 text-destructive">
                   {error}
                 </TableCell>
               </TableRow>
             ) : sortedMembers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No team members found
                 </TableCell>
               </TableRow>
@@ -233,6 +246,22 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                     <Badge variant={getStatusBadgeVariant(member.status)}>
                       {getStatusLabel(member.status)}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {format(new Date(member.created_at), 'MM/dd/yyyy')}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-popover">
+                        <DropdownMenuItem>Edit user</DropdownMenuItem>
+                        <DropdownMenuItem>Disable user</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
