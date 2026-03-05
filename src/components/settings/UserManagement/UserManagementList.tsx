@@ -274,9 +274,16 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                           <Pencil className="h-4 w-4" />
                           Edit user
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive">
-                          <Trash2 className="h-4 w-4" />
+                        <DropdownMenuItem className="gap-2">
+                          <Ban className="h-4 w-4" />
                           Disable user
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="gap-2 text-destructive focus:text-destructive"
+                          onClick={() => setMemberToDelete(member)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete user
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
