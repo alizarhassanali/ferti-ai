@@ -9,7 +9,7 @@ const SettingsContent = () => {
   const { isSessionsPanelVisible } = useSessionsPanel();
 
   return (
-    <div className="flex flex-1 min-w-0">
+    <div className="flex flex-1 min-w-0 h-full overflow-hidden">
       {/* Show either sessions panel or settings middle pane */}
       {isSessionsPanelVisible ? (
         <div className="w-80 flex-shrink-0 h-screen">
