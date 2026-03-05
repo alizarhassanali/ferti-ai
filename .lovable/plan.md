@@ -1,20 +1,26 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Fix Double Scrollbar on Settings/Profile Page
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Problem
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+There are two nested scrollable containers creating a double-scroll issue:
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+1. **AppLayout** (line 37): `<div className="flex-1 overflow-y-auto">` — wraps all children with scroll
+2. **RightPane** (line 29): `<div className="flex-1 h-screen overflow-y-auto">` — also has its own scroll
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+The `SettingsContent` div also has no height constraint, so it expands naturally within the AppLayout scroller, while RightPane independently sets `h-screen overflow-y-auto`, creating a second scroll context.
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
+### Fix
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**File: `src/components/settings/RightPane.tsx`** (line 29)
+- Change `h-screen overflow-y-auto` to `h-full overflow-y-auto` so it fills its parent instead of forcing viewport height
+
+**File: `src/pages/Settings.tsx`** (line 12)
+- Change `<div className="flex flex-1 min-w-0">` to `<div className="flex flex-1 min-w-0 h-full overflow-hidden">` so the settings content fills the AppLayout scroll area and lets only the RightPane scroll internally
+
+**File: `src/components/layout/AppLayout.tsx`** (line 37)
+- Change `overflow-y-auto` to `overflow-hidden` on the children wrapper so it doesn't create its own scrollbar — the RightPane handles scrolling itself
+
+This ensures only one scroll context: the RightPane.
 
