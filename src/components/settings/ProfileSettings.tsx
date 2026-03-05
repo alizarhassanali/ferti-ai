@@ -186,6 +186,7 @@ export const ProfileSettings = () => {
                   <SelectItem value="OB/GYN">OB/GYN</SelectItem>
                   <SelectItem value="Urologist">Urologist</SelectItem>
                   <SelectItem value="Embryologist">Embryologist</SelectItem>
+                  <SelectItem value="Senior Embryologist">Senior Embryologist</SelectItem>
                 </SelectContent>
               </Select>
             </div>
