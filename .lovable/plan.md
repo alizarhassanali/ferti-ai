@@ -1,12 +1,20 @@
 
 
-## Fix Save Changes Button & Remove Divider
+## Remove Shadow from Letters Tab Pills
 
-Apologies for the unnecessary changes. Two quick fixes:
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**File: `src/components/settings/ProfileSettings.tsx`**
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-1. **Line 268**: Remove `border-t border-border` from the button container div — changing `"flex items-center gap-3 pt-6 border-t border-border"` to `"flex items-center gap-3 pt-6"`
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-2. **Line 269**: Revert the Save Changes button to use the default variant (no custom className) — just use `<Button onClick={handleSave} ...>` without the `className="bg-primary..."` override, so it uses the default salmon/brand color from the button variants.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

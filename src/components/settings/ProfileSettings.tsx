@@ -265,8 +265,8 @@ export const ProfileSettings = () => {
         </div>
 
         {/* Save / Cancel Buttons */}
-        <div className="flex items-center gap-3 pt-6 border-t border-border">
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={handleSave} disabled={!hasChanges || localSaving || isSaving}>
+        <div className="flex items-center gap-3 pt-6">
+          <Button onClick={handleSave} disabled={!hasChanges || localSaving || isSaving}>
             {localSaving || isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
           <Button variant="outline" onClick={handleCancel} disabled={!hasChanges || localSaving || isSaving}>
