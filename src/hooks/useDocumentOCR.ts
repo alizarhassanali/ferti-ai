@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AttachedFile } from '@/types/attachedFile';
-import { toast } from 'sonner';
+import { showErrorToast } from '@/lib/toast';
 
 const MAX_ATTACHMENTS = 15;
 
@@ -81,13 +81,13 @@ export const useDocumentOCR = () => {
     setFiles(prev => {
       const remaining = MAX_ATTACHMENTS - prev.length;
       if (remaining <= 0) {
-        toast.error("You can add 15 attachments at most.");
+        showErrorToast("You can add 15 attachments at most.");
         return prev;
       }
 
       const filesToAdd = newFiles.slice(0, remaining);
       if (filesToAdd.length < newFiles.length) {
-        toast.error("You can add 15 attachments at most.");
+        showErrorToast("You can add 15 attachments at most.");
       }
 
       const fileEntries: AttachedFile[] = filesToAdd.map(file => ({

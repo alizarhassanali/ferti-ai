@@ -1,15 +1,20 @@
 
-## Fix Toast Design Inconsistency for Attachment Limit
 
-### Issue
-`src/hooks/useDocumentOCR.ts` calls `toast.error()` directly from Sonner (lines 84, 90) instead of using the standardized `showErrorToast()` helper from `src/lib/toast.ts`. This bypasses consistent styling, positioning, and duration settings defined in the global toast system.
+## Remove Shadow from Letters Tab Pills
 
-### Solution
-**File: `src/hooks/useDocumentOCR.ts`**
-1. Import `showErrorToast` from `@/lib/toast` 
-2. Replace the two `toast.error("You can add 15 attachments at most.")` calls (lines 84, 90) with `showErrorToast("You can add 15 attachments at most.")`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-This ensures the attachment limit toast uses the same design tokens (py-2 px-3, text-xs, bg-destructive/10, text-destructive, border-destructive/20, top-right position, 2000ms duration) as all other error toasts in the application.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**Files to change:**
-- `src/hooks/useDocumentOCR.ts` (2 lines modified)
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+
