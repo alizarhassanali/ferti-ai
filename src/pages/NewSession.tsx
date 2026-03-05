@@ -214,6 +214,7 @@ const NewSession = () => {
 
   const handleRestartKeep = useCallback(() => {
     setShowRestartDialog(false);
+    pendingClearTranscript.current = false;
     if (privacySettings.consentPopupEnabled) {
       setShowConsentDialog(true);
     } else {
@@ -223,6 +224,7 @@ const NewSession = () => {
 
   const handleRestartFresh = useCallback(() => {
     setShowRestartDialog(false);
+    pendingClearTranscript.current = true;
     if (privacySettings.consentPopupEnabled) {
       setShowConsentDialog(true);
     } else {
