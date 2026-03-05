@@ -1,5 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AttachedFile } from '@/types/attachedFile';
+import { toast } from 'sonner';
+
+const MAX_ATTACHMENTS = 15;
 
 const DEMO_EXTRACTED_TEXTS = [
   "Patient History: 45-year-old male with type 2 diabetes, hypertension. Current medications: Metformin 1000mg BID, Lisinopril 10mg daily.",
