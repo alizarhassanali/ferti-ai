@@ -1,5 +1,16 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban } from 'lucide-react';
+import { showSuccessToast } from '@/lib/toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -76,6 +87,7 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [roleFilter, setRoleFilter] = useState('all');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
 
   const { members, isLoading, error } = useTeamMembers({
     search,
@@ -262,9 +274,16 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                           <Pencil className="h-4 w-4" />
                           Edit user
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive">
-                          <Trash2 className="h-4 w-4" />
+                        <DropdownMenuItem className="gap-2">
+                          <Ban className="h-4 w-4" />
                           Disable user
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="gap-2 text-destructive focus:text-destructive"
+                          onClick={() => setMemberToDelete(member)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete user
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -275,6 +294,33 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
           </TableBody>
         </Table>
       </div>
+
+      <AlertDialog open={!!memberToDelete} onOpenChange={(open) => !open && setMemberToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to permanently delete{' '}
+              <span className="font-medium text-foreground">
+                {memberToDelete?.first_name} {memberToDelete?.last_name}
+              </span>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                showSuccessToast(`${memberToDelete?.first_name} ${memberToDelete?.last_name} has been deleted.`);
+                setMemberToDelete(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

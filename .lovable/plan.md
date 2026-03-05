@@ -1,21 +1,20 @@
 
 
-## Add Delete User with Confirmation Dialog
+## Remove Shadow from Letters Tab Pills
 
-### Changes to `src/components/settings/UserManagement/UserManagementList.tsx`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-1. **Import** `AlertDialog` components and add a `Ban` icon (for disable) alongside existing `Trash2` (for delete).
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-2. **Add state** to track which member is being deleted (`memberToDelete`).
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-3. **Update the actions dropdown** for each row:
-   - **Edit user** — unchanged (pencil icon)
-   - **Disable user** — remove red/destructive styling, use `Ban` icon, normal text color
-   - **Delete user** — red destructive styling with `Trash2` icon, sets `memberToDelete` state
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-4. **Add an `AlertDialog`** outside the table that shows when `memberToDelete` is set:
-   - Title: "Delete User"
-   - Description: "Are you sure you want to permanently delete {name}? This action cannot be undone."
-   - Cancel button (outline) and Delete button (red/destructive)
-   - On confirm: show a toast for now (no backend wired yet), clear state
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
