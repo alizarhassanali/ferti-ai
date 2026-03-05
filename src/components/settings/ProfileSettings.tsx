@@ -233,7 +233,7 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Language & Time Fields */}
-          <div className="pt-6 mb-6">
+          <div className="mb-4">
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
