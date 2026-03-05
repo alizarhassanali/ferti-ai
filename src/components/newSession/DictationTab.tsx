@@ -17,6 +17,7 @@ export const DictationTab = ({
   content,
   onContentChange,
   isRecording,
+  isPaused,
   smartDictation,
   onSmartDictationChange,
 }: DictationTabProps) => {
