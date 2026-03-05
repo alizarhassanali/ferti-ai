@@ -96,7 +96,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
 
         {/* Files list with processing status */}
         {files.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-3 max-h-[72px] overflow-y-auto flex flex-wrap gap-2 pr-1">
             {files.map(file => (
               <FileProcessingItem
                 key={file.id}
