@@ -1,20 +1,22 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Style "Disable user" Dropdown Item
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**File:** `src/components/settings/UserManagement/UserManagementList.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+**Changes (lines 260-263):**
+- Add a `Pencil` icon (from lucide-react) before "Edit user"
+- Add a `Trash2` icon before "Disable user" and style it with destructive/red coloring using `className="text-destructive focus:text-destructive"`
+- Import `Pencil` and `Trash2` from lucide-react
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
-
+```tsx
+<DropdownMenuItem className="gap-2">
+  <Pencil className="h-4 w-4" />
+  Edit user
+</DropdownMenuItem>
+<DropdownMenuItem className="gap-2 text-destructive focus:text-destructive">
+  <Trash2 className="h-4 w-4" />
+  Disable user
+</DropdownMenuItem>
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
