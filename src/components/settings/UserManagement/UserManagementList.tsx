@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
