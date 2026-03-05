@@ -10,6 +10,7 @@ interface TwoColumnLayoutProps {
   transcriptContent: string;
   onTranscriptChange: (content: string) => void;
   isRecording: boolean;
+  isPaused: boolean;
   contextContent: string;
   onContextChange: (content: string) => void;
   noteTabs: NoteTabType[];
