@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogBody,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,22 +28,37 @@ export const ConsentPopupDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Patient Consent Required</DialogTitle>
-          <DialogDescription className="pt-2">
-            Please confirm that the patient has been informed and has consented
-            to this consultation being recorded and transcribed.
-          </DialogDescription>
+          <DialogTitle>Verbal Consent Script</DialogTitle>
         </DialogHeader>
+        <DialogBody className="space-y-4 text-sm text-muted-foreground">
+          <p>
+            Before we begin, I'd like to use a secure AI documentation tool to
+            assist me. It works by listening to our conversation in real-time to
+            help me draft your medical note.
+          </p>
+          <p>
+            You would have received a disclosure document outlining this system.
+            The system does not keep a permanent recording; the audio is
+            processed into text and then automatically deleted once transcribed
+            to text. This allows me to focus entirely on you instead of my
+            computer screen or notepad.
+          </p>
+          <p>
+            You have the right to say no, or to ask me to turn it off at any
+            time, and it won't affect your care. Are you comfortable with me
+            using this tool for our visit today?
+          </p>
+        </DialogBody>
         <DialogFooter className="flex flex-col gap-2 sm:flex-col">
           <Button onClick={handleConfirm} className="w-full">
-            Consent provided, continue transcribing
+            Consent provided
           </Button>
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="w-full"
+            className="w-full border-0"
           >
-            Cancel
+            Consent not provided
           </Button>
         </DialogFooter>
       </DialogContent>
