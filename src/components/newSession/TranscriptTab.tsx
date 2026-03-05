@@ -6,9 +6,10 @@ interface TranscriptTabProps {
   content: string;
   onContentChange: (content: string) => void;
   isRecording: boolean;
+  isPaused?: boolean;
 }
 
-export const TranscriptTab = ({ content, onContentChange, isRecording }: TranscriptTabProps) => {
+export const TranscriptTab = ({ content, onContentChange, isRecording, isPaused }: TranscriptTabProps) => {
   return (
     <div className="flex flex-col h-full p-4">
       {/* Toolbar */}
@@ -22,13 +23,19 @@ export const TranscriptTab = ({ content, onContentChange, isRecording }: Transcr
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
           <List className="h-4 w-4" />
         </Button>
-        {isRecording && (
+        {isRecording && !isPaused && (
           <div className="ml-auto flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
             <span className="text-sm text-muted-foreground">Recording...</span>
+          </div>
+        )}
+        {isRecording && isPaused && (
+          <div className="ml-auto flex items-center gap-2">
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            <span className="text-sm text-amber-500">Paused</span>
           </div>
         )}
       </div>

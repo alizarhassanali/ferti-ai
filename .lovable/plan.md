@@ -1,25 +1,20 @@
 
 
-## Fix Recording Indicator Showing While Paused
+## Remove Shadow from Letters Tab Pills
 
-The "● Recording..." indicator in the transcript pane only checks `isRecording` and ignores `isPaused`. When paused, it should either hide or show "Paused" instead.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Changes
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/components/newSession/TwoColumnLayout.tsx`**
-- Add `isPaused` to the props interface
-- Change the recording indicator condition from `isRecording` to `isRecording && !isPaused`
-- Optionally show an amber "Paused" indicator when `isRecording && isPaused`
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**`src/components/newSession/TranscriptTab.tsx`**
-- Add `isPaused` prop
-- Same logic: hide the red "Recording..." dot when paused, show amber "Paused" instead
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**Parent component passing props** (likely `NewSession.tsx` or `MainTabsContainer.tsx`)
-- Pass `isPaused` down to `TwoColumnLayout` / `TranscriptTab`
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-**`src/components/newSession/DictationTab.tsx`**
-- Same fix: add `isPaused` prop, update the recording indicator
-
-This ensures the red pulsing dot and "Recording..." text stop when the user pauses, matching the paused state already shown in the top bar.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
