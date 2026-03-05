@@ -1,36 +1,20 @@
 
 
-## Fix Dialog Slide-in Bug
+## Remove Shadow from Letters Tab Pills
 
-### Root Cause
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-The `DialogContent` is centered using Tailwind classes `translate-x-[-50%] translate-y-[-50%]` combined with `left-[50%] top-[50%]`. However, the `scale-in` keyframe sets:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-```css
-transform: scale(0.95) /* at 0% */
-transform: scale(1)    /* at 100% */
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-This **completely replaces** the translate values during animation, so the dialog starts un-centered (bottom-right) and snaps to center when the animation ends and the Tailwind translate classes take effect again.
-
-### Fix
-
-**`tailwind.config.ts`** — Update `scale-in` and `scale-out` keyframes to include the translate centering:
-
-```ts
-"scale-in": {
-  "0%": { opacity: "0", transform: "translate(-50%, -50%) scale(0.95)" },
-  "100%": { opacity: "1", transform: "translate(-50%, -50%) scale(1)" },
-},
-"scale-out": {
-  "0%": { opacity: "1", transform: "translate(-50%, -50%) scale(1)" },
-  "100%": { opacity: "0", transform: "translate(-50%, -50%) scale(0.95)" },
-},
-```
-
-This preserves the centering throughout the animation so the dialog fades/scales smoothly in place.
-
-### Scope
-- Only `tailwind.config.ts` needs to change (2 keyframe objects)
-- All dialogs using `animate-scale-in`/`animate-scale-out` will benefit
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
