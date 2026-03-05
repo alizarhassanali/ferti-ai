@@ -232,13 +232,8 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Language & Time Section - moved here */}
+          {/* Language & Time Fields */}
           <div className="pt-6 mb-6">
-            <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Change the language used in the interface.
-            </p>
-            
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
