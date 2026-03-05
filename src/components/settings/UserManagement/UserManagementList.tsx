@@ -87,6 +87,7 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [roleFilter, setRoleFilter] = useState('all');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
 
   const { members, isLoading, error } = useTeamMembers({
     search,
