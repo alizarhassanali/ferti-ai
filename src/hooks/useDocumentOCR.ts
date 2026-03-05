@@ -1,5 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AttachedFile } from '@/types/attachedFile';
+import { toast } from 'sonner';
+
+const MAX_ATTACHMENTS = 15;
 
 const DEMO_EXTRACTED_TEXTS = [
   "Patient History: 45-year-old male with type 2 diabetes, hypertension. Current medications: Metformin 1000mg BID, Lisinopril 10mg daily.",
@@ -75,19 +78,32 @@ export const useDocumentOCR = () => {
   }, []);
 
   const addFiles = useCallback((newFiles: File[]) => {
-    const fileEntries: AttachedFile[] = newFiles.map(file => ({
-      id: crypto.randomUUID(),
-      name: file.name,
-      size: file.size,
-      status: 'uploading' as const,
-      progress: 0,
-    }));
-    
-    setFiles(prev => [...prev, ...fileEntries]);
-    
-    // Start processing simulation for each file
-    fileEntries.forEach(file => {
-      simulateProcessing(file.id);
+    setFiles(prev => {
+      const remaining = MAX_ATTACHMENTS - prev.length;
+      if (remaining <= 0) {
+        toast.error("You can add 15 attachments at most.");
+        return prev;
+      }
+
+      const filesToAdd = newFiles.slice(0, remaining);
+      if (filesToAdd.length < newFiles.length) {
+        toast.error("You can add 15 attachments at most.");
+      }
+
+      const fileEntries: AttachedFile[] = filesToAdd.map(file => ({
+        id: crypto.randomUUID(),
+        name: file.name,
+        size: file.size,
+        status: 'uploading' as const,
+        progress: 0,
+      }));
+
+      // Start processing simulation for each file
+      fileEntries.forEach(file => {
+        simulateProcessing(file.id);
+      });
+
+      return [...prev, ...fileEntries];
     });
   }, [simulateProcessing]);
 

@@ -1,16 +1,20 @@
 
 
-## Limit Attachments to 15 & Fix Scrolling for Attachment Pills
+## Remove Shadow from Letters Tab Pills
 
-### Changes
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**File 1: `src/hooks/useDocumentOCR.ts`** — Add 15-file limit to `addFiles`
-- Before adding files, check if `current files + new files > 15`
-- If over limit, show toast: `"You can add 15 attachments at most."` using `toast.error` from sonner
-- Only add files up to the remaining capacity (e.g., if 12 exist and user drops 5, add only 3)
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**File 2: `src/components/newSession/ContextTab.tsx`** — Cap the attachment pills area to 2 rows with scroll
-- Replace the `flex flex-wrap gap-2` container (line 99) with a `max-h` constrained div + `overflow-y-auto`
-- Each pill is ~32px tall + 8px gap, so 2 rows ≈ 72px → use `max-h-[72px] overflow-y-auto`
-- This prevents the textarea from shrinking as more files are added
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
