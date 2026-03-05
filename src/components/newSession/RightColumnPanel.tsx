@@ -315,7 +315,7 @@ export const RightColumnPanel = ({
   return (
     <div className="flex flex-col h-full">
       {/* Right Pane Header Row - Context/Note toggle only */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
         {/* Context / Note Toggle */}
         <div className="flex items-center gap-1">
           <button
