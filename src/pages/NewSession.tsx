@@ -372,7 +372,7 @@ const NewSession = () => {
       <ConsentPopupDialog
         open={showConsentDialog}
         onOpenChange={setShowConsentDialog}
-        onConfirm={startRecording}
+        onConfirm={() => startRecording(pendingClearTranscript.current)}
       />
 
       {/* Restart Confirmation Dialog */}
