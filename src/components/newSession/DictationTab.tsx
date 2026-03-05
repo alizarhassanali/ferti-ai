@@ -8,6 +8,7 @@ interface DictationTabProps {
   content: string;
   onContentChange: (content: string) => void;
   isRecording: boolean;
+  isPaused?: boolean;
   smartDictation: boolean;
   onSmartDictationChange: (enabled: boolean) => void;
 }
