@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { AttachedFile } from '@/types/attachedFile';
-import { showErrorToast } from '@/lib/toast';
+import { toast } from '@/hooks/use-toast';
 
 const MAX_ATTACHMENTS = 15;
 
