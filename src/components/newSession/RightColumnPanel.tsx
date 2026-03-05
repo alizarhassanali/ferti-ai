@@ -315,7 +315,7 @@ export const RightColumnPanel = ({
   return (
     <div className="flex flex-col h-full">
       {/* Right Pane Header Row - Context/Note toggle only */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
         {/* Context / Note Toggle */}
         <div className="flex items-center gap-1">
           <button
@@ -514,16 +514,11 @@ export const RightColumnPanel = ({
               value={contextContent}
               onChange={(e) => onContextChange(e.target.value)}
               placeholder="Input any additional medical context you want included as part of your note."
-              className="flex-1 min-h-[150px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base bg-white"
+              className="flex-1 min-h-[150px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base"
             />
 
-            {/* Example hint */}
-            <p className="text-sm text-muted-foreground mt-2">
-              Ex: pt 35yoM, Hgb: 13.8, RBC: 4.5, WBC: 4,500
-            </p>
-
             {/* File attachment area - inside Context panel only */}
-            <div className="mt-4 pt-4 border-t border-border">
+            <div className="mt-4">
               <div
                 className={cn(
                   "border-2 border-dashed border-border rounded-lg p-4 text-center",

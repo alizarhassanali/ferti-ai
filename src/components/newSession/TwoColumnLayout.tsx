@@ -55,7 +55,7 @@ export const TwoColumnLayout = ({
         <ResizablePanel defaultSize={40} minSize={25}>
           <div className="flex flex-col h-full border-r border-border">
             {/* Left Pane Header */}
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/30">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
               <div className={cn(
                 "flex items-center gap-2 px-3 py-1 rounded-full",
                 recordingMode === 'dictate' 
@@ -84,7 +84,7 @@ export const TwoColumnLayout = ({
                   ? "Your dictation will appear here as you speak..."
                   : "Your transcript will appear here as you speak or record..."
                 }
-                className="w-full h-full min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed bg-white"
+                className="w-full h-full min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed"
               />
             </div>
           </div>

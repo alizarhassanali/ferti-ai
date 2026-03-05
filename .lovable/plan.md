@@ -1,23 +1,20 @@
 
 
-## Match New Session Page to Screenshot
+## Remove Shadow from Letters Tab Pills
 
-Three changes needed:
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### 1. Remove "Ex: pt..." hint line and its divider
-**File: `src/components/newSession/RightColumnPanel.tsx`**
-- Lines 520-523: Remove the example hint paragraph (`Ex: pt 35yoM...`)
-- Lines 526: Remove the `border-t border-border` from the file attachment area div (remove `pt-4 border-t border-border` classes, keep `mt-4`)
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-### 2. Remove white background from transcript/left pane
-**File: `src/components/newSession/TwoColumnLayout.tsx`**
-- Line 87: Remove `bg-white` from the Textarea className
-- Line 58: Remove `bg-muted/30` from the left pane header div (looking at screenshot, no tinted header background)
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### 3. Remove white background from context panel
-**File: `src/components/newSession/RightColumnPanel.tsx`**
-- Line 517: Remove `bg-white` from the context Textarea className
-- Line 318: Remove `bg-muted/30` from the right pane header div to match screenshot
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-Both panes should use the default `bg-background` instead of explicit white backgrounds, matching the screenshot's appearance.
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
