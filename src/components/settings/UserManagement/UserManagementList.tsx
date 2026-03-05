@@ -25,7 +25,7 @@ interface UserManagementListProps {
   onAddMember: () => void;
 }
 
-type SortField = 'name' | 'status';
+type SortField = 'name' | 'status' | 'created_at';
 type SortDirection = 'asc' | 'desc';
 
 const statusOptions = [
