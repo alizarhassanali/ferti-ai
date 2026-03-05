@@ -72,6 +72,7 @@ const NewSession = () => {
   const [activeNoteTabId, setActiveNoteTabId] = useState("1");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
+  const pendingClearTranscript = useRef(false);
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
