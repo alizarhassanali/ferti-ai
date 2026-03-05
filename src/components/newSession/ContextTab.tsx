@@ -90,7 +90,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
           />
           <div className="flex items-center justify-center gap-2 text-muted-foreground">
             <Paperclip className="h-4 w-4" />
-            <span className="text-sm">Drag and drop files here or click to attach</span>
+            <span className="text-sm">Drag & drop, click to attach, or paste (Ctrl+V) screenshots</span>
           </div>
         </div>
 
