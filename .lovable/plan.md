@@ -1,20 +1,37 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Fix: Start Fresh Not Clearing Transcript
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Root Cause
+When the consent popup flow is active, both "Keep & Continue" and "Start Fresh" paths go through the consent dialog. The `onConfirm` callback is `startRecording` (with no arguments), so `clearTranscript` always defaults to `false` — content is never cleared.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+Even without consent enabled, there may be a stale closure issue since `startRecording` is passed directly.
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+### Fix in `src/pages/NewSession.tsx`
 
+1. **Add a `pendingClearTranscript` ref** (useRef) to remember whether the user chose "Start Fresh" before the consent dialog opens.
+
+2. **Update `handleRestartKeep`**: Set `pendingClearTranscript.current = false` before showing consent or calling `startRecording(false)`.
+
+3. **Update `handleRestartFresh`**: Set `pendingClearTranscript.current = true` before showing consent or calling `startRecording(true)`.
+
+4. **Update the `ConsentPopupDialog` onConfirm**: Instead of passing `startRecording` directly, pass a wrapper that calls `startRecording(pendingClearTranscript.current)`.
+
+```tsx
+// Add ref
+const pendingClearTranscript = useRef(false);
+
+// handleRestartKeep
+pendingClearTranscript.current = false;
+// ... rest unchanged
+
+// handleRestartFresh  
+pendingClearTranscript.current = true;
+// ... rest unchanged
+
+// ConsentPopupDialog onConfirm prop
+onConfirm={() => startRecording(pendingClearTranscript.current)}
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+This ensures the user's choice ("Keep" vs "Fresh") is preserved through the consent dialog flow.
 
