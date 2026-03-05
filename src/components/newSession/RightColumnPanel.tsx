@@ -517,13 +517,8 @@ export const RightColumnPanel = ({
               className="flex-1 min-h-[150px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base"
             />
 
-            {/* Example hint */}
-            <p className="text-sm text-muted-foreground mt-2">
-              Ex: pt 35yoM, Hgb: 13.8, RBC: 4.5, WBC: 4,500
-            </p>
-
             {/* File attachment area - inside Context panel only */}
-            <div className="mt-4 pt-4 border-t border-border">
+            <div className="mt-4">
               <div
                 className={cn(
                   "border-2 border-dashed border-border rounded-lg p-4 text-center",
