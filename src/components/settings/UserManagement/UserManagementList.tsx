@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -258,8 +258,14 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-popover">
-                        <DropdownMenuItem>Edit user</DropdownMenuItem>
-                        <DropdownMenuItem>Disable user</DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2">
+                          <Pencil className="h-4 w-4" />
+                          Edit user
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                          Disable user
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
