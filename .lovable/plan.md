@@ -1,21 +1,20 @@
 
 
-## Redesign Consent Popup to Match Screenshot
+## Remove Shadow from Letters Tab Pills
 
-### What changes
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**`src/components/newSession/ConsentPopupDialog.tsx`** — rewrite content to match the screenshot exactly:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-1. **Title**: Change from "Patient Consent Required" → "Verbal Consent Script"
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-2. **Body**: Replace single description with three paragraphs of the verbal consent script text:
-   - Paragraph 1: "Before we begin, I'd like to use a secure AI documentation tool to assist me. It works by listening to our conversation in real-time to help me draft your medical note."
-   - Paragraph 2: "You would have received a disclosure document outlining this system. The system does not keep a permanent recording; the audio is processed into text and then automatically deleted once transcribed to text. This allows me to focus entirely on you instead of my computer screen or notepad."
-   - Paragraph 3: "You have the right to say no, or to ask me to turn it off at any time, and it won't affect your care. Are you comfortable with me using this tool for our visit today?"
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-3. **Buttons**: 
-   - Primary (coral/brand): "Consent provided" (full width)
-   - Secondary (outline): "Consent not provided" instead of "Cancel" (full width, no border — use `variant="outline"`)
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-4. **Layout**: Use `DialogDescription` or a `div` with multiple `<p>` tags for the three paragraphs with spacing between them.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
