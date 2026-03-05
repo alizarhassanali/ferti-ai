@@ -87,7 +87,7 @@ export const useDocumentOCR = () => {
 
       const filesToAdd = newFiles.slice(0, remaining);
       if (filesToAdd.length < newFiles.length) {
-        showErrorToast("You can add 15 attachments at most.");
+        toast({ title: "You can add 15 attachments at most." });
       }
 
       const fileEntries: AttachedFile[] = filesToAdd.map(file => ({
