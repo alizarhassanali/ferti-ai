@@ -1,33 +1,20 @@
 
 
-## Fix Attachment Limit Toast to Match "Recording Started" Design
+## Remove Shadow from Letters Tab Pills
 
-### Problem
-The app has two toast systems:
-1. **Radix/shadcn toast** (`useToast` from `@/hooks/use-toast`) — produces the clean white card style seen in "Recording started / Transcribing..." (screenshot 2, the correct design)
-2. **Sonner toast** (`showErrorToast` from `@/lib/toast`) — produces a red-tinted background toast (screenshot 1, the incorrect design)
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-The attachment limit message currently uses Sonner via `showErrorToast`, which doesn't match.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-### Solution
-**File: `src/hooks/useDocumentOCR.ts`**
-- The hook can't use React hooks (`useToast`) directly since it's already a hook, but it can't call hooks conditionally. Instead, we have two options:
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**Option A (Recommended):** Have `useDocumentOCR` accept an `onError` callback, and call it from `ContextTab.tsx` (or wherever it's consumed) using the Radix toast system. This keeps the hook UI-agnostic.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**Option B:** Import and use the Radix `toast` function (the standalone version from `@/hooks/use-toast`) directly in the hook — this function can be called outside components.
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-Going with **Option B** for minimal changes:
-
-**`src/hooks/useDocumentOCR.ts`**:
-- Replace `import { showErrorToast } from '@/lib/toast'` with `import { toast } from '@/hooks/use-toast'`
-- Replace `showErrorToast("You can add 15 attachments at most.")` with:
-  ```ts
-  toast({ title: "You can add 15 attachments at most." })
-  ```
-
-This makes the attachment limit toast render identically to the "Recording started" toast — same white card, same typography, same position.
-
-### Files changed
-- `src/hooks/useDocumentOCR.ts` (2 lines)
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
