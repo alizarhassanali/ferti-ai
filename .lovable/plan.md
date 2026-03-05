@@ -1,14 +1,20 @@
 
 
-## Fix Button Styles in Restart Confirmation Dialog
+## Remove Shadow from Letters Tab Pills
 
-### Problem
-In `src/pages/NewSession.tsx` (lines 385-391):
-1. **Cancel** button uses `AlertDialogCancel` which inherits `buttonVariants({ variant: "outline" })` — this adds a border.
-2. **Keep & Continue** uses `bg-secondary` which maps to white (`--secondary: 0 0% 100%`), causing the white background issue.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Fix (single file: `src/pages/NewSession.tsx`)
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-- **Cancel**: Add `className="border-0"` to `AlertDialogCancel` to remove the border, or use `variant="ghost"` styling.
-- **Keep & Continue**: Change from `bg-secondary text-secondary-foreground` to `bg-muted text-foreground hover:bg-muted/80` so it gets the light sky blue tint instead of plain white.
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
