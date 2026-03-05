@@ -92,6 +92,8 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
         comparison = nameA.localeCompare(nameB);
       } else if (sortField === 'status') {
         comparison = a.status.localeCompare(b.status);
+      } else if (sortField === 'created_at') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       }
       return sortDirection === 'asc' ? comparison : -comparison;
     });
