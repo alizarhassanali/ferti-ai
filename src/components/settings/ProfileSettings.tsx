@@ -105,6 +105,15 @@ export const ProfileSettings = () => {
       </div>
 
       <div className="space-y-8">
+        {/* Account Section */}
+        <div className="border border-border rounded-lg p-6 bg-card">
+          <h4 className="text-sm font-semibold text-foreground mb-4">Account</h4>
+          <div>
+            <Label className="text-sm font-medium mb-1 block">Email</Label>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
+          </div>
+        </div>
+
         {/* About You Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-6">About you</h4>
@@ -121,7 +130,7 @@ export const ProfileSettings = () => {
               </Avatar>
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground mb-2">
-                  Upload a JPG or PNG image up to 5MB.
+                  Upload a JPG, PNG, GIF, or WebP image up to 5MB.
                 </p>
                 <label htmlFor="image-upload">
                   <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
@@ -177,6 +186,7 @@ export const ProfileSettings = () => {
                   <SelectItem value="OB/GYN">OB/GYN</SelectItem>
                   <SelectItem value="Urologist">Urologist</SelectItem>
                   <SelectItem value="Embryologist">Embryologist</SelectItem>
+                  <SelectItem value="Senior Embryologist">Senior Embryologist</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -222,13 +232,8 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Language & Time Section - moved here */}
+          {/* Language & Time Fields */}
           <div className="pt-6 mb-6">
-            <h4 className="text-sm font-semibold text-foreground mb-1">Language & time</h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Change the language used in the interface.
-            </p>
-            
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
@@ -260,8 +265,8 @@ export const ProfileSettings = () => {
         </div>
 
         {/* Save / Cancel Buttons */}
-        <div className="flex items-center gap-3 pt-4">
-          <Button onClick={handleSave} disabled={!hasChanges || localSaving || isSaving}>
+        <div className="flex items-center gap-3 pt-6 border-t border-border">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={handleSave} disabled={!hasChanges || localSaving || isSaving}>
             {localSaving || isSaving ? 'Saving...' : 'Save Changes'}
           </Button>
           <Button variant="outline" onClick={handleCancel} disabled={!hasChanges || localSaving || isSaving}>
