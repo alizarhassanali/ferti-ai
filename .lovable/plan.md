@@ -1,29 +1,20 @@
 
-## Change Date Format to MM/DD/YY in Middle Panes
 
-### Current state
-Both `SessionList.tsx` (lines 76-79) and `LettersList.tsx` (lines 37-40) have a `formatGroupDate` function that returns ordinal dates:
-- Current: `"2nd Mar '26"` (includes day ordinal and abbreviated month)
-- Desired: `"12/02/26"` (MM/DD/YY format)
+## Remove Shadow from Letters Tab Pills
 
-### Changes needed
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-**File 1: `src/components/sessions/SessionList.tsx`**
-- Replace `formatGroupDate()` function (lines 76-79)
-- Remove the `getOrdinalSuffix()` helper function (lines 69-74) — no longer needed
-- Update the function to use `format(date, 'MM/dd/yy')` from date-fns
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**File 2: `src/components/letters/LettersList.tsx`**
-- Replace `formatGroupDate()` function (lines 37-40)
-- Remove the `getOrdinalSuffix()` helper function (lines 30-35) — no longer needed
-- Update the function to use `format(date, 'MM/dd/yy')` from date-fns
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### Implementation
-Both files use the same pattern. The new `formatGroupDate` function in each file becomes:
-```ts
-const formatGroupDate = (date: Date) => {
-  return format(date, 'MM/dd/yy');
-};
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-This simplifies the logic and displays dates like "12/02/26" instead of "2nd Dec '26".
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+
