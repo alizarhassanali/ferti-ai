@@ -30,6 +30,7 @@ export const TwoColumnLayout = ({
   transcriptContent,
   onTranscriptChange,
   isRecording,
+  isPaused,
   contextContent,
   onContextChange,
   noteTabs,
