@@ -1,20 +1,24 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Make Profile Settings Match Screenshot
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Changes to `src/components/settings/ProfileSettings.tsx`:
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+1. **Add "Account" card** at the top (separate bordered card) showing the user's email: `Email: {user.email}`
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+2. **Update image upload description** text from "Upload a JPG or PNG image up to 5MB." to "Upload a JPG, PNG, GIF, or WebP image up to 5MB."
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+3. **Add "Senior Embryologist"** to the specialty dropdown options
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
+4. **Remove "Language & time" subsection header and description** — keep just the "Display language" and "Date format" fields directly without the `h4` heading and `p` description text
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+5. **Add a separator/divider line** before the Save/Cancel buttons (using `border-t border-border`)
+
+6. **Style "Save Changes" button** with coral/primary color: add `className="bg-[#E8755A] hover:bg-[#d4664d] text-white"`
+
+### Changes to `src/components/settings/MiddlePane.tsx`:
+
+7. **Add "Privacy" and "Signature" tabs** to the settings categories list (Privacy with Lock icon already exists; add Signature with `PenLine` icon between Privacy and AI Settings)
+
+Reorder categories to match screenshot: Profile, Privacy, Signature, AI Settings, User management, Security.
 
