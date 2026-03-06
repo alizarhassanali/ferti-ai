@@ -1,20 +1,45 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Conditional Action Menu Based on User Status
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Change
+**File: `src/components/settings/UserManagement/UserManagementList.tsx`** (lines 272-288)
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+Replace the static three-option dropdown with conditional rendering based on `member.status`:
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+- **Active or Pending users** → show "Edit user" + "Disable user" (2 options)
+- **Disabled users** → show "Edit user" + "Enable user" + "Delete user" (3 options)
 
+The "Enable user" option will use a `CheckCircle` (or `ShieldCheck`) icon. Delete remains destructive-styled and triggers the existing confirmation dialog. Need to import an additional icon (e.g. `CheckCircle2` from lucide-react).
+
+```tsx
+<DropdownMenuContent align="end" className="bg-popover">
+  <DropdownMenuItem className="gap-2">
+    <Pencil className="h-4 w-4" />
+    Edit user
+  </DropdownMenuItem>
+  {member.status === 'disabled' ? (
+    <>
+      <DropdownMenuItem className="gap-2">
+        <CheckCircle2 className="h-4 w-4" />
+        Enable user
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        className="gap-2 text-destructive focus:text-destructive"
+        onClick={() => setMemberToDelete(member)}
+      >
+        <Trash2 className="h-4 w-4" />
+        Delete user
+      </DropdownMenuItem>
+    </>
+  ) : (
+    <DropdownMenuItem className="gap-2">
+      <Ban className="h-4 w-4" />
+      Disable user
+    </DropdownMenuItem>
+  )}
+</DropdownMenuContent>
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**Files changed:** 1 file, ~15 lines modified.
 
