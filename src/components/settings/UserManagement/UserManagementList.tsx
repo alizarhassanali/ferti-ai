@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useTeamMembers } from '@/hooks/useTeamMembers';
+import { useTeamMembers, useUpdateMemberStatus } from '@/hooks/useTeamMembers';
 import { TeamMember, TeamMemberRole, TeamMemberStatus } from '@/types/team';
 
 interface UserManagementListProps {
@@ -88,12 +88,14 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
+  const [memberToDisable, setMemberToDisable] = useState<TeamMember | null>(null);
 
-  const { members, isLoading, error } = useTeamMembers({
+  const { members, isLoading, error, refetch } = useTeamMembers({
     search,
     status: statusFilter,
     role: roleFilter,
   });
+  const { updateStatus, isLoading: isUpdatingStatus } = useUpdateMemberStatus();
 
   const sortedMembers = useMemo(() => {
     return [...members].sort((a, b) => {
@@ -276,7 +278,17 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                         </DropdownMenuItem>
                         {member.status === 'disabled' ? (
                           <>
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={async () => {
+                                const success = await updateStatus(member.id, 'active');
+                                if (success) {
+                                  showSuccessToast(`${member.first_name} ${member.last_name} has been enabled.`);
+                                  refetch();
+                                }
+                              }}
+                              disabled={isUpdatingStatus}
+                            >
                               <CheckCircle2 className="h-4 w-4" />
                               Enable user
                             </DropdownMenuItem>
@@ -289,7 +301,10 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                             </DropdownMenuItem>
                           </>
                         ) : (
-                          <DropdownMenuItem className="gap-2">
+                          <DropdownMenuItem
+                            className="gap-2"
+                            onClick={() => setMemberToDisable(member)}
+                          >
                             <Ban className="h-4 w-4" />
                             Disable user
                           </DropdownMenuItem>
@@ -326,6 +341,39 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
               }}
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!memberToDisable} onOpenChange={(open) => !open && setMemberToDisable(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disable User</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to disable{' '}
+              <span className="font-medium text-foreground">
+                {memberToDisable?.first_name} {memberToDisable?.last_name}
+              </span>
+              ? They will lose access until re-enabled.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                const member = memberToDisable;
+                setMemberToDisable(null);
+                if (member) {
+                  const success = await updateStatus(member.id, 'disabled');
+                  if (success) {
+                    showSuccessToast(`${member.first_name} ${member.last_name} has been disabled.`);
+                    refetch();
+                  }
+                }
+              }}
+            >
+              Disable
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

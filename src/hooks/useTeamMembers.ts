@@ -127,3 +127,29 @@ export const useCreateInvite = () => {
 
   return { createInvite, isLoading, error, setError };
 };
+
+export const useUpdateMemberStatus = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const updateStatus = async (teamMemberId: string, status: 'active' | 'disabled'): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('update-team-member-status', {
+        method: 'POST',
+        body: { teamMemberId, status },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      return true;
+    } catch (err) {
+      console.error('Error updating member status:', err);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { updateStatus, isLoading };
+};
