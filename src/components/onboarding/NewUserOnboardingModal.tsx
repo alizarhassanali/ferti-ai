@@ -259,7 +259,7 @@ export const NewUserOnboardingModal = () => {
           <Button
             onClick={handleContinue}
             disabled={!isValid || saving}
-            className="w-full bg-primary hover:bg-primary/90"
+            className="w-full"
             size="lg"
           >
             {saving ? 'Setting up...' : 'Continue'}
