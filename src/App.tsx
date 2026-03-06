@@ -42,6 +42,7 @@ const App = () => (
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/new-session" element={<NewSession />} />
+                    <Route path="/new-user-screen" element={<NewUserScreen />} />
                     <Route path="/sessions" element={<ViewSessions />} />
                     <Route path="/ai-assistant" element={<AIAssistant />} />
                     <Route path="/settings" element={<Settings />} />
