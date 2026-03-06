@@ -266,7 +266,7 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                 </TableCell>
               </TableRow>
             ) : (
-              sortedMembers.map(member => (
+              sortedMembers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(member => (
                 <TableRow key={member.id}>
                   <TableCell className="font-medium">
                     {member.first_name} {member.last_name}
