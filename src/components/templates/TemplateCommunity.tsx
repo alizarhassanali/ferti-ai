@@ -80,7 +80,7 @@ export const TemplateCommunity = () => {
               type="text"
               placeholder="Search for a template..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
               className="pl-11 pr-4 py-2.5 h-11 rounded-xl"
             />
           </div>
