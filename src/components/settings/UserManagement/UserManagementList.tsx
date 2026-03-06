@@ -96,6 +96,19 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
     role: roleFilter,
   });
   const { updateStatus, isLoading: isUpdatingStatus } = useUpdateMemberStatus();
+  const { createInvite, isLoading: isResending } = useCreateInvite();
+
+  const handleResendInvite = async (member: TeamMember) => {
+    const result = await createInvite({
+      firstName: member.first_name,
+      lastName: member.last_name,
+      email: member.email,
+      role: member.role,
+    });
+    if (result) {
+      showSuccessToast(`Invitation resent to ${member.email}.`);
+    }
+  };
 
   const sortedMembers = useMemo(() => {
     return [...members].sort((a, b) => {
