@@ -4,6 +4,7 @@ import { TemplatesFilters } from '@/components/templates/TemplatesFilters';
 import { TemplatesTable } from '@/components/templates/TemplatesTable';
 import { CreateTemplateModal } from '@/components/templates/CreateTemplateModal';
 import { useTemplates } from '@/hooks/useTemplates';
+import { useState } from 'react';
 
 const MyTemplates = () => {
   const {
@@ -23,6 +24,7 @@ const MyTemplates = () => {
     deleteTemplate,
     shareTemplate,
   } = useTemplates();
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   return (
     <AppLayout>
@@ -43,6 +45,8 @@ const MyTemplates = () => {
             onShare={shareTemplate}
             currentPage={currentPage}
             onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setItemsPerPage}
           />
 
           <CreateTemplateModal

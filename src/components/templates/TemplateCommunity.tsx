@@ -4,6 +4,7 @@ import { hubTemplates } from '@/data/hubTemplates';
 import { TemplateCard } from './hub/TemplateCard';
 import { TemplateFilters } from './hub/TemplateFilters';
 import { Input } from '@/components/ui/input';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 
 export const TemplateCommunity = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,6 +12,8 @@ export const TemplateCommunity = () => {
   const [location, setLocation] = useState('All');
   const [specialty, setSpecialty] = useState('All');
   const [category, setCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const filteredAndSortedTemplates = useMemo(() => {
     let filtered = hubTemplates.filter((template) => {
@@ -44,6 +47,17 @@ export const TemplateCommunity = () => {
     return filtered;
   }, [searchQuery, sortBy, location, specialty, category]);
 
+  // Reset page on filter change
+  const handleFilterChange = <T,>(setter: (v: T) => void) => (value: T) => {
+    setter(value);
+    setCurrentPage(1);
+  };
+
+  const paginatedTemplates = filteredAndSortedTemplates.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto px-10 lg:px-14 py-10 max-w-7xl">
@@ -66,7 +80,7 @@ export const TemplateCommunity = () => {
               type="text"
               placeholder="Search for a template..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
               className="pl-11 pr-4 py-2.5 h-11 rounded-xl"
             />
           </div>
@@ -75,16 +89,16 @@ export const TemplateCommunity = () => {
             location={location}
             specialty={specialty}
             category={category}
-            onSortChange={setSortBy}
-            onLocationChange={setLocation}
-            onSpecialtyChange={setSpecialty}
-            onCategoryChange={setCategory}
+            onSortChange={handleFilterChange(setSortBy)}
+            onLocationChange={handleFilterChange(setLocation)}
+            onSpecialtyChange={handleFilterChange(setSpecialty)}
+            onCategoryChange={handleFilterChange(setCategory)}
           />
         </div>
 
         {/* Template Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {filteredAndSortedTemplates.map((template) => (
+          {paginatedTemplates.map((template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
         </div>
@@ -93,6 +107,17 @@ export const TemplateCommunity = () => {
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">No templates found matching your criteria.</p>
           </div>
+        )}
+
+        {filteredAndSortedTemplates.length > 0 && (
+          <PaginationFooter
+            totalItems={filteredAndSortedTemplates.length}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={(limit) => { setItemsPerPage(limit); setCurrentPage(1); }}
+            itemLabel="templates"
+          />
         )}
       </div>
     </div>

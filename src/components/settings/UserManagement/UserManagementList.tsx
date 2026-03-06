@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban, CheckCircle2, Mail } from 'lucide-react';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 import { showSuccessToast } from '@/lib/toast';
 import {
   AlertDialog,
@@ -89,6 +90,13 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
   const [memberToDisable, setMemberToDisable] = useState<TeamMember | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, roleFilter]);
 
   const { members, isLoading, error, refetch } = useTeamMembers({
     search,
@@ -251,14 +259,14 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                   {error}
                 </TableCell>
               </TableRow>
-            ) : sortedMembers.length === 0 ? (
+            ) : sortedMembers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No team members found
                 </TableCell>
               </TableRow>
             ) : (
-              sortedMembers.map(member => (
+              sortedMembers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(member => (
                 <TableRow key={member.id}>
                   <TableCell className="font-medium">
                     {member.first_name} {member.last_name}
@@ -351,6 +359,17 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
           </TableBody>
         </Table>
       </div>
+
+      {sortedMembers.length > 0 && (
+        <PaginationFooter
+          totalItems={sortedMembers.length}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(limit) => { setItemsPerPage(limit); setCurrentPage(1); }}
+          itemLabel="users"
+        />
+      )}
 
       <AlertDialog open={!!memberToDelete} onOpenChange={(open) => !open && setMemberToDelete(null)}>
         <AlertDialogContent>

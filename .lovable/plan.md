@@ -1,44 +1,20 @@
 
 
-## Add Pagination with Limit Selector to All List Pages
+## Remove Shadow from Letters Tab Pills
 
-### Overview
-Create a reusable pagination footer component matching the screenshot design, then apply it to all table/list pages. The footer shows "Showing X to Y of Z items", Previous/Next with page numbers, and a "Limit: 10/25/50/100" dropdown.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### 1. Create Reusable `PaginationFooter` Component
-**New file: `src/components/ui/pagination-footer.tsx`**
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-A self-contained component that accepts `totalItems`, `currentPage`, `itemsPerPage`, `onPageChange`, `onItemsPerPageChange`, and an `itemLabel` (e.g. "users", "templates").
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-Renders three sections in a flex row:
-- **Left**: "Showing 1 to 10 of 55 {itemLabel}"
-- **Center**: Previous / page numbers / Next (reuse existing Pagination components, limit visible page numbers to ~5 with ellipsis)
-- **Right**: "Limit:" dropdown with options 10, 25, 50, 100
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-### 2. Apply to `UserManagementList`
-**File: `src/components/settings/UserManagement/UserManagementList.tsx`**
-- Add `currentPage`, `itemsPerPage` state
-- Slice `sortedMembers` for current page
-- Reset page to 1 when filters/search change
-- Add `PaginationFooter` below the table with label "users"
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-### 3. Update `TemplatesTable`
-**File: `src/components/templates/TemplatesTable.tsx`**
-- Replace hardcoded `itemsPerPage = 10` with prop/state
-- Add `onItemsPerPageChange` prop, pass up to parent
-- Replace existing pagination block with `PaginationFooter` (label "templates")
-- Update parent `MyTemplates` page to manage `itemsPerPage` state
-
-### 4. Apply to `TemplateCommunity` (Template Hub)
-**File: `src/components/templates/TemplateCommunity.tsx`**
-- Add `currentPage`, `itemsPerPage` state
-- Slice `filteredAndSortedTemplates` for display
-- Add `PaginationFooter` below the grid with label "templates"
-
-### Files changed
-- `src/components/ui/pagination-footer.tsx` (new)
-- `src/components/settings/UserManagement/UserManagementList.tsx`
-- `src/components/templates/TemplatesTable.tsx`
-- `src/components/templates/TemplateCommunity.tsx`
-- `src/pages/MyTemplates.tsx` (pass new itemsPerPage props)
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

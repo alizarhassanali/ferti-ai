@@ -9,14 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { TemplateRow } from './TemplateRow';
 import { Template, TemplateVisibility } from '@/types/template';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 
 interface TemplatesTableProps {
   templates: Template[];
@@ -25,6 +18,8 @@ interface TemplatesTableProps {
   onShare: (id: string, visibility: TemplateVisibility) => void;
   currentPage: number;
   onPageChange: (page: number) => void;
+  itemsPerPage: number;
+  onItemsPerPageChange: (limit: number) => void;
 }
 
 export const TemplatesTable = ({
@@ -34,8 +29,9 @@ export const TemplatesTable = ({
   onShare,
   currentPage,
   onPageChange,
+  itemsPerPage,
+  onItemsPerPageChange,
 }: TemplatesTableProps) => {
-  const itemsPerPage = 10;
   const totalPages = Math.ceil(templates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTemplates = templates.slice(startIndex, startIndex + itemsPerPage);
@@ -94,36 +90,15 @@ export const TemplatesTable = ({
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination className="mt-6">
-          <PaginationContent className="gap-1">
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                className={`rounded-xl border-border hover:bg-muted ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  onClick={() => onPageChange(page)}
-                  isActive={currentPage === page}
-                  className={`cursor-pointer rounded-xl ${currentPage === page ? 'bg-brand text-brand-foreground border-brand' : 'border-border hover:bg-muted'}`}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                className={`rounded-xl border-border hover:bg-muted ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+      {templates.length > 0 && (
+        <PaginationFooter
+          totalItems={templates.length}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
+          onItemsPerPageChange={(limit) => { onItemsPerPageChange(limit); onPageChange(1); }}
+          itemLabel="templates"
+        />
       )}
     </div>
   );
