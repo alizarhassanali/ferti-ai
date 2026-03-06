@@ -278,7 +278,17 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                         </DropdownMenuItem>
                         {member.status === 'disabled' ? (
                           <>
-                            <DropdownMenuItem className="gap-2">
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={async () => {
+                                const success = await updateStatus(member.id, 'active');
+                                if (success) {
+                                  showSuccessToast(`${member.first_name} ${member.last_name} has been enabled.`);
+                                  refetch();
+                                }
+                              }}
+                              disabled={isUpdatingStatus}
+                            >
                               <CheckCircle2 className="h-4 w-4" />
                               Enable user
                             </DropdownMenuItem>
@@ -291,7 +301,10 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                             </DropdownMenuItem>
                           </>
                         ) : (
-                          <DropdownMenuItem className="gap-2">
+                          <DropdownMenuItem
+                            className="gap-2"
+                            onClick={() => setMemberToDisable(member)}
+                          >
                             <Ban className="h-4 w-4" />
                             Disable user
                           </DropdownMenuItem>
