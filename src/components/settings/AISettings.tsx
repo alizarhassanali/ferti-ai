@@ -52,7 +52,7 @@ export const AISettings = () => {
     <div className="w-full">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">AI Settings</h3>
-        <p className="text-sm text-muted-foreground">Customize your AI preferences and language settings</p>
+        <p className="text-sm text-muted-foreground">Customize your AI preferences</p>
       </div>
 
       <div className="space-y-8">
