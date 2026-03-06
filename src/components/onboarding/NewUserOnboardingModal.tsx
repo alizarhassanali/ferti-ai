@@ -54,33 +54,28 @@ export const NewUserOnboardingModal = () => {
     setSaving(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast({ title: 'Not authenticated', description: 'Please log in first.', variant: 'destructive' });
-        return;
+      if (session) {
+        const res = await supabase.functions.invoke('update-user-profile', {
+          body: {
+            first_name: form.firstName.trim(),
+            last_name: form.lastName.trim(),
+            signature_title: form.title,
+            signature_preferred_name: form.preferredName.trim() || null,
+            signature_specialty: form.specialty,
+            phone_country_code: form.phoneCountryCode,
+            phone_number: form.phoneNumber.trim() || null,
+            language: form.displayLanguage,
+            profile_completed: true,
+          },
+        });
+        if (res.error) throw res.error;
       }
-
-      const res = await supabase.functions.invoke('update-user-profile', {
-        body: {
-          first_name: form.firstName.trim(),
-          last_name: form.lastName.trim(),
-          signature_title: form.title,
-          signature_preferred_name: form.preferredName.trim() || null,
-          signature_specialty: form.specialty,
-          phone_country_code: form.phoneCountryCode,
-          phone_number: form.phoneNumber.trim() || null,
-          language: form.displayLanguage,
-          profile_completed: true,
-        },
-      });
-
-      if (res.error) throw res.error;
-      setStep(2);
     } catch (error) {
       console.error('Profile setup error:', error);
-      toast({ title: 'Error', description: 'Failed to save your profile. Please try again.', variant: 'destructive' });
     } finally {
       setSaving(false);
     }
+    setStep(2);
   };
 
   const handleFinish = () => {

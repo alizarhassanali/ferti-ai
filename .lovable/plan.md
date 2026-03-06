@@ -1,14 +1,20 @@
 
 
-## Fix: "Not authenticated" error on Step 1 Continue
+## Remove Shadow from Letters Tab Pills
 
-The issue is on line 56-59: `handleStepOneContinue` calls `supabase.auth.getSession()`, and since there's no authenticated user in the preview, it shows the "Not authenticated" toast and returns early, never advancing to step 2.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Fix
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/components/onboarding/NewUserOnboardingModal.tsx`** — Make the backend call optional. If the user is not authenticated, skip the profile save and still advance to step 2. The profile data can be saved later when authentication is available.
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-- Wrap the backend call in a try-catch that doesn't block step advancement
-- If no session exists, still proceed to step 2 (just skip the edge function call)
-- Move `setStep(2)` outside the session check so it always runs after validation passes
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
