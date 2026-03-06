@@ -1,23 +1,20 @@
 
 
-## Make Onboarding Demo Accessible Without Login
+## Remove Shadow from Letters Tab Pills
 
-The issue is that the published URL (`preview--otto-notes.lovable.app`) requires Lovable authentication. The **published** URL (`otto-notes.lovable.app`) does not require Lovable login — it's your public app.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-So sharing `https://otto-notes.lovable.app/new-user-screen` should work without any Lovable login.
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-However, the onboarding modal currently calls `supabase.functions.invoke('update-user-profile')` on step 1 continue, which will fail without a backend session. To make it work cleanly as a demo:
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### Changes
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**`src/components/onboarding/NewUserOnboardingModal.tsx`**
-- Add a `demoMode` prop (optional, defaults to `false`)
-- When `demoMode` is true, skip the Supabase profile update call in `handleStepOneContinue` — just advance to step 2
-- On finish in demo mode, navigate to `/` instead of `/new-session`
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-**`src/pages/NewUserScreen.tsx`**
-- Pass `demoMode` prop based on whether there's an active auth session, or simply always run in demo mode on this route (since real onboarding would be triggered by the auth flow)
-- Simplest approach: detect if no session exists and pass `demoMode={true}` automatically
-
-This way, anyone visiting `https://otto-notes.lovable.app/new-user-screen` sees the full onboarding UI and can click through both steps without errors — no login required.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
