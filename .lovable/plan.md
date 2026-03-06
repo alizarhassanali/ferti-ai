@@ -1,18 +1,20 @@
 
 
-## Remove H1/H2/H3 and Bullet List from Onboarding Signature Toolbar
+## Remove Shadow from Letters Tab Pills
 
-### Approach
-Add an optional `exclude` prop to `RichTextToolbar` that accepts an array of tool labels to hide. Then pass the relevant exclusions from `OnboardingStepTwo`.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Changes
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/components/letters/RichTextToolbar.tsx`**
-- Add optional `exclude?: string[]` prop to `RichTextToolbarProps`
-- Filter out tools whose `label` is in the exclude list (and clean up orphaned separators)
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**`src/components/onboarding/OnboardingStepTwo.tsx`**
-- Pass `exclude={['Heading 1', 'Heading 2', 'Heading 3', 'Bullet list']}` to `RichTextToolbar`
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-This keeps the full toolbar available in Settings and Letters while making it compact for the onboarding popup.
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
