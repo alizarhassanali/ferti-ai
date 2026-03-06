@@ -12,7 +12,7 @@ import StarterKit from '@tiptap/starter-kit';
 import UnderlineExt from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { RichTextToolbar } from '@/components/letters/RichTextToolbar';
-import ottoLogo from '@/assets/otto-icon.png';
+
 
 const SIGNATURE_STORAGE_KEY = 'medical-scribe-signature-settings';
 
