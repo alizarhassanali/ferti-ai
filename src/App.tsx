@@ -46,7 +46,7 @@ const App = () => (
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/my-templates" element={<MyTemplates />} />
                     <Route path="/template-hub" element={<TemplateHub />} />
-                    <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
+                    
                     <Route path="/letters" element={<Letters />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
