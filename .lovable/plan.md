@@ -1,33 +1,20 @@
 
 
-## Add Signature Settings Tab
+## Remove Shadow from Letters Tab Pills
 
-### What we're building
-A new `SignatureSettings` component matching the screenshot: a rich text editor for signature content, plus two toggle switches ("Enable signature" and "Append to AI-generated letters"), with Save/Cancel buttons.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Files to create
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/components/settings/SignatureSettings.tsx`**
-- Header: "Signature" title + "Create a signature that can be automatically appended to your notes and documents" subtitle
-- Card with:
-  - "Signature content" label + helper text
-  - Tiptap rich text editor (reuse existing `RichTextToolbar` + same Tiptap setup as Letters)
-  - A `<Select>` for heading level ("Default" dropdown) integrated into toolbar — actually looking at the screenshot more closely, this is just the standard toolbar with a heading dropdown. We'll use the existing `RichTextToolbar` component with a simplified heading dropdown added.
-  - Separator
-  - "Enable signature" toggle with description
-  - Separator  
-  - "Append to AI-generated letters" toggle with description
-- Save Changes / Cancel buttons at bottom
-- Local state management following the explicit save/cancel pattern
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### Files to modify
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**`src/components/settings/RightPane.tsx`**
-- Import `SignatureSettings` and add `case 'signature'` to the switch
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-### Implementation details
-- Tiptap editor initialized with StarterKit + Underline + TextAlign extensions (already installed)
-- Default signature content pre-populated with user's name from settings context (e.g. "Dr. Shahid Saya")
-- Toggle states stored locally, saved on "Save Changes" click
-- Toolbar uses a simplified version — we can add a heading-level `<Select>` ("Default", "Heading 1", etc.) before the existing toolbar buttons, matching the screenshot's dropdown
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
