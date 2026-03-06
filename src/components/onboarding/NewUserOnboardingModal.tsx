@@ -44,36 +44,39 @@ export const NewUserOnboardingModal = ({ demoMode = false }: NewUserOnboardingMo
   const handleStepOneContinue = async () => {
     const isValid = form.firstName.trim() && form.lastName.trim() && form.specialty && form.agreedToTerms;
     if (!isValid) return;
-    setSaving(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const res = await supabase.functions.invoke('update-user-profile', {
-          body: {
-            first_name: form.firstName.trim(),
-            last_name: form.lastName.trim(),
-            signature_title: form.title,
-            signature_preferred_name: form.preferredName.trim() || null,
-            signature_specialty: form.specialty,
-            phone_country_code: form.phoneCountryCode,
-            phone_number: form.phoneNumber.trim() || null,
-            language: form.displayLanguage,
-            profile_completed: true,
-          },
-        });
-        if (res.error) throw res.error;
+
+    if (!demoMode) {
+      setSaving(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const res = await supabase.functions.invoke('update-user-profile', {
+            body: {
+              first_name: form.firstName.trim(),
+              last_name: form.lastName.trim(),
+              signature_title: form.title,
+              signature_preferred_name: form.preferredName.trim() || null,
+              signature_specialty: form.specialty,
+              phone_country_code: form.phoneCountryCode,
+              phone_number: form.phoneNumber.trim() || null,
+              language: form.displayLanguage,
+              profile_completed: true,
+            },
+          });
+          if (res.error) throw res.error;
+        }
+      } catch (error) {
+        console.error('Profile setup error:', error);
+      } finally {
+        setSaving(false);
       }
-    } catch (error) {
-      console.error('Profile setup error:', error);
-    } finally {
-      setSaving(false);
     }
     setStep(2);
   };
 
   const handleFinish = () => {
     toast({ title: 'Welcome!', description: 'Your profile has been set up successfully.' });
-    navigate('/new-session');
+    navigate(demoMode ? '/' : '/new-session');
   };
 
   return (
