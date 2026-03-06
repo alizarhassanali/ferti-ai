@@ -42,7 +42,9 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
           className={cn(
             "inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all",
             "border",
-            "bg-white text-foreground border-border hover:bg-muted"
+            isDefault
+              ? "bg-white text-foreground border-border hover:bg-muted"
+              : "bg-brand/10 text-brand border-brand/30 hover:bg-brand/15"
           )}
         >
           {icon}
