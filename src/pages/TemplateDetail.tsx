@@ -36,7 +36,7 @@ const TemplateDetail = () => {
 
   return (
     <AppLayout>
-      <div className="flex-1 overflow-y-auto bg-background">
+      <div className="h-full overflow-y-auto bg-background">
         <div className="mx-auto px-10 lg:px-12 py-8 max-w-[1100px]">
           {/* Back Navigation */}
           <button

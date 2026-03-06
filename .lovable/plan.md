@@ -1,27 +1,20 @@
 
 
-## Fix Missing Scroll on All Pages
+## Remove Shadow from Letters Tab Pills
 
-### Root Cause
-AppLayout wraps children in `<div className="flex-1 overflow-hidden">`. Pages using `flex-1 overflow-y-auto` as their outer wrapper don't get a proper height constraint, so scrolling breaks. The fix is to use `h-full overflow-y-auto` instead.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Pages to Fix
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-| Page | File | Current class | Fix |
-|------|------|--------------|-----|
-| My Templates | `src/pages/MyTemplates.tsx` (line 31) | `flex-1 overflow-y-auto` | `h-full overflow-y-auto` |
-| Template Hub | `src/components/templates/TemplateCommunity.tsx` (line 62) | `flex-1 overflow-y-auto` | `h-full overflow-y-auto` |
-| Template Detail | `src/pages/TemplateDetail.tsx` (line 39) | `flex-1 overflow-y-auto` | `h-full overflow-y-auto` |
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### Pages Already Working (no changes needed)
-- **Settings/RightPane**: Already uses `h-full overflow-y-auto`
-- **NewSession**: Uses `h-screen overflow-hidden` with internal scroll containers
-- **Team**: Uses `h-screen overflow-hidden` with inner `flex-1 overflow-y-auto` (works because h-screen provides the constraint)
-- **Letters, ViewSessions, AIAssistant**: Use `h-screen` flex layouts with internal scroll
-- **Index**: No scroll needed (centered landing)
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-### Files Changed
-1. `src/pages/MyTemplates.tsx` — line 31: `flex-1` → `h-full`
-2. `src/components/templates/TemplateCommunity.tsx` — line 62: `flex-1` → `h-full`
-3. `src/pages/TemplateDetail.tsx` — line 39: `flex-1` → `h-full`
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

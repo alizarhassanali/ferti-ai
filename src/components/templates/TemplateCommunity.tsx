@@ -59,7 +59,7 @@ export const TemplateCommunity = () => {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="h-full overflow-y-auto">
       <div className="mx-auto px-10 lg:px-14 py-10 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
