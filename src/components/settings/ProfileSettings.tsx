@@ -230,35 +230,18 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Language & Time Fields */}
+          {/* Display Language */}
           <div className="mb-4">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
-                <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
-                  <SelectTrigger id="displayLanguage">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="English">English</SelectItem>
-                    <SelectItem value="French">French</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="dateFormat" className="text-sm font-medium mb-2 block">Date format</Label>
-                <Select value={formData.dateFormat} onValueChange={(value) => setFormData({ ...formData, dateFormat: value })}>
-                  <SelectTrigger id="dateFormat">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
-                    <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
-                    <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
+            <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
+              <SelectTrigger id="displayLanguage">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="English">English</SelectItem>
+                <SelectItem value="French">French</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

@@ -56,57 +56,6 @@ export const AISettings = () => {
       </div>
 
       <div className="space-y-8">
-        {/* Language Preferences Section */}
-        <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-1">Language Preferences</h4>
-          <p className="text-sm text-muted-foreground mb-6">
-            Set your preferred input and output languages for AI processing.
-          </p>
-          
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="inputLanguage" className="text-sm font-medium mb-2 block">
-                Default input language
-              </Label>
-              <Select 
-                value={formData.inputLanguage} 
-                onValueChange={(value) => setFormData({ ...formData, inputLanguage: value })}
-              >
-                <SelectTrigger id="inputLanguage">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                  <SelectItem value="Spanish">Spanish</SelectItem>
-                  <SelectItem value="German">German</SelectItem>
-                  <SelectItem value="Portuguese">Portuguese</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="outputLanguage" className="text-sm font-medium mb-2 block">
-                Default output language
-              </Label>
-              <Select 
-                value={formData.outputLanguage} 
-                onValueChange={(value) => setFormData({ ...formData, outputLanguage: value })}
-              >
-                <SelectTrigger id="outputLanguage">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                  <SelectItem value="Spanish">Spanish</SelectItem>
-                  <SelectItem value="German">German</SelectItem>
-                  <SelectItem value="Portuguese">Portuguese</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-
         {/* Note Preferences Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-1">Note Preferences</h4>
