@@ -4,6 +4,7 @@ import { hubTemplates } from '@/data/hubTemplates';
 import { TemplateCard } from './hub/TemplateCard';
 import { TemplateFilters } from './hub/TemplateFilters';
 import { Input } from '@/components/ui/input';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 
 export const TemplateCommunity = () => {
   const [searchQuery, setSearchQuery] = useState('');
