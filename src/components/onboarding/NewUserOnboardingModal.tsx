@@ -11,6 +11,7 @@ import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import ottoLogo from '@/assets/otto-icon.png';
+import { specialtyOptions } from '@/data/hubTemplates';
 
 interface OnboardingFormState {
   title: string;
@@ -195,12 +196,9 @@ export const NewUserOnboardingModal = () => {
             <Select value={form.specialty} onValueChange={(v) => setForm({ ...form, specialty: v })}>
               <SelectTrigger><SelectValue placeholder="Select your specialty" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Fertility Specialist">Fertility Specialist</SelectItem>
-                <SelectItem value="Reproductive Endocrinologist">Reproductive Endocrinologist</SelectItem>
-                <SelectItem value="OB/GYN">OB/GYN</SelectItem>
-                <SelectItem value="Urologist">Urologist</SelectItem>
-                <SelectItem value="Embryologist">Embryologist</SelectItem>
-                <SelectItem value="Senior Embryologist">Senior Embryologist</SelectItem>
+                {specialtyOptions.filter(s => s !== 'All').map(s => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

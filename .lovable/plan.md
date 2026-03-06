@@ -1,15 +1,20 @@
 
 
-## Unify Specialty Options Across Three Components
+## Remove Shadow from Letters Tab Pills
 
-### The canonical list (from `hubTemplates.ts`)
-25 specialties: Admin Assistant, Andrologist, Endocrinologist, Fellow, General Practitioner, Lab Director, Medical Director, Medical Office Admin, Medical Office Assistant, Nurse, Nurse Manager, Nurse Office Assistant, Obstetrician-Gynecologist, Obstetrics and Gynecology Specialist, Patient Care Coordinator, Physician, Physician Assistant, Physician Dispensary Coordinator, Referral Coordinator, Reproductive Endocrinologist And Infertility, Reproductive Endocrinologist and Fertility, Resource Nurse, Senior Embryologist, Urologist.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Changes
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-1. **`src/components/onboarding/NewUserOnboardingModal.tsx`** — Replace the 6-item specialty `<Select>` with the full list imported from `hubTemplates.ts` (excluding 'All').
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-2. **`src/components/settings/ProfileSettings.tsx`** — Same change: replace the hardcoded 6-item specialty dropdown with the full list from `hubTemplates.ts` (excluding 'All').
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-Both files will import `specialtyOptions` from `@/data/hubTemplates` and map over them (skipping 'All') to render `<SelectItem>` entries.
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
+
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 

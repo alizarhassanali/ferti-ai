@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
+import { specialtyOptions } from '@/data/hubTemplates';
 
 interface ProfileFormState {
   title: string;
@@ -181,12 +182,9 @@ export const ProfileSettings = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Fertility Specialist">Fertility Specialist</SelectItem>
-                  <SelectItem value="Reproductive Endocrinologist">Reproductive Endocrinologist</SelectItem>
-                  <SelectItem value="OB/GYN">OB/GYN</SelectItem>
-                  <SelectItem value="Urologist">Urologist</SelectItem>
-                  <SelectItem value="Embryologist">Embryologist</SelectItem>
-                  <SelectItem value="Senior Embryologist">Senior Embryologist</SelectItem>
+                  {specialtyOptions.filter(s => s !== 'All').map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
