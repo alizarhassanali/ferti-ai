@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban, CheckCircle2 } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban, CheckCircle2, Mail } from 'lucide-react';
 import { showSuccessToast } from '@/lib/toast';
 import {
   AlertDialog,
@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useTeamMembers, useUpdateMemberStatus } from '@/hooks/useTeamMembers';
+import { useTeamMembers, useUpdateMemberStatus, useCreateInvite } from '@/hooks/useTeamMembers';
 import { TeamMember, TeamMemberRole, TeamMemberStatus } from '@/types/team';
 
 interface UserManagementListProps {
@@ -96,6 +96,19 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
     role: roleFilter,
   });
   const { updateStatus, isLoading: isUpdatingStatus } = useUpdateMemberStatus();
+  const { createInvite, isLoading: isResending } = useCreateInvite();
+
+  const handleResendInvite = async (member: TeamMember) => {
+    const result = await createInvite({
+      firstName: member.first_name,
+      lastName: member.last_name,
+      email: member.email,
+      role: member.role,
+    });
+    if (result) {
+      showSuccessToast(`Invitation resent to ${member.email}.`);
+    }
+  };
 
   const sortedMembers = useMemo(() => {
     return [...members].sort((a, b) => {
@@ -276,7 +289,26 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                           <Pencil className="h-4 w-4" />
                           Edit user
                         </DropdownMenuItem>
-                        {member.status === 'disabled' ? (
+                        {member.status === 'pending' && (
+                          <>
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={() => handleResendInvite(member)}
+                              disabled={isResending}
+                            >
+                              <Mail className="h-4 w-4" />
+                              Resend invitation
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={() => setMemberToDisable(member)}
+                            >
+                              <Ban className="h-4 w-4" />
+                              Disable user
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        {member.status === 'disabled' && (
                           <>
                             <DropdownMenuItem
                               className="gap-2"
@@ -300,7 +332,8 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                               Delete user
                             </DropdownMenuItem>
                           </>
-                        ) : (
+                        )}
+                        {member.status === 'active' && (
                           <DropdownMenuItem
                             className="gap-2"
                             onClick={() => setMemberToDisable(member)}
