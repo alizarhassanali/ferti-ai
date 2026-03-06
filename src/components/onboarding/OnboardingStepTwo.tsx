@@ -73,7 +73,7 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
 
       {/* Logo + Header */}
       <div className="flex flex-col items-center mb-6">
-        <img src={ottoLogo} alt="Otto" className="h-12 w-12 mb-4" />
+        
         <DialogTitle className="text-2xl font-semibold text-foreground text-center">
           Set up your signature
         </DialogTitle>
