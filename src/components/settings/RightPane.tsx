@@ -3,6 +3,7 @@ import { ProfileSettings } from './ProfileSettings';
 import { SecuritySettings } from './SecuritySettings';
 import { AISettings } from './AISettings';
 import { PrivacySettings } from './PrivacySettings';
+import { SignatureSettings } from './SignatureSettings';
 import { UserManagement } from './UserManagement';
 
 export const RightPane = () => {

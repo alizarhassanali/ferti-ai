@@ -1,0 +1,147 @@
+import { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { useSettings } from '@/contexts/SettingsContext';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import UnderlineExt from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import { RichTextToolbar } from '@/components/letters/RichTextToolbar';
+import { showSaveSuccess } from '@/lib/toast';
+
+const SIGNATURE_STORAGE_KEY = 'medical-scribe-signature-settings';
+
+interface SignatureState {
+  content: string;
+  enabled: boolean;
+  appendToLetters: boolean;
+}
+
+const getInitialState = (userName: string): SignatureState => {
+  try {
+    const saved = localStorage.getItem(SIGNATURE_STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return {
+    content: `<p>${userName}</p>`,
+    enabled: true,
+    appendToLetters: true,
+  };
+};
+
+export const SignatureSettings = () => {
+  const { user } = useSettings();
+  const defaultName = `${user.title || ''} ${user.firstName} ${user.lastName}`.trim();
+
+  const [savedState, setSavedState] = useState<SignatureState>(() => getInitialState(defaultName));
+  const [enabled, setEnabled] = useState(savedState.enabled);
+  const [appendToLetters, setAppendToLetters] = useState(savedState.appendToLetters);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      UnderlineExt,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    ],
+    content: savedState.content,
+    onUpdate: () => setHasChanges(true),
+  });
+
+  useEffect(() => {
+    const contentChanged = editor ? editor.getHTML() !== savedState.content : false;
+    const togglesChanged = enabled !== savedState.enabled || appendToLetters !== savedState.appendToLetters;
+    setHasChanges(contentChanged || togglesChanged);
+  }, [enabled, appendToLetters, savedState]);
+
+  const handleSave = useCallback(() => {
+    const newState: SignatureState = {
+      content: editor?.getHTML() || '',
+      enabled,
+      appendToLetters,
+    };
+    localStorage.setItem(SIGNATURE_STORAGE_KEY, JSON.stringify(newState));
+    setSavedState(newState);
+    setHasChanges(false);
+    showSaveSuccess();
+  }, [editor, enabled, appendToLetters]);
+
+  const handleCancel = useCallback(() => {
+    editor?.commands.setContent(savedState.content);
+    setEnabled(savedState.enabled);
+    setAppendToLetters(savedState.appendToLetters);
+    setHasChanges(false);
+  }, [editor, savedState]);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-semibold text-foreground">Signature</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Create a signature that can be automatically appended to your notes and documents.
+        </p>
+      </div>
+
+      <Card>
+        <CardContent className="p-6 space-y-6">
+          {/* Signature content editor */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-foreground">Signature content</Label>
+            <p className="text-xs text-muted-foreground">
+              Format your signature using the toolbar below.
+            </p>
+            {editor && (
+              <div className="rounded-lg border border-border overflow-hidden">
+                <div className="border-b border-border px-3 py-2 bg-muted/30">
+                  <RichTextToolbar editor={editor} />
+                </div>
+                <div className="p-4 min-h-[160px] prose prose-sm max-w-none text-foreground">
+                  <EditorContent editor={editor} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Enable signature toggle */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label className="text-sm font-medium text-foreground">Enable signature</Label>
+              <p className="text-xs text-muted-foreground">
+                Include your signature at the bottom of notes and documents.
+              </p>
+            </div>
+            <Switch checked={enabled} onCheckedChange={setEnabled} />
+          </div>
+
+          <Separator />
+
+          {/* Append to AI-generated letters toggle */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label className="text-sm font-medium text-foreground">Append to AI-generated letters</Label>
+              <p className="text-xs text-muted-foreground">
+                Automatically add your signature to letters generated by the AI assistant.
+              </p>
+            </div>
+            <Switch checked={appendToLetters} onCheckedChange={setAppendToLetters} />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Save / Cancel */}
+      <div className="flex justify-end gap-3">
+        <Button variant="outline" onClick={handleCancel} disabled={!hasChanges}>
+          Cancel
+        </Button>
+        <Button onClick={handleSave} disabled={!hasChanges}>
+          Save Changes
+        </Button>
+      </div>
+    </div>
+  );
+};
