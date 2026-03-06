@@ -89,10 +89,10 @@ export const TemplateCommunity = () => {
             location={location}
             specialty={specialty}
             category={category}
-            onSortChange={setSortBy}
-            onLocationChange={setLocation}
-            onSpecialtyChange={setSpecialty}
-            onCategoryChange={setCategory}
+            onSortChange={handleFilterChange(setSortBy)}
+            onLocationChange={handleFilterChange(setLocation)}
+            onSpecialtyChange={handleFilterChange(setSpecialty)}
+            onCategoryChange={handleFilterChange(setCategory)}
           />
         </div>
 
