@@ -12,9 +12,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 interface RichTextToolbarProps {
   editor: Editor;
+  exclude?: string[];
 }
 
-export const RichTextToolbar = ({ editor }: RichTextToolbarProps) => {
+export const RichTextToolbar = ({ editor, exclude = [] }: RichTextToolbarProps) => {
   const btnClass = "h-8 w-8 p-0 text-muted-foreground data-[state=on]:text-foreground data-[state=on]:bg-muted";
 
   const tools = [
