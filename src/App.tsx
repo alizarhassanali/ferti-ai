@@ -48,12 +48,6 @@ const App = () => (
                     <Route path="/template-hub" element={<TemplateHub />} />
                     <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
                     <Route path="/letters" element={<Letters />} />
-                    {/* Onboarding routes - with token validation */}
-                    <Route path="/invite" element={<SetPassword />} />
-                    <Route path="/complete-profile" element={<CompleteProfile />} />
-                    {/* Onboarding routes - static UI (no backend) */}
-                    <Route path="/onboarding/create-password" element={<CreatePasswordPage />} />
-                    <Route path="/onboarding/complete-profile" element={<CompleteProfilePage />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
