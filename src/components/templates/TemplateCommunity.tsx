@@ -47,6 +47,17 @@ export const TemplateCommunity = () => {
     return filtered;
   }, [searchQuery, sortBy, location, specialty, category]);
 
+  // Reset page on filter change
+  const handleFilterChange = <T,>(setter: (v: T) => void) => (value: T) => {
+    setter(value);
+    setCurrentPage(1);
+  };
+
+  const paginatedTemplates = filteredAndSortedTemplates.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="mx-auto px-10 lg:px-14 py-10 max-w-7xl">
