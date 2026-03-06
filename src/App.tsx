@@ -20,10 +20,6 @@ import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
-import SetPassword from "./pages/onboarding/SetPassword";
-import CompleteProfile from "./pages/onboarding/CompleteProfile";
-import CreatePasswordPage from "./pages/onboarding/CreatePasswordPage";
-import CompleteProfilePage from "./pages/onboarding/CompleteProfilePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
