@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
+import { specialtyOptions } from '@/data/hubTemplates';
 
 interface ProfileFormState {
   title: string;
