@@ -43,7 +43,23 @@ export const RichTextToolbar = ({ editor, exclude = [] }: RichTextToolbarProps) 
   return (
     <div className="flex items-center gap-0.5 flex-wrap">
       <TooltipProvider delayDuration={300}>
-        {tools.map((tool, index) => {
+        {tools.filter((tool, index, arr) => {
+          if (tool !== 'separator' && exclude.includes(tool.label)) return false;
+          // Remove orphaned separators (leading, trailing, or consecutive)
+          if (tool === 'separator') {
+            const prev = arr.slice(0, index).filter((t, i, a) => t !== 'separator' || (i > 0 && a[i-1] !== 'separator')).pop();
+            const next = arr.slice(index + 1).find(t => t !== 'separator');
+            if (!prev || !next) return false;
+            if (exclude.includes((prev as any).label) || exclude.includes((next as any).label)) {
+              // Check if all items in preceding/following group are excluded
+            }
+          }
+          return true;
+        }).filter((tool, index, arr) => {
+          // Clean consecutive separators after filtering
+          if (tool === 'separator' && (index === 0 || index === arr.length - 1 || arr[index - 1] === 'separator')) return false;
+          return true;
+        }).map((tool, index) => {
           if (tool === 'separator') {
             return <Separator key={`sep-${index}`} orientation="vertical" className="h-6 mx-1" />;
           }

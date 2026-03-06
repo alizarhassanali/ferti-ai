@@ -88,7 +88,7 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
         {editor && (
           <div className="rounded-lg border border-border overflow-hidden">
             <div className="border-b border-border px-2 py-1.5 bg-muted/30">
-              <RichTextToolbar editor={editor} />
+              <RichTextToolbar editor={editor} exclude={['Heading 1', 'Heading 2', 'Heading 3', 'Bullet list']} />
             </div>
             <div className="p-3 min-h-[100px] prose prose-sm max-w-none text-foreground">
               <EditorContent editor={editor} />
