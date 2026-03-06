@@ -1,20 +1,19 @@
 
+## Remove Date Format Field and Language Preferences Block
 
-## Remove Shadow from Letters Tab Pills
+### Changes Required
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+**ProfileSettings.tsx**
+- Remove `dateFormat` from `ProfileFormState` interface (line 26)
+- Remove `dateFormat: 'MM/DD/YYYY'` from `getInitialState()` (line 44)
+- Remove the entire "Language & Time Fields" section (lines 233-262) which contains both Display language and Date format selectors. Keep only the display language field by converting the grid into a single field or removing the section entirely since we're removing date format
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+**AISettings.tsx**
+- Remove `inputLanguage` and `outputLanguage` from `AISettingsState` interface (lines 9-10)
+- Remove language-related fields from `savedSettings` object (lines 16-17)
+- Remove the entire "Language Preferences Section" block (lines 63-112)
+- Update the description in the header (line 59) from "Customize your AI preferences and language settings" to "Customize your AI preferences"
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
-
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
-
+### Result
+- Profile Settings will no longer show the Date format field or Language & Time section header
+- AI Settings will only show the "Note Preferences" section with Temperature and Nucleus Sampling sliders
