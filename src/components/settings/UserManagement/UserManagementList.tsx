@@ -345,6 +345,39 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={!!memberToDisable} onOpenChange={(open) => !open && setMemberToDisable(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disable User</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to disable{' '}
+              <span className="font-medium text-foreground">
+                {memberToDisable?.first_name} {memberToDisable?.last_name}
+              </span>
+              ? They will lose access until re-enabled.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                const member = memberToDisable;
+                setMemberToDisable(null);
+                if (member) {
+                  const success = await updateStatus(member.id, 'disabled');
+                  if (success) {
+                    showSuccessToast(`${member.first_name} ${member.last_name} has been disabled.`);
+                    refetch();
+                  }
+                }
+              }}
+            >
+              Disable
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
