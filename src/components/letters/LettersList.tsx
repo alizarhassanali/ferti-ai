@@ -153,7 +153,7 @@ export const LettersList = () => {
           </TabsTrigger>
           <TabsTrigger 
             value="sent" 
-            className="rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+            className="rounded-full border border-transparent bg-muted text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
           >
             Sent
           </TabsTrigger>
