@@ -360,6 +360,17 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
         </Table>
       </div>
 
+      {sortedMembers.length > 0 && (
+        <PaginationFooter
+          totalItems={sortedMembers.length}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(limit) => { setItemsPerPage(limit); setCurrentPage(1); }}
+          itemLabel="users"
+        />
+      )}
+
       <AlertDialog open={!!memberToDelete} onOpenChange={(open) => !open && setMemberToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
