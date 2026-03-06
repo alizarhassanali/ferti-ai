@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban } from 'lucide-react';
+import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban, CheckCircle2 } from 'lucide-react';
 import { showSuccessToast } from '@/lib/toast';
 import {
   AlertDialog,
@@ -274,17 +274,26 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                           <Pencil className="h-4 w-4" />
                           Edit user
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
-                          <Ban className="h-4 w-4" />
-                          Disable user
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="gap-2 text-destructive focus:text-destructive"
-                          onClick={() => setMemberToDelete(member)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Delete user
-                        </DropdownMenuItem>
+                        {member.status === 'disabled' ? (
+                          <>
+                            <DropdownMenuItem className="gap-2">
+                              <CheckCircle2 className="h-4 w-4" />
+                              Enable user
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="gap-2 text-destructive focus:text-destructive"
+                              onClick={() => setMemberToDelete(member)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              Delete user
+                            </DropdownMenuItem>
+                          </>
+                        ) : (
+                          <DropdownMenuItem className="gap-2">
+                            <Ban className="h-4 w-4" />
+                            Disable user
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
