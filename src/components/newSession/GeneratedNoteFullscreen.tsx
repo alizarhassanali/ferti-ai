@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Copy, Mail, FileDown, Pencil, FileText } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface GeneratedNote {
   template: string;
@@ -86,51 +87,48 @@ export const GeneratedNoteFullscreen = ({
 
           {/* Action Icons */}
           <div className="flex items-center gap-2 mt-8 pt-6 border-t border-border">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleCopyText}
-              className="h-9 w-9"
-              title="Copy text"
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSendEmail}
-              className="h-9 w-9"
-              title="Send as email"
-            >
-              <Mail className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSaveAsFile}
-              className="h-9 w-9"
-              title="Save as file"
-            >
-              <FileDown className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleEdit}
-              className="h-9 w-9"
-              title="Edit"
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSaveAsPDF}
-              className="h-9 w-9"
-              title="Save as PDF"
-            >
-              <FileText className="h-4 w-4" />
-            </Button>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleCopyText} className="h-9 w-9">
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Copy text</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleSendEmail} className="h-9 w-9">
+                    <Mail className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Send as email</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleSaveAsFile} className="h-9 w-9">
+                    <FileDown className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Save as file</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleEdit} className="h-9 w-9">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Edit</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleSaveAsPDF} className="h-9 w-9">
+                    <FileText className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Save as PDF</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </ScrollArea>

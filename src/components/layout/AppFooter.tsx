@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Globe } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type Language = 'en' | 'fr';
 
@@ -28,12 +29,19 @@ export const AppFooter = () => {
             <Globe className="h-3.5 w-3.5" />
             <span>Canada ({language === 'en' ? 'English' : 'Français'})</span>
           </div>
-          <button
-            onClick={toggleLanguage}
-            className="px-2 py-1 rounded-md hover:bg-muted transition-colors font-medium text-foreground/70 hover:text-foreground"
-          >
-            {language === 'en' ? 'Français' : 'English'}
-          </button>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={toggleLanguage}
+                  className="px-2 py-1 rounded-md hover:bg-muted transition-colors font-medium text-foreground/70 hover:text-foreground"
+                >
+                  {language === 'en' ? 'Français' : 'English'}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">Switch language</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </footer>

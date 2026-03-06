@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { TEMPLATES } from '@/data/demoContent';
 import { useLetters } from '@/contexts/LettersContext';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -327,35 +328,47 @@ export const NoteTab = ({
       {/* Sub-tabs */}
       <div className="flex items-center border-b border-border px-2 bg-muted/30">
         <div className="flex items-center overflow-x-auto">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => onActiveTabChange(tab.id)}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
-                tab.id === activeTabId
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <FileText className="h-3.5 w-3.5" />
-              <span>{tab.title}</span>
+          <TooltipProvider delayDuration={300}>
+            {tabs.map(tab => (
               <button
-                onClick={(e) => closeTab(tab.id, e)}
-                className="ml-1 p-0.5 rounded hover:bg-muted"
+                key={tab.id}
+                onClick={() => onActiveTabChange(tab.id)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 text-sm border-b-2 transition-colors whitespace-nowrap",
+                  tab.id === activeTabId
+                    ? "border-primary text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
               >
-                <X className="h-3 w-3" />
+                <FileText className="h-3.5 w-3.5" />
+                <span>{tab.title}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={(e) => closeTab(tab.id, e)}
+                      className="ml-1 p-0.5 rounded hover:bg-muted"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">Close tab</TooltipContent>
+                </Tooltip>
               </button>
-            </button>
-          ))}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 shrink-0"
-            onClick={addNewTab}
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+            ))}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 shrink-0"
+                  onClick={addNewTab}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Add note tab</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
@@ -393,17 +406,24 @@ export const NoteTab = ({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={handleExportPDF}>Export as PDF</DropdownMenuItem>
-              <DropdownMenuItem onClick={handlePrint}>Print</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={handleExportPDF}>Export as PDF</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handlePrint}>Print</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">More options</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           <div className="ml-auto flex items-center gap-1">
             {/* Language selector per template */}
@@ -421,27 +441,44 @@ export const NoteTab = ({
               </SelectContent>
             </Select>
             
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleCopy} disabled={!activeTab?.content}>
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0" 
-              onClick={handleUndo}
-              disabled={!canUndo}
-            >
-              <Undo className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0" 
-              onClick={handleRedo}
-              disabled={!canRedo}
-            >
-              <Redo className="h-4 w-4" />
-            </Button>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={handleCopy} disabled={!activeTab?.content}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Copy</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0" 
+                    onClick={handleUndo}
+                    disabled={!canUndo}
+                  >
+                    <Undo className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Undo</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0" 
+                    onClick={handleRedo}
+                    disabled={!canRedo}
+                  >
+                    <Redo className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Redo</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 

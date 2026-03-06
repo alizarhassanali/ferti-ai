@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface RecordingControlsBarProps {
   isRecording: boolean;
@@ -47,7 +48,6 @@ export const RecordingControlsBar = ({
 
       {/* Recording Controls */}
       <div className="flex items-center gap-3">
-        {/* Recording Button with Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -69,12 +69,17 @@ export const RecordingControlsBar = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Microphone Icon */}
-        <Button variant="ghost" size="icon" className="h-9 w-9">
-          <Mic className="h-5 w-5" />
-        </Button>
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Mic className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="text-xs">Microphone</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        {/* Generate Button with Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="default" className="gap-2">

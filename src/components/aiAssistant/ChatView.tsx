@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAIAssistant, Message } from '@/contexts/AIAssistantContext';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const EmptyState = () => (
   <div className="flex-1 flex flex-col items-center justify-center px-8">
@@ -104,7 +105,6 @@ export const ChatView = () => {
   const hasMessages = selectedConversation && selectedConversation.messages.length > 0;
 
   useEffect(() => {
-    // Scroll to bottom when messages change or loading state changes
     if (scrollAreaRef.current) {
       const scrollContainer = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
@@ -114,7 +114,6 @@ export const ChatView = () => {
   }, [selectedConversation?.messages, isLoading]);
 
   useEffect(() => {
-    // Focus input when conversation changes
     inputRef.current?.focus();
   }, [selectedConversation?.id]);
 
@@ -135,7 +134,6 @@ export const ChatView = () => {
     return <NoSelectionState />;
   }
 
-  // Group messages by date
   const renderMessages = () => {
     const messages = selectedConversation.messages;
     const elements: JSX.Element[] = [];
@@ -157,7 +155,6 @@ export const ChatView = () => {
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Messages Area */}
       {hasMessages ? (
         <ScrollArea className="flex-1 px-4 py-4" ref={scrollAreaRef}>
           <div className="max-w-[960px] mx-auto">
@@ -181,21 +178,33 @@ export const ChatView = () => {
               placeholder="Ask anything..."
               className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
             />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 text-foreground hover:text-foreground"
-            >
-              <Mic className="h-5 w-5" />
-            </Button>
-            <Button
-              onClick={handleSend}
-              disabled={!inputValue.trim() || isLoading}
-              size="icon"
-              className="h-9 w-9 bg-brand hover:bg-brand/90 text-brand-foreground"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 text-foreground hover:text-foreground"
+                  >
+                    <Mic className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">Voice input</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleSend}
+                    disabled={!inputValue.trim() || isLoading}
+                    size="icon"
+                    className="h-9 w-9 bg-brand hover:bg-brand/90 text-brand-foreground"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">Send message</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </div>

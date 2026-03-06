@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select';
 import { Template, TemplateVisibility } from '@/types/template';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface TemplateRowProps {
   template: Template;
@@ -78,42 +79,53 @@ export const TemplateRow = ({ template, onDelete, onShare }: TemplateRowProps) =
         
         <TableCell className="py-3.5">
           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white border-[hsl(35_20%_88%)] rounded-xl shadow-lg">
-                <DropdownMenuItem className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer">
-                  Duplicate
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer"
-                  onClick={() => setShowShareDialog(true)}
-                >
-                  Share
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="text-[hsl(0_60%_45%)] hover:bg-[hsl(0_60%_96%)] rounded-lg cursor-pointer"
-                  onClick={() => onDelete(template.id)}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Edit template</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-[hsl(25_20%_45%)] hover:text-[hsl(25_30%_30%)] hover:bg-[hsl(40_25%_92%)] rounded-lg"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-white border-[hsl(35_20%_88%)] rounded-xl shadow-lg">
+                      <DropdownMenuItem className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer">
+                        Duplicate
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="text-[hsl(25_25%_35%)] hover:bg-[hsl(40_25%_96%)] rounded-lg cursor-pointer"
+                        onClick={() => setShowShareDialog(true)}
+                      >
+                        Share
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        className="text-[hsl(0_60%_45%)] hover:bg-[hsl(0_60%_96%)] rounded-lg cursor-pointer"
+                        onClick={() => onDelete(template.id)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">More options</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </TableCell>
       </TableRow>

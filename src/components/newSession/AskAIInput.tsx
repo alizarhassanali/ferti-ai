@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Bot, Paperclip, Send, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AskAIInputProps {
   onSubmit: (prompt: string) => void;
@@ -30,21 +31,33 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
               className="pr-20"
             />
             <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-              >
-                <Paperclip className="h-4 w-4" />
-              </Button>
-              <Button
-                size="icon"
-                className="h-8 w-8"
-                onClick={handleSubmit}
-                disabled={!prompt.trim()}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                    >
+                      <Paperclip className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">Attach file</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={handleSubmit}
+                      disabled={!prompt.trim()}
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">Send</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>

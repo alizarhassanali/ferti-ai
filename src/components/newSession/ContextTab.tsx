@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ContextTabProps {
   content: string;
@@ -34,15 +35,32 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
     <div className="flex flex-col h-full p-4">
       {/* Toolbar */}
       <div className="flex items-center gap-1 mb-3 pb-3 border-b border-border">
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-          <Bold className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-          <Italic className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-          <List className="h-4 w-4" />
-        </Button>
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Bold className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">Bold</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Italic className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">Italic</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <List className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">List</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
         {onLoadDemo && (
           <Button 
