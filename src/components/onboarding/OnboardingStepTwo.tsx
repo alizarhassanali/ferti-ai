@@ -120,7 +120,7 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
         </div>
       </div>
 
-      <Separator className="mb-5" />
+      
 
       {/* Demo Booking */}
       <div className="mb-6">
