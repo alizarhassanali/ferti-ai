@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronDown, ArrowUpDown, Plus, MoreVertical, Pencil, Trash2, Ban, CheckCircle2, Mail } from 'lucide-react';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 import { showSuccessToast } from '@/lib/toast';
 import {
   AlertDialog,
