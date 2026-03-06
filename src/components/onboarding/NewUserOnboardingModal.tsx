@@ -11,6 +11,7 @@ import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import ottoLogo from '@/assets/otto-icon.png';
+import { specialtyOptions } from '@/data/hubTemplates';
 
 interface OnboardingFormState {
   title: string;
