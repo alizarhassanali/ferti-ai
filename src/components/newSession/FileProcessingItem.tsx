@@ -2,6 +2,7 @@ import { FileText, X, RotateCcw, AlertCircle, Loader2, Check } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AttachedFile } from '@/types/attachedFile';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface FileProcessingItemProps {
   file: AttachedFile;
@@ -49,23 +50,37 @@ export const FileProcessingItem = ({ file, onRemove, onRetry }: FileProcessingIt
       )}
 
       {/* Remove button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        className="flex-shrink-0 h-4 w-4 p-0 rounded-full hover:bg-destructive/10 ml-0.5"
-        onClick={() => onRemove(file.id)}
-      >
-        <X className="h-3 w-3" />
-      </Button>
+      <TooltipProvider delayDuration={300}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-shrink-0 h-4 w-4 p-0 rounded-full hover:bg-destructive/10 ml-0.5"
+              onClick={() => onRemove(file.id)}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="text-xs">Remove file</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {/* Error retry */}
       {isError && onRetry && (
-        <button
-          className="text-[10px] text-destructive hover:underline flex items-center gap-0.5 flex-shrink-0"
-          onClick={() => onRetry(file.id)}
-        >
-          <RotateCcw className="h-2.5 w-2.5" />
-        </button>
+        <TooltipProvider delayDuration={300}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="text-[10px] text-destructive hover:underline flex items-center gap-0.5 flex-shrink-0"
+                onClick={() => onRetry(file.id)}
+              >
+                <RotateCcw className="h-2.5 w-2.5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="text-xs">Retry</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
 
       {/* Progress bar */}

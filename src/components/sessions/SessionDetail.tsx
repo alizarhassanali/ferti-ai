@@ -9,6 +9,7 @@ import { Plus, Trash2, Copy, Calendar, Globe, Zap, Mic, ThumbsUp, ThumbsDown, X,
 import { useSessionsLayout } from '@/contexts/SessionsLayoutContext';
 import { useSessions } from '@/contexts/SessionsContext';
 import { useToast } from '@/hooks/use-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const SessionDetail = () => {
   const { selectedSessionId } = useSessionsLayout();
@@ -24,7 +25,6 @@ export const SessionDetail = () => {
     return 'dictation';
   });
 
-  // Reset tab when session changes
   useEffect(() => {
     if (selectedSession) {
       if (selectedSession.transcriptContent || selectedSession.hasTranscript) {
@@ -98,7 +98,6 @@ export const SessionDetail = () => {
               readOnly
             />
             
-            {/* Partner - read only */}
             <div 
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
               title={selectedSession.patientName ? "Jane Smith" : "No partner linked"}
@@ -109,7 +108,6 @@ export const SessionDetail = () => {
               </span>
             </div>
             
-            {/* Referring Physician - read only */}
             <div 
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sidebar rounded-full text-[13px] select-text"
               title={selectedSession.patientName ? "Dr. Michael Chen" : "No referring physician"}
@@ -120,9 +118,16 @@ export const SessionDetail = () => {
               </span>
             </div>
             
-            <Button variant="ghost" size="icon" onClick={handleDeleteSession}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" onClick={handleDeleteSession}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">Delete session</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="default" size="sm" onClick={handleEditSession}>
@@ -195,9 +200,16 @@ export const SessionDetail = () => {
               )}
             </TabsTrigger>
           ))}
-          <TabsTrigger value="add" className="rounded-none border-b-2 border-transparent">
-            <Plus className="h-4 w-4" />
-          </TabsTrigger>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <TabsTrigger value="add" className="rounded-none border-b-2 border-transparent">
+                  <Plus className="h-4 w-4" />
+                </TabsTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">Add note</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </TabsList>
 
         {/* Empty State */}
@@ -262,12 +274,24 @@ export const SessionDetail = () => {
                 ))}
               </div>
               <div className="flex items-center gap-2 mt-8 pt-4 border-t">
-                <Button variant="ghost" size="sm">
-                  <ThumbsUp className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <ThumbsDown className="h-4 w-4" />
-                </Button>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <ThumbsUp className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Good transcription</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <ThumbsDown className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Poor transcription</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
           </TabsContent>
@@ -281,9 +305,16 @@ export const SessionDetail = () => {
                 ✨ Smart dictation
               </Button>
               <div className="flex gap-2">
-                <Button variant="ghost" size="icon">
-                  <Mic className="h-4 w-4" />
-                </Button>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Mic className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Record</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -303,12 +334,24 @@ export const SessionDetail = () => {
             />
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm">
-                  <ThumbsUp className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <ThumbsDown className="h-4 w-4" />
-                </Button>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <ThumbsUp className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Good transcription</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <ThumbsDown className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">Poor transcription</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <span>⚙️ Personalisation off</span>
@@ -344,12 +387,24 @@ export const SessionDetail = () => {
               />
               <div className="flex items-center justify-between pt-4 border-t">
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm">
-                    <ThumbsUp className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <ThumbsDown className="h-4 w-4" />
-                  </Button>
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <ThumbsUp className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="text-xs">Good transcription</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <ThumbsDown className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="text-xs">Poor transcription</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span>⚙️ Personalisation off</span>
@@ -368,12 +423,24 @@ export const SessionDetail = () => {
             placeholder="🤖 Ask Otto to do anything..."
             className="flex-1"
           />
-          <Button size="icon" variant="ghost">
-            <Mic className="h-4 w-4" />
-          </Button>
-          <Button size="icon">
-            ➤
-          </Button>
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <Mic className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">Voice input</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon">
+                  ➤
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-xs">Send</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>⚠️ Review your note before use to ensure it accurately represents the visit</span>

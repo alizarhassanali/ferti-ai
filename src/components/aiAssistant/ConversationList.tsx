@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAIAssistant } from '@/contexts/AIAssistantContext';
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const formatTimestamp = (date: Date) => {
   if (isToday(date)) {
@@ -64,7 +65,6 @@ export const ConversationList = () => {
     <div className="h-full flex flex-col bg-card">
       {/* Header */}
       <div className="flex items-center justify-between gap-2.5 px-4 py-2.5 border-b border-border bg-card">
-        {/* Search Bar */}
         <div className="flex-1 flex items-center relative">
           <Search className="absolute left-3 h-4 w-4 text-foreground" />
           <input
@@ -76,7 +76,6 @@ export const ConversationList = () => {
           />
         </div>
         
-        {/* New Chat Button - Primary Salmon */}
         <button
           onClick={createNewChat}
           className="inline-flex items-center justify-center gap-1.5 h-8 px-3.5 rounded-full bg-brand text-brand-foreground text-[13px] font-medium cursor-pointer shadow-sm hover:bg-brand/90 active:bg-brand/80 transition-colors"
@@ -106,7 +105,6 @@ export const ConversationList = () => {
                   onMouseEnter={() => setHoveredId(conversation.id)}
                   onMouseLeave={() => setHoveredId(null)}
                 >
-                  {/* Selected indicator bar */}
                   {isSelected && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-brand rounded-r-full" />
                   )}
@@ -121,7 +119,6 @@ export const ConversationList = () => {
                       }
                     `}
                   >
-                    {/* Text content - takes remaining width */}
                     <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                       {isEditing ? (
                         <Input
@@ -149,7 +146,6 @@ export const ConversationList = () => {
                       )}
                     </div>
                     
-                    {/* Timestamp and menu - fixed width */}
                     <div className="flex items-center gap-1 flex-shrink-0 pt-0.5">
                       {!isEditing && (
                         <span className="text-[11px] text-muted-foreground whitespace-nowrap">
@@ -157,40 +153,46 @@ export const ConversationList = () => {
                         </span>
                       )}
                       
-                      {/* Context menu */}
                       {(isHovered || isSelected) && !isEditing && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6 opacity-60 hover:opacity-100"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-40">
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleStartRename(conversation.id, conversation.title);
-                              }}
-                            >
-                              <Pencil className="h-4 w-4 mr-2" />
-                              Rename chat
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteConversation(conversation.id);
-                              }}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete chat
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <TooltipProvider delayDuration={300}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 opacity-60 hover:opacity-100"
+                                  >
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-40">
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleStartRename(conversation.id, conversation.title);
+                                    }}
+                                  >
+                                    <Pencil className="h-4 w-4 mr-2" />
+                                    Rename chat
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteConversation(conversation.id);
+                                    }}
+                                    className="text-destructive focus:text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete chat
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="text-xs">More options</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       )}
                     </div>
                   </button>
