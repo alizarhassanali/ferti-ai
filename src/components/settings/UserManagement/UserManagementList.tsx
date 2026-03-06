@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useTeamMembers, useUpdateMemberStatus } from '@/hooks/useTeamMembers';
+import { useTeamMembers, useUpdateMemberStatus, useCreateInvite } from '@/hooks/useTeamMembers';
 import { TeamMember, TeamMemberRole, TeamMemberStatus } from '@/types/team';
 
 interface UserManagementListProps {
