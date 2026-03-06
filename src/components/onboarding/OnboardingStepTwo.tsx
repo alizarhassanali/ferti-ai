@@ -5,14 +5,14 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
+
 import { ArrowLeft } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import UnderlineExt from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { RichTextToolbar } from '@/components/letters/RichTextToolbar';
-import ottoLogo from '@/assets/otto-icon.png';
+
 
 const SIGNATURE_STORAGE_KEY = 'medical-scribe-signature-settings';
 
@@ -73,7 +73,7 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
 
       {/* Logo + Header */}
       <div className="flex flex-col items-center mb-6">
-        <img src={ottoLogo} alt="Otto" className="h-12 w-12 mb-4" />
+        
         <DialogTitle className="text-2xl font-semibold text-foreground text-center">
           Set up your signature
         </DialogTitle>
@@ -120,7 +120,7 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
         </div>
       </div>
 
-      <Separator className="mb-5" />
+      
 
       {/* Demo Booking */}
       <div className="mb-6">
