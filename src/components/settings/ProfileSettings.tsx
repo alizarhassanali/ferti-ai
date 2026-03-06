@@ -41,7 +41,7 @@ export const ProfileSettings = () => {
     phoneNumber: '',
     useInfoForSignature: false,
     displayLanguage: 'English',
-    dateFormat: 'MM/DD/YYYY',
+    
   });
 
   const [formData, setFormData] = useState<ProfileFormState>(getInitialState);
