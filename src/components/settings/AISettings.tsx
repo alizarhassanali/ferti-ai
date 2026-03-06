@@ -1,20 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 interface AISettingsState {
-  inputLanguage: string;
-  outputLanguage: string;
   temperature: number;
   nucleusSampling: number;
 }
 
 const savedSettings: AISettingsState = {
-  inputLanguage: 'English',
-  outputLanguage: 'English',
   temperature: 0.7,
   nucleusSampling: 0.9,
 };
@@ -56,61 +51,10 @@ export const AISettings = () => {
     <div className="w-full">
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-foreground mb-1">AI Settings</h3>
-        <p className="text-sm text-muted-foreground">Customize your AI preferences and language settings</p>
+        <p className="text-sm text-muted-foreground">Customize your AI preferences</p>
       </div>
 
       <div className="space-y-8">
-        {/* Language Preferences Section */}
-        <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-1">Language Preferences</h4>
-          <p className="text-sm text-muted-foreground mb-6">
-            Set your preferred input and output languages for AI processing.
-          </p>
-          
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="inputLanguage" className="text-sm font-medium mb-2 block">
-                Default input language
-              </Label>
-              <Select 
-                value={formData.inputLanguage} 
-                onValueChange={(value) => setFormData({ ...formData, inputLanguage: value })}
-              >
-                <SelectTrigger id="inputLanguage">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                  <SelectItem value="Spanish">Spanish</SelectItem>
-                  <SelectItem value="German">German</SelectItem>
-                  <SelectItem value="Portuguese">Portuguese</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="outputLanguage" className="text-sm font-medium mb-2 block">
-                Default output language
-              </Label>
-              <Select 
-                value={formData.outputLanguage} 
-                onValueChange={(value) => setFormData({ ...formData, outputLanguage: value })}
-              >
-                <SelectTrigger id="outputLanguage">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="English">English</SelectItem>
-                  <SelectItem value="French">French</SelectItem>
-                  <SelectItem value="Spanish">Spanish</SelectItem>
-                  <SelectItem value="German">German</SelectItem>
-                  <SelectItem value="Portuguese">Portuguese</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-
         {/* Note Preferences Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-1">Note Preferences</h4>
