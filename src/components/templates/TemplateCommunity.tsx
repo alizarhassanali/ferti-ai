@@ -12,6 +12,8 @@ export const TemplateCommunity = () => {
   const [location, setLocation] = useState('All');
   const [specialty, setSpecialty] = useState('All');
   const [category, setCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const filteredAndSortedTemplates = useMemo(() => {
     let filtered = hubTemplates.filter((template) => {
