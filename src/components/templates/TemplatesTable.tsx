@@ -9,14 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { TemplateRow } from './TemplateRow';
 import { Template, TemplateVisibility } from '@/types/template';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
+import { PaginationFooter } from '@/components/ui/pagination-footer';
 
 interface TemplatesTableProps {
   templates: Template[];
