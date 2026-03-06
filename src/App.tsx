@@ -17,6 +17,7 @@ import MyTemplates from "./pages/MyTemplates";
 import TemplateHub from "./pages/TemplateHub";
 
 import NewSession from "./pages/NewSession";
+import NewUserScreen from "./pages/NewUserScreen";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
@@ -41,6 +42,7 @@ const App = () => (
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/new-session" element={<NewSession />} />
+                    <Route path="/new-user-screen" element={<NewUserScreen />} />
                     <Route path="/sessions" element={<ViewSessions />} />
                     <Route path="/ai-assistant" element={<AIAssistant />} />
                     <Route path="/settings" element={<Settings />} />
