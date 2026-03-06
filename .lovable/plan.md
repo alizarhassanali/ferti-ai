@@ -1,20 +1,15 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Add Grey Background to Inactive Tab Pills
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Problem
+In both the Letters and View Sessions middle panes, the inactive tab pill has `bg-transparent`. The screenshot shows inactive pills should have a light grey background.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Fix
+Change `bg-transparent` to `bg-muted` (which maps to `#EAF4FB` / light sky) on the inactive state of the tab pills in both files. This gives the unselected pill a visible grey fill.
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+### Files Changed
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+1. **`src/components/sessions/SessionList.tsx`** (lines 227, 233) — change `bg-transparent` to `bg-muted` in both TabsTrigger classNames
+2. **`src/components/letters/LettersList.tsx`** (lines 145, 156) — change `bg-transparent` to `bg-muted` in both TabsTrigger classNames
 
