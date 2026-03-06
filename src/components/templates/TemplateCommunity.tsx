@@ -98,7 +98,7 @@ export const TemplateCommunity = () => {
 
         {/* Template Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
-          {filteredAndSortedTemplates.map((template) => (
+          {paginatedTemplates.map((template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
         </div>
@@ -107,6 +107,17 @@ export const TemplateCommunity = () => {
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">No templates found matching your criteria.</p>
           </div>
+        )}
+
+        {filteredAndSortedTemplates.length > 0 && (
+          <PaginationFooter
+            totalItems={filteredAndSortedTemplates.length}
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={(limit) => { setItemsPerPage(limit); setCurrentPage(1); }}
+            itemLabel="templates"
+          />
         )}
       </div>
     </div>

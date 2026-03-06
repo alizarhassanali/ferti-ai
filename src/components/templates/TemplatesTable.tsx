@@ -90,36 +90,15 @@ export const TemplatesTable = ({
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination className="mt-6">
-          <PaginationContent className="gap-1">
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                className={`rounded-xl border-border hover:bg-muted ${currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  onClick={() => onPageChange(page)}
-                  isActive={currentPage === page}
-                  className={`cursor-pointer rounded-xl ${currentPage === page ? 'bg-brand text-brand-foreground border-brand' : 'border-border hover:bg-muted'}`}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                className={`rounded-xl border-border hover:bg-muted ${currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+      {templates.length > 0 && (
+        <PaginationFooter
+          totalItems={templates.length}
+          currentPage={currentPage}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
+          onItemsPerPageChange={(limit) => { onItemsPerPageChange(limit); onPageChange(1); }}
+          itemLabel="templates"
+        />
       )}
     </div>
   );

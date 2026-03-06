@@ -45,6 +45,8 @@ const MyTemplates = () => {
             onShare={shareTemplate}
             currentPage={currentPage}
             onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setItemsPerPage}
           />
 
           <CreateTemplateModal
