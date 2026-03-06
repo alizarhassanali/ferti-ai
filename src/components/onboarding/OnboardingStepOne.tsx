@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import ottoLogo from '@/assets/otto-icon.png';
+
 import { specialtyOptions } from '@/data/hubTemplates';
 import type { OnboardingFormState } from './NewUserOnboardingModal';
 
