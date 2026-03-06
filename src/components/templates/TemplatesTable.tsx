@@ -29,8 +29,9 @@ export const TemplatesTable = ({
   onShare,
   currentPage,
   onPageChange,
+  itemsPerPage,
+  onItemsPerPageChange,
 }: TemplatesTableProps) => {
-  const itemsPerPage = 10;
   const totalPages = Math.ceil(templates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTemplates = templates.slice(startIndex, startIndex + itemsPerPage);
