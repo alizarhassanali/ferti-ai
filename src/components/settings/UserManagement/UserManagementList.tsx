@@ -289,7 +289,26 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                           <Pencil className="h-4 w-4" />
                           Edit user
                         </DropdownMenuItem>
-                        {member.status === 'disabled' ? (
+                        {member.status === 'pending' && (
+                          <>
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={() => handleResendInvite(member)}
+                              disabled={isResending}
+                            >
+                              <Mail className="h-4 w-4" />
+                              Resend invitation
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="gap-2"
+                              onClick={() => setMemberToDisable(member)}
+                            >
+                              <Ban className="h-4 w-4" />
+                              Disable user
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        {member.status === 'disabled' && (
                           <>
                             <DropdownMenuItem
                               className="gap-2"
@@ -313,7 +332,8 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                               Delete user
                             </DropdownMenuItem>
                           </>
-                        ) : (
+                        )}
+                        {member.status === 'active' && (
                           <DropdownMenuItem
                             className="gap-2"
                             onClick={() => setMemberToDisable(member)}
