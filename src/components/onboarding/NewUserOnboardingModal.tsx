@@ -18,7 +18,11 @@ export interface OnboardingFormState {
   agreedToTerms: boolean;
 }
 
-export const NewUserOnboardingModal = () => {
+interface NewUserOnboardingModalProps {
+  demoMode?: boolean;
+}
+
+export const NewUserOnboardingModal = ({ demoMode = false }: NewUserOnboardingModalProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [step, setStep] = useState<1 | 2>(1);
