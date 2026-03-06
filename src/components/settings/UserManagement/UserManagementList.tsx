@@ -259,7 +259,7 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
                   {error}
                 </TableCell>
               </TableRow>
-            ) : sortedMembers.length === 0 ? (
+            ) : sortedMembers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No team members found
