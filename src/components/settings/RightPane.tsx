@@ -19,6 +19,8 @@ export const RightPane = () => {
         return <UserManagement />;
       case 'privacy':
         return <PrivacySettings />;
+      case 'signature':
+        return <SignatureSettings />;
       case 'security':
         return <SecuritySettings />;
       default:
