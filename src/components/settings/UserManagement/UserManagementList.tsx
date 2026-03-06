@@ -88,12 +88,14 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
+  const [memberToDisable, setMemberToDisable] = useState<TeamMember | null>(null);
 
-  const { members, isLoading, error } = useTeamMembers({
+  const { members, isLoading, error, refetch } = useTeamMembers({
     search,
     status: statusFilter,
     role: roleFilter,
   });
+  const { updateStatus, isLoading: isUpdatingStatus } = useUpdateMemberStatus();
 
   const sortedMembers = useMemo(() => {
     return [...members].sort((a, b) => {
