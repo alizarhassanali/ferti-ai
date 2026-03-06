@@ -1,20 +1,32 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Make Disable/Enable User Buttons Functional
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Problem
+The "Disable user" and "Enable user" buttons in the User Management dropdown currently do nothing.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Approach
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+Since `team_members` table updates require `service_role` (per RLS), we need a backend function to handle status changes.
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
+**1. Create edge function `update-team-member-status`** (`supabase/functions/update-team-member-status/index.ts`)
+- Accepts `{ teamMemberId, status }` (status: `'active'` | `'disabled'`)
+- Validates JWT, checks caller has admin role via `has_role()`
+- Updates `team_members.status` using service role client
+- Returns updated member
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
+**2. Add `useUpdateMemberStatus` hook** (in `src/hooks/useTeamMembers.ts`)
+- Calls `supabase.functions.invoke('update-team-member-status', { body: { teamMemberId, status } })`
+- Returns `{ updateStatus, isLoading }`
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**3. Wire up buttons in `UserManagementList.tsx`**
+- Add confirmation dialog for disable action ("Are you sure you want to disable {name}?")
+- On "Disable user" click → call `updateStatus(member.id, 'disabled')` → show success toast → refetch members
+- On "Enable user" click → call `updateStatus(member.id, 'active')` → show success toast → refetch members
+
+### Files changed
+- `supabase/functions/update-team-member-status/index.ts` (new)
+- `supabase/config.toml` (add JWT config for new function)
+- `src/hooks/useTeamMembers.ts` (add `useUpdateMemberStatus` export)
+- `src/components/settings/UserManagement/UserManagementList.tsx` (wire buttons + add disable confirmation dialog)
 
