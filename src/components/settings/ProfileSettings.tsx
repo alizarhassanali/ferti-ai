@@ -23,7 +23,7 @@ interface ProfileFormState {
   useInfoForSignature: boolean;
   // Language & time
   displayLanguage: string;
-  dateFormat: string;
+  
 }
 
 export const ProfileSettings = () => {
