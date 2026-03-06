@@ -18,6 +18,8 @@ interface TemplatesTableProps {
   onShare: (id: string, visibility: TemplateVisibility) => void;
   currentPage: number;
   onPageChange: (page: number) => void;
+  itemsPerPage: number;
+  onItemsPerPageChange: (limit: number) => void;
 }
 
 export const TemplatesTable = ({
