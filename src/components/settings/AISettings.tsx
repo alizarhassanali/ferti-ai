@@ -6,15 +6,11 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 interface AISettingsState {
-  inputLanguage: string;
-  outputLanguage: string;
   temperature: number;
   nucleusSampling: number;
 }
 
 const savedSettings: AISettingsState = {
-  inputLanguage: 'English',
-  outputLanguage: 'English',
   temperature: 0.7,
   nucleusSampling: 0.9,
 };
