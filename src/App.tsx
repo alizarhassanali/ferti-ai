@@ -15,7 +15,7 @@ import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
 import TemplateHub from "./pages/TemplateHub";
-import TemplateDetail from "./pages/TemplateDetail";
+
 import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
