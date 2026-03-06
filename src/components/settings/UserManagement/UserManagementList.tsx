@@ -90,6 +90,13 @@ export const UserManagementList = ({ onAddMember }: UserManagementListProps) => 
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
   const [memberToDisable, setMemberToDisable] = useState<TeamMember | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, roleFilter]);
 
   const { members, isLoading, error, refetch } = useTeamMembers({
     search,
