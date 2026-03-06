@@ -15,7 +15,7 @@ import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import MyTemplates from "./pages/MyTemplates";
 import TemplateHub from "./pages/TemplateHub";
-import TemplateDetail from "./pages/TemplateDetail";
+
 import NewSession from "./pages/NewSession";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
@@ -46,7 +46,7 @@ const App = () => (
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/my-templates" element={<MyTemplates />} />
                     <Route path="/template-hub" element={<TemplateHub />} />
-                    <Route path="/template-hub/:templateId" element={<TemplateDetail />} />
+                    
                     <Route path="/letters" element={<Letters />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
