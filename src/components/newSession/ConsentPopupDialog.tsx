@@ -27,7 +27,7 @@ export const ConsentPopupDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+        <DialogHeader className="border-0">
           <DialogTitle>Verbal Consent Script</DialogTitle>
         </DialogHeader>
         <DialogBody className="space-y-4 text-sm text-muted-foreground">
