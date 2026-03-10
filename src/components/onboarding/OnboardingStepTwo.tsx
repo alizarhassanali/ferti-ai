@@ -3,8 +3,6 @@ import { DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 
 import { ArrowLeft } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -12,7 +10,6 @@ import StarterKit from '@tiptap/starter-kit';
 import UnderlineExt from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { RichTextToolbar } from '@/components/letters/RichTextToolbar';
-
 
 const SIGNATURE_STORAGE_KEY = 'medical-scribe-signature-settings';
 
@@ -25,8 +22,6 @@ interface Props {
 export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
   const [enabled, setEnabled] = useState(true);
   const [appendToLetters, setAppendToLetters] = useState(true);
-  const [bookDemo, setBookDemo] = useState(false);
-  const [demoReason, setDemoReason] = useState('');
 
   const editor = useEditor({
     extensions: [
@@ -37,26 +32,13 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
     content: `<p>${userName}</p>`,
   });
 
-  const canContinue = !bookDemo || demoReason.trim().length > 0;
-
   const handleContinue = () => {
-    // Save signature to localStorage
     const signatureState = {
       content: editor?.getHTML() || '',
       enabled,
       appendToLetters,
     };
     localStorage.setItem(SIGNATURE_STORAGE_KEY, JSON.stringify(signatureState));
-
-    // Save demo preference
-    if (bookDemo) {
-      localStorage.setItem('otto-demo-request', JSON.stringify({
-        requested: true,
-        reason: demoReason.trim(),
-        requestedAt: new Date().toISOString(),
-      }));
-    }
-
     onFinish();
   };
 
@@ -71,9 +53,8 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
         Back
       </button>
 
-      {/* Logo + Header */}
+      {/* Header */}
       <div className="flex flex-col items-center mb-6">
-        
         <DialogTitle className="text-2xl font-semibold text-foreground text-center">
           Set up your signature
         </DialogTitle>
@@ -120,43 +101,9 @@ export const OnboardingStepTwo = ({ userName, onBack, onFinish }: Props) => {
         </div>
       </div>
 
-      
-
-      {/* Demo Booking */}
-      <div className="mb-6">
-        <div className="flex items-start gap-2.5">
-          <Checkbox
-            id="book-demo"
-            checked={bookDemo}
-            onCheckedChange={(checked) => {
-              setBookDemo(checked === true);
-              if (!checked) setDemoReason('');
-            }}
-            className="mt-0.5"
-          />
-          <label htmlFor="book-demo" className="text-sm text-foreground leading-snug cursor-pointer font-medium">
-            Book a 1-1 demo with an Otto Notes expert
-          </label>
-        </div>
-
-        {bookDemo && (
-          <div className="mt-3 ml-6">
-            <Label className="text-sm font-medium mb-1.5 block">
-              Reason for demo <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              value={demoReason}
-              onChange={(e) => setDemoReason(e.target.value)}
-              placeholder="e.g. Exploring for my practice, evaluating AI tools..."
-            />
-          </div>
-        )}
-      </div>
-
       {/* Continue Button */}
       <Button
         onClick={handleContinue}
-        disabled={!canContinue}
         className="w-full"
         size="lg"
       >
