@@ -7,6 +7,7 @@ import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { MessageCircle } from 'lucide-react';
 import { HelpPanel } from '@/components/help/HelpPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { TrainingBanner } from '@/components/onboarding/TrainingBanner';
 
 interface AppLayoutProps {
   children: ReactNode;
