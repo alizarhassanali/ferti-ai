@@ -482,12 +482,6 @@ export const NoteTab = ({
           </div>
         </div>
 
-        {/* Review disclaimer - always visible */}
-        <div className="flex items-center gap-2 px-3 py-2 mb-3 rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-sm">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          <span>Review your note before use to ensure it accurately represents the visit</span>
-        </div>
-
         {/* Loading State */}
         {isGenerating && (
           <div className="flex-1 flex flex-col items-center justify-center gap-3">
