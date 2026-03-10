@@ -56,7 +56,7 @@ const FilterPill = ({ icon, label, value, defaultValue, options, onChange, isAct
             <span
               role="button"
               className="ml-0.5 rounded-full hover:bg-brand/20 p-0.5 transition-colors"
-              onClick={(e) => { e.stopPropagation(); onChange(defaultValue); }}
+              onClick={(e) => { e.stopPropagation(); e.preventDefault(); onChange(defaultValue); }}
             >
               <X className="h-3 w-3" />
             </span>
