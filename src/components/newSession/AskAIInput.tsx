@@ -62,12 +62,6 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
           </div>
         </div>
       </div>
-      <div className="px-4 py-2 bg-muted/30 border-t border-border">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
-          <span>Review your note before use to ensure it accurately represents the visit</span>
-        </div>
-      </div>
     </div>
   );
 };

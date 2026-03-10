@@ -513,6 +513,12 @@ export const NoteTab = ({
           />
         )}
 
+        {/* Review disclaimer - always visible */}
+        <div className="flex items-center gap-2 px-3 py-2 mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md text-sm text-amber-800 dark:text-amber-200">
+          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+          <span>Review your note before use to ensure it accurately represents the visit</span>
+        </div>
+
         {/* Letter Actions - Show when note has content */}
         {hasGeneratedContent && !isGenerating && (
           <div className="mt-4 pt-4 border-t border-border">
