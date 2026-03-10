@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bot, Paperclip, Send, AlertTriangle } from 'lucide-react';
+import { Bot, Paperclip, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -60,12 +60,6 @@ export const AskAIInput = ({ onSubmit }: AskAIInputProps) => {
               </TooltipProvider>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="px-4 py-2 bg-muted/30 border-t border-border">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
-          <span>Review your note before use to ensure it accurately represents the visit</span>
         </div>
       </div>
     </div>

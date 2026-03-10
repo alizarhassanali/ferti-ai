@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Send, Download, CheckCircle, Globe } from 'lucide-react';
+import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, Send, Download, CheckCircle, Globe, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -512,6 +512,12 @@ export const NoteTab = ({
             className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed"
           />
         )}
+
+        {/* Review disclaimer - always visible */}
+        <div className="flex items-center gap-2 px-3 py-2 mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md text-sm text-amber-800 dark:text-amber-200">
+          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+          <span>Review your note before use to ensure it accurately represents the visit</span>
+        </div>
 
         {/* Letter Actions - Show when note has content */}
         {hasGeneratedContent && !isGenerating && (
