@@ -1,35 +1,20 @@
 
 
-## Filter Clearing UX for Template Hub
+## Remove Shadow from Letters Tab Pills
 
-### The Problem
-When a user has selected specific values on one or more filter pills, there's no obvious way to clear them — either individually or all at once.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Proposed Approach
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**1. Individual filter clearing — X button on active pills**
-When a filter pill has a non-default value (not "All"), show a small `X` icon on the right side of the pill. Clicking the X resets that filter to "All" (or "Most Popular" for Sort). This is intuitive — the brand-colored pill already signals it's active, and the X gives a clear affordance to dismiss it.
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-The X click should stop propagation so it doesn't open the dropdown.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-**2. "Clear all" button — shown only when 2+ filters are active**
-A subtle text button labeled "Clear all" appears at the end of the filter row when 2 or more non-default filters are active. Clicking it resets all filters (Clinic, Specialty, Category) back to "All" and Sort back to "Most Popular".
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-Showing it at 2+ active filters avoids clutter when only one is set (the X on that pill is sufficient).
-
-### Changes
-
-**`src/components/templates/hub/TemplateFilters.tsx`**
-- Add `X` import from lucide-react
-- In `FilterPill`: when value is not default, render a small X button after the chevron. On click, call `onChange('All')` (with `stopPropagation`)
-- In `TemplateFilters`: add an `onClearAll` prop. Count active filters (non-default values). When count >= 2, render a "Clear all" text button at the end of the row
-
-**`src/components/templates/TemplateCommunity.tsx`**
-- Add a `clearAllFilters` handler that resets sort/location/specialty/category to defaults
-- Pass it to `TemplateFilters` as `onClearAll`
-
-### Visual Behavior
-- Active pill: `[🔍 Cardiology  ✕  ▾]` — brand-colored, X appears before chevron
-- Inactive pill: `[🔍 Specialty  ▾]` — no X shown
-- Clear all: appears as a ghost-style text link `Clear all` after the last pill
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
