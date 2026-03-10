@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { OnboardingStepOne } from './OnboardingStepOne';
 import { OnboardingStepTwo } from './OnboardingStepTwo';
+import { OnboardingStepThree } from './OnboardingStepThree';
 
 export interface OnboardingFormState {
   title: string;
@@ -21,7 +22,7 @@ export interface OnboardingFormState {
 export const NewUserOnboardingModal = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [imagePreview, setImagePreview] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
 
@@ -67,15 +68,18 @@ export const NewUserOnboardingModal = () => {
     setStep(2);
   };
 
-  const handleFinish = () => {
+  const finishOnboarding = () => {
     toast({ title: 'Welcome!', description: 'Your profile has been set up successfully.' });
     navigate('/new-session');
   };
 
+  // Dynamic width: steps 1-2 narrow, step 3 wider for calendar
+  const modalWidth = step === 3 ? 'max-w-2xl' : 'max-w-md';
+
   return (
     <Dialog open modal>
       <DialogContent
-        className="max-w-md max-h-[90vh] p-0 gap-0 overflow-hidden"
+        className={`${modalWidth} max-h-[90vh] p-0 gap-0 overflow-hidden transition-all`}
         hideCloseButton
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -89,11 +93,17 @@ export const NewUserOnboardingModal = () => {
             saving={saving}
             onContinue={handleStepOneContinue}
           />
-        ) : (
+        ) : step === 2 ? (
           <OnboardingStepTwo
             userName={`${form.title} ${form.firstName} ${form.lastName}`.trim()}
             onBack={() => setStep(1)}
-            onFinish={handleFinish}
+            onFinish={() => setStep(3)}
+          />
+        ) : (
+          <OnboardingStepThree
+            onBack={() => setStep(2)}
+            onSkip={finishOnboarding}
+            onFinish={finishOnboarding}
           />
         )}
       </DialogContent>
