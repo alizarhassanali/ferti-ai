@@ -1,4 +1,4 @@
-import { ArrowUpDown, MapPin, Stethoscope, FolderOpen, ChevronDown } from 'lucide-react';
+import { ArrowUpDown, MapPin, Stethoscope, FolderOpen, ChevronDown, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +17,14 @@ interface TemplateFiltersProps {
   onLocationChange: (value: string) => void;
   onSpecialtyChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
+  onClearAll?: () => void;
 }
 
 interface FilterPillProps {
   icon: React.ReactNode;
   label: string;
   value: string;
+  defaultValue: string;
   options: readonly string[];
   onChange: (value: string) => void;
   isActive?: boolean;
@@ -30,8 +32,8 @@ interface FilterPillProps {
   hideLabel?: boolean;
 }
 
-const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownClassName, hideLabel }: FilterPillProps) => {
-  const isDefault = value === 'All';
+const FilterPill = ({ icon, label, value, defaultValue, options, onChange, isActive, dropdownClassName, hideLabel }: FilterPillProps) => {
+  const isDefault = value === defaultValue;
   const showLabel = !hideLabel && isDefault;
   const showValue = hideLabel || !isDefault;
 
@@ -50,6 +52,15 @@ const FilterPill = ({ icon, label, value, options, onChange, isActive, dropdownC
           {icon}
           {showLabel && <span>{label}</span>}
           {showValue && <span className="text-xs max-w-[80px] truncate inline-block">{value}</span>}
+          {!isDefault && (
+            <span
+              role="button"
+              className="ml-0.5 rounded-full hover:bg-brand/20 p-0.5 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onChange(defaultValue); }}
+            >
+              <X className="h-3 w-3" />
+            </span>
+          )}
           <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </button>
       </DropdownMenuTrigger>
@@ -85,20 +96,30 @@ export const TemplateFilters = ({
   onLocationChange,
   onSpecialtyChange,
   onCategoryChange,
+  onClearAll,
 }: TemplateFiltersProps) => {
+  const activeCount = [
+    sortBy !== 'Most Popular',
+    location !== 'All',
+    specialty !== 'All',
+    category !== 'All',
+  ].filter(Boolean).length;
+
   return (
     <div className="flex items-center gap-3 flex-wrap">
       <FilterPill
         icon={<ArrowUpDown className="h-4 w-4" />}
         label="Sort"
         value={sortBy}
+        defaultValue="Most Popular"
         options={sortOptions}
         onChange={onSortChange}
       />
       <FilterPill
         icon={<MapPin className="h-4 w-4" />}
-        label="Location"
+        label="Clinic"
         value={location}
+        defaultValue="All"
         options={locationOptions}
         onChange={onLocationChange}
         dropdownClassName="min-w-[340px]"
@@ -107,6 +128,7 @@ export const TemplateFilters = ({
         icon={<Stethoscope className="h-4 w-4" />}
         label="Specialty"
         value={specialty}
+        defaultValue="All"
         options={specialtyOptions}
         onChange={onSpecialtyChange}
         dropdownClassName="min-w-[340px]"
@@ -115,9 +137,18 @@ export const TemplateFilters = ({
         icon={<FolderOpen className="h-4 w-4" />}
         label="Category"
         value={category}
+        defaultValue="All"
         options={categoryOptions}
         onChange={onCategoryChange}
       />
+      {activeCount >= 2 && onClearAll && (
+        <button
+          onClick={onClearAll}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
+        >
+          Clear all
+        </button>
+      )}
     </div>
   );
 };

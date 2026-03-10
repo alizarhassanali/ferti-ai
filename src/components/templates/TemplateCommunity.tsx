@@ -101,6 +101,7 @@ export const TemplateCommunity = () => {
             onLocationChange={handleFilterChange(setLocation)}
             onSpecialtyChange={handleFilterChange(setSpecialty)}
             onCategoryChange={handleFilterChange(setCategory)}
+            onClearAll={clearAllFilters}
           />
         </div>
 
