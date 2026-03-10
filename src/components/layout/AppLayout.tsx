@@ -55,6 +55,7 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         <AppFooter />
       </div>
       <HelpPanel open={helpOpen} onOpenChange={setHelpOpen} />
+      <TrainingBanner />
     </div>
   );
 };
