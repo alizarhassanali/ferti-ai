@@ -1,40 +1,20 @@
 
 
-## Remove close button from onboarding modal
+## Remove Shadow from Letters Tab Pills
 
-The `DialogContent` component in `src/components/ui/dialog.tsx` always renders an X close button (line 41-44). The onboarding modal already prevents overlay click and Escape key dismiss, but the X button is still visible.
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-### Approach
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-**`src/components/ui/dialog.tsx`** — Add an optional `hideCloseButton` prop to `DialogContent`. When `true`, the X button is not rendered.
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-**`src/components/onboarding/NewUserOnboardingModal.tsx`** — Pass `hideCloseButton` to `DialogContent`.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-### Technical detail
-
-```tsx
-// dialog.tsx - DialogContent
-interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
-  hideCloseButton?: boolean;
-}
-
-// Conditionally render the close button
-{!hideCloseButton && (
-  <DialogPrimitive.Close className="absolute right-4 top-4 ...">
-    <X className="h-4 w-4" />
-  </DialogPrimitive.Close>
-)}
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-```tsx
-// NewUserOnboardingModal.tsx
-<DialogContent
-  className="max-w-md max-h-[90vh] p-0 gap-0 overflow-hidden"
-  hideCloseButton
-  onPointerDownOutside={(e) => e.preventDefault()}
-  onEscapeKeyDown={(e) => e.preventDefault()}
->
-```
-
-This ensures the onboarding modal has no way to be dismissed — no X button, no overlay click, no Escape key.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
