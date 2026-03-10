@@ -76,6 +76,7 @@ export const NewUserOnboardingModal = () => {
     <Dialog open modal>
       <DialogContent
         className="max-w-md max-h-[90vh] p-0 gap-0 overflow-hidden"
+        hideCloseButton
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
