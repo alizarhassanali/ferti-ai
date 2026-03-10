@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bot, Paperclip, Send, AlertTriangle } from 'lucide-react';
+import { Bot, Paperclip, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
