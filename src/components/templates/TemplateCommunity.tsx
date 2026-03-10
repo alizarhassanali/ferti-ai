@@ -53,6 +53,14 @@ export const TemplateCommunity = () => {
     setCurrentPage(1);
   };
 
+  const clearAllFilters = () => {
+    setSortBy('Most Popular');
+    setLocation('All');
+    setSpecialty('All');
+    setCategory('All');
+    setCurrentPage(1);
+  };
+
   const paginatedTemplates = filteredAndSortedTemplates.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
