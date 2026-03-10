@@ -359,13 +359,6 @@ const NewSession = () => {
           <TwoColumnLayout recordingMode={recordingMode} transcriptContent={transcriptContent} onTranscriptChange={setTranscriptContent} isRecording={isRecording} isPaused={isPaused} contextContent={contextContent} onContextChange={setContextContent} noteTabs={noteTabs} activeNoteTabId={activeNoteTabId} onNoteTabsChange={setNoteTabs} onActiveNoteTabChange={setActiveNoteTabId} isGenerating={isGenerating} hasContent={hasContent} onGenerate={handleGenerate} sessionId={currentSessionId || undefined} patientName={selectedPatient?.name} sessionDate={sessionDate} />
         </div>
 
-        {/* Helper text - Review note warning */}
-        <div className="px-4 py-2 bg-muted/30 border-t border-border">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="text-amber-500">⚠</span>
-            <span>Review your note before use to ensure it accurately represents the visit</span>
-          </div>
-        </div>
       </div>
 
       {/* Consent Popup Dialog */}
