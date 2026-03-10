@@ -590,41 +590,41 @@ export const RightColumnPanel = ({
                   className="flex-1 min-h-[300px] resize-none border-0 shadow-none focus-visible:ring-0 p-0 text-base leading-relaxed whitespace-pre-wrap"
                 />
 
-                {/* Review disclaimer - always visible */}
-                <div className="flex items-center gap-2 px-3 py-2 mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md text-sm text-amber-800 dark:text-amber-200">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
-                  <span>Review your note before use to ensure it accurately represents the visit</span>
-                </div>
-
-                {/* Letter Actions */}
-                {hasGeneratedContent && (
-                  <div className="mt-4 pt-4 border-t border-border">
-                    {existingLetter ? (
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
-                          <CheckCircle className="h-3 w-3" />
-                          {existingLetter.status === 'sent' ? 'Sent' : 'Approved & pending'}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          This note has been sent to Letters
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-2" onClick={handleMarkReviewed}>
-                          <CheckCircle className="h-4 w-4" />
-                          Reviewed
-                        </Button>
-                        {selectedTemplate?.type === 'Letter' && (
-                          <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
-                            <Send className="h-4 w-4" />
-                            Send to Letters
-                          </Button>
-                        )}
-                      </div>
-                    )}
+                {/* Review disclaimer + Letter Actions */}
+                <div className="mt-4 pt-4 border-t border-border flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-xs text-amber-800 dark:text-amber-200">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                    <span>Review your note before use to ensure it accurately represents the visit</span>
                   </div>
-                )}
+                  {hasGeneratedContent && (
+                    <div className="flex items-center gap-2 ml-auto shrink-0">
+                      {existingLetter ? (
+                        <>
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1">
+                            <CheckCircle className="h-3 w-3" />
+                            {existingLetter.status === 'sent' ? 'Sent' : 'Approved & pending'}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            Sent to Letters
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Button variant="outline" size="sm" className="gap-2" onClick={handleMarkReviewed}>
+                            <CheckCircle className="h-4 w-4" />
+                            Reviewed
+                          </Button>
+                          {selectedTemplate?.type === 'Letter' && (
+                            <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                              <Send className="h-4 w-4" />
+                              Send to Letters
+                            </Button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
               </>
             )}
           </div>
