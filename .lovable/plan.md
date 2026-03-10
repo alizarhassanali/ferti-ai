@@ -1,20 +1,22 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Fix: Add review disclaimer to the correct component
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+The banner was added to `src/components/newSession/NoteTab.tsx`, but the `/new-session` page actually renders `RightColumnPanel.tsx` (via `TwoColumnLayout`). That's why you don't see it.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Change
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+**`src/components/newSession/RightColumnPanel.tsx`** — Add the same always-visible disclaimer banner inside the Note view section, right after the textarea (around line 350), before the letter actions block:
 
+```tsx
+{/* Review disclaimer - always visible */}
+<div className="flex items-center gap-2 px-3 py-2 mt-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-md text-sm text-amber-800 dark:text-amber-200">
+  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+  <span>Review your note before use to ensure it accurately represents the visit</span>
+</div>
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+- Import `AlertTriangle` from `lucide-react` (already has many icons imported on line 2)
+- Place it inside the note panel section, after the textarea and before the letter actions — rendered unconditionally so it's always visible regardless of generation state
+- Keep the existing one in `NoteTab.tsx` as well since `MainTabsContainer` also imports it
 
