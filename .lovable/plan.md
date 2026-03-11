@@ -1,20 +1,18 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Update Step 1 onboarding field placeholders and checkbox text
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+Make the Step 1 form fields more concise and clean up the placeholder text per requirements.
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Changes to `src/components/onboarding/OnboardingStepOne.tsx`
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
-
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+| Field | Current | New |
+|-------|---------|-----|
+| Preferred name placeholder | "How would you like to be called?" | "The name you prefer to go by" |
+| First name placeholder | "First name" | Remove (no placeholder) |
+| Last name placeholder | "Last name" | Remove (no placeholder) |
+| Specialty placeholder | "Select your specialty" | "Select speciality" |
+| Phone number placeholder | "Phone number" | "Enter phone number" |
+| Display language | No placeholder shown | Add placeholder="English" (already defaults to English in state) |
+| Terms checkbox text | "I have read and agree to abide by the Usage Policy, Privacy Policy and Terms of Use" | "I agree to the Privacy Policy and Terms of Use" |
 
