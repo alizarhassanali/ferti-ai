@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload } from 'lucide-react';
+import { Camera } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
 import { specialtyOptions } from '@/data/hubTemplates';
@@ -122,28 +123,25 @@ export const ProfileSettings = () => {
           {/* Profile Image */}
           <div className="mb-6">
             <Label className="text-sm font-medium mb-3 block">Profile image</Label>
-            <div className="flex items-start gap-4">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={imagePreview} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                  {getInitials(formData.firstName, formData.lastName)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Upload a profile image (JPG, PNG, GIF, or WebP, max 5 MB).
-                </p>
-                <label htmlFor="image-upload">
-                  <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
-                    <span>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload image
-                    </span>
-                  </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <label htmlFor="image-upload" className="relative cursor-pointer group inline-block">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage src={imagePreview} />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+                      {getInitials(formData.firstName, formData.lastName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm ring-2 ring-card group-hover:bg-primary/90 transition-colors">
+                    <Camera className="h-3.5 w-3.5" />
+                  </span>
                 </label>
-                <input id="image-upload" type="file" accept="image/jpeg,image/png" onChange={handleImageUpload} className="hidden" />
-              </div>
-            </div>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                Upload a profile image (JPG, PNG, GIF, or WebP, max 5 MB)
+              </TooltipContent>
+            </Tooltip>
+            <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleImageUpload} className="hidden" />
           </div>
 
           {/* Name Fields */}
