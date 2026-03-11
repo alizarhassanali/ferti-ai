@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Upload } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 import { specialtyOptions } from '@/data/hubTemplates';
