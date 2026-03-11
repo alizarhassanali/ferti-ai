@@ -128,7 +128,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           Specialty <span className="text-destructive">*</span>
         </Label>
         <Select value={form.specialty} onValueChange={(v) => setForm({ ...form, specialty: v })}>
-          <SelectTrigger><SelectValue placeholder="Select your specialty" /></SelectTrigger>
+          <SelectTrigger><SelectValue placeholder="Select speciality" /></SelectTrigger>
           <SelectContent>
             {specialtyOptions.filter(s => s !== 'All').map(s => (
               <SelectItem key={s} value={s}>{s}</SelectItem>
