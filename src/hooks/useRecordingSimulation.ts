@@ -16,7 +16,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Timer effect
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording) {
       interval = setInterval(() => {
         setDuration(prev => prev + 1);
