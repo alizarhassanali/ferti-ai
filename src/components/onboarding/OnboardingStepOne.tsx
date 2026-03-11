@@ -155,7 +155,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           <Input
             value={form.phoneNumber}
             onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-            placeholder="Phone number"
+            placeholder="Enter phone number"
             className="flex-1"
           />
         </div>
