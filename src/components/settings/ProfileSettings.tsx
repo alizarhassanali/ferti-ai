@@ -131,13 +131,17 @@ export const ProfileSettings = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute inset-0 rounded-full bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-0.5">
-                    <Upload className="h-4 w-4 text-white" />
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-1">
+                    <Camera className="h-5 w-5 text-white" />
+                    <span className="text-[10px] text-white font-medium">Change photo</span>
                   </div>
                 </div>
               </label>
               <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleImageUpload} className="hidden" />
-              <p className="text-xs text-muted-foreground mt-2">
+              <label htmlFor="image-upload" className="text-xs text-primary cursor-pointer hover:underline mt-2">
+                Change photo
+              </label>
+              <p className="text-xs text-muted-foreground mt-1">
                 JPG, PNG, GIF, WebP · Max 5 MB
               </p>
             </div>
