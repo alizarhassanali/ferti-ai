@@ -182,8 +182,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           className="mt-0.5"
         />
         <label htmlFor="terms" className="text-sm text-muted-foreground leading-snug cursor-pointer">
-          I have read and agree to abide by the{' '}
-          <a href="#" className="text-[hsl(var(--link))] underline">Usage Policy</a>,{' '}
+          I agree to the{' '}
           <a href="#" className="text-[hsl(var(--link))] underline">Privacy Policy</a> and{' '}
           <a href="#" className="text-[hsl(var(--link))] underline">Terms of Use</a>
         </label>
