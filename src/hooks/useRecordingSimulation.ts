@@ -27,7 +27,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Audio level simulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording) {
       interval = setInterval(() => {
         setAudioLevel(Math.random() * 100);
