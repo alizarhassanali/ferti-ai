@@ -1,20 +1,19 @@
 
+## Add Description to Consent Popup Setting
 
-## Remove Shadow from Letters Tab Pills
+Add the requested description text under the "Consent popup" label to explain what the setting does.
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Changes to `src/components/settings/PrivacySettings.tsx`
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+Update the Consent Settings container layout from a single-row flex to a layout that accommodates the description:
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+| Current | New |
+|---------|-----|
+| Single row with label left, switch right | Label + description stacked on left, switch aligned to the right |
+| No description | Add: "Display a consent script before transcription starts so the patient can provide verbal consent." |
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+**Implementation approach:**
+- Restructure the consent popup container to use flex layout where the left side is a vertical stack (label + muted description) and the right side has the switch
+- Keep the muted text styling consistent with other description text in the app (`text-sm text-muted-foreground`)
+- Maintain the existing minimal bordered container design
 
