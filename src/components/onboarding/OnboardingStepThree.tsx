@@ -129,7 +129,7 @@ export const OnboardingStepThree = ({ onBack, onSkip, onFinish }: Props) => {
             }}
             className="mt-0.5"
           />
-          <label htmlFor="book-demo-step3" className="text-sm text-foreground leading-snug cursor-pointer font-medium">
+          <label htmlFor="book-demo-step3" className="text-sm text-foreground leading-snug cursor-pointer">
             Book a 1-on-1 demo with an Otto Notes expert
           </label>
         </div>
