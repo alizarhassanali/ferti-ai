@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Camera } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
 import { specialtyOptions } from '@/data/hubTemplates';
@@ -122,28 +122,27 @@ export const ProfileSettings = () => {
           {/* Profile Image */}
           <div className="mb-6">
             <Label className="text-sm font-medium mb-3 block">Profile image</Label>
-            <div className="flex flex-col items-start">
-              <label htmlFor="image-upload" className="cursor-pointer group relative">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={imagePreview} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                    {getInitials(formData.firstName, formData.lastName)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute inset-0 rounded-full bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-1">
-                    <Camera className="h-5 w-5 text-white" />
-                    <span className="text-[10px] text-white font-medium">Change photo</span>
-                  </div>
-                </div>
-              </label>
-              <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleImageUpload} className="hidden" />
-              <label htmlFor="image-upload" className="text-xs text-primary cursor-pointer hover:underline mt-2">
-                Change photo
-              </label>
-              <p className="text-xs text-muted-foreground mt-1">
-                JPG, PNG, GIF, WebP · Max 5 MB
-              </p>
+            <div className="flex items-start gap-4">
+              <Avatar className="h-20 w-20">
+                <AvatarImage src={imagePreview} />
+                <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+                  {getInitials(formData.firstName, formData.lastName)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Upload a profile image (JPG, PNG, GIF, or WebP, max 5 MB).
+                </p>
+                <label htmlFor="image-upload">
+                  <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
+                    <span>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload image
+                    </span>
+                  </Button>
+                </label>
+                <input id="image-upload" type="file" accept="image/jpeg,image/png" onChange={handleImageUpload} className="hidden" />
+              </div>
             </div>
           </div>
 
