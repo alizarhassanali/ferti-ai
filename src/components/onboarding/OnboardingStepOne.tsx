@@ -108,7 +108,6 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           <Input
             value={form.lastName}
             onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-            placeholder="Last name"
           />
         </div>
       </div>
