@@ -99,7 +99,6 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           <Input
             value={form.firstName}
             onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-            placeholder="First name"
           />
         </div>
         <div>
@@ -109,7 +108,6 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           <Input
             value={form.lastName}
             onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-            placeholder="Last name"
           />
         </div>
       </div>
@@ -120,7 +118,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
         <Input
           value={form.preferredName}
           onChange={(e) => setForm({ ...form, preferredName: e.target.value })}
-          placeholder="How would you like to be called?"
+          placeholder="The name you prefer to go by"
         />
       </div>
 
@@ -130,7 +128,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           Specialty <span className="text-destructive">*</span>
         </Label>
         <Select value={form.specialty} onValueChange={(v) => setForm({ ...form, specialty: v })}>
-          <SelectTrigger><SelectValue placeholder="Select your specialty" /></SelectTrigger>
+          <SelectTrigger><SelectValue placeholder="Select speciality" /></SelectTrigger>
           <SelectContent>
             {specialtyOptions.filter(s => s !== 'All').map(s => (
               <SelectItem key={s} value={s}>{s}</SelectItem>
@@ -157,7 +155,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           <Input
             value={form.phoneNumber}
             onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-            placeholder="Phone number"
+            placeholder="Enter phone number"
             className="flex-1"
           />
         </div>
@@ -167,7 +165,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
       <div className="mb-6">
         <Label className="text-sm font-medium mb-1.5 block">Display language</Label>
         <Select value={form.displayLanguage} onValueChange={(v) => setForm({ ...form, displayLanguage: v })}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger><SelectValue placeholder="Select language" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="English">English</SelectItem>
             <SelectItem value="French">French</SelectItem>
@@ -184,8 +182,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
           className="mt-0.5"
         />
         <label htmlFor="terms" className="text-sm text-muted-foreground leading-snug cursor-pointer">
-          I have read and agree to abide by the{' '}
-          <a href="#" className="text-[hsl(var(--link))] underline">Usage Policy</a>,{' '}
+          I agree to the{' '}
           <a href="#" className="text-[hsl(var(--link))] underline">Privacy Policy</a> and{' '}
           <a href="#" className="text-[hsl(var(--link))] underline">Terms of Use</a>
         </label>
