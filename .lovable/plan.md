@@ -1,20 +1,21 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Update Avatar Upload Module
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+The current implementation already has the clickable avatar with hover overlay and upload icon. Minor refinements needed:
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### Changes to `src/components/settings/ProfileSettings.tsx` (lines 122–143)
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+1. **Add Camera icon** instead of Upload icon in the hover overlay
+2. **Add "Change photo" text** in the overlay on hover
+3. **Add "Change photo" label** below the avatar, above the format helper text
+4. Structure becomes:
 
 ```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+[Avatar with hover overlay showing Camera icon + "Change photo"]
+"Change photo" (clickable text label)
+"JPG, PNG, GIF, WebP · Max 5 MB"
 ```
 
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+Only the profile image block (lines 122–144) is touched. No other fields or styling modified. Import `Camera` from lucide-react instead of (or alongside) `Upload`.
 
