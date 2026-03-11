@@ -1,31 +1,20 @@
 
 
-## Polish the profile image upload button
+## Remove Shadow from Letters Tab Pills
 
-### What changes
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-In `src/components/onboarding/OnboardingStepOne.tsx` (lines 58-78), replace the current basic upload section with a more polished design:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-- Replace the `outline` button with a subtle, rounded upload area that feels more modern
-- Add a camera/edit overlay on the avatar itself so users can click the avatar directly to upload
-- Use a soft hover state with a semi-transparent overlay and camera icon on the avatar
-- Remove the separate "Upload" button and helper text — consolidate into the avatar interaction
-- Keep the hidden file input and existing upload logic
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-The new layout will be a centered avatar with a small camera badge icon in the bottom-right corner. Clicking anywhere on the avatar triggers the file input. On hover, the avatar gets a slight overlay with an upload hint.
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-```text
-     ┌──────┐
-     │  DR  │  ← Avatar with initials/image
-     │  📷  │  ← Small camera badge bottom-right
-     └──────┘
-   Click to upload
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
 ```
 
-### File: `src/components/onboarding/OnboardingStepOne.tsx`
-- Replace lines 58-78 (profile image section) with a centered, clickable avatar that has a camera overlay badge
-- Import `Camera` icon from lucide-react instead of `Upload`
-- The avatar wrapper becomes a `label` element linked to the file input, with `cursor-pointer` and hover overlay styles
-- Add a small absolute-positioned camera icon badge (bg-primary, rounded-full) at the bottom-right of the avatar
-- Below the avatar, add subtle text "Click to upload photo" in `text-xs text-muted-foreground`
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
