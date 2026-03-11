@@ -118,7 +118,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
         <Input
           value={form.preferredName}
           onChange={(e) => setForm({ ...form, preferredName: e.target.value })}
-          placeholder="How would you like to be called?"
+          placeholder="The name you prefer to go by"
         />
       </div>
 
