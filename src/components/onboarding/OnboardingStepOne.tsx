@@ -56,25 +56,20 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
       </div>
 
       {/* Profile Image */}
-      <div className="flex items-center gap-4 mb-6">
-        <Avatar className="h-16 w-16">
-          <AvatarImage src={imagePreview} />
-          <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-            {getInitials()}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-xs text-muted-foreground mb-1.5">JPG, PNG up to 5MB</p>
-          <label htmlFor="onboarding-image-upload">
-            <Button type="button" variant="outline" size="sm" className="cursor-pointer" asChild>
-              <span>
-                <Upload className="h-3.5 w-3.5 mr-1.5" />
-                Upload
-              </span>
-            </Button>
-          </label>
-          <input id="onboarding-image-upload" type="file" accept="image/jpeg,image/png" onChange={handleImageUpload} className="hidden" />
-        </div>
+      <div className="flex flex-col items-center mb-6">
+        <label htmlFor="onboarding-image-upload" className="relative cursor-pointer group">
+          <Avatar className="h-20 w-20 transition-opacity group-hover:opacity-75">
+            <AvatarImage src={imagePreview} />
+            <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+              {getInitials()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1.5 shadow-md border-2 border-background transition-transform group-hover:scale-110">
+            <Camera className="h-3.5 w-3.5" />
+          </span>
+        </label>
+        <input id="onboarding-image-upload" type="file" accept="image/jpeg,image/png" onChange={handleImageUpload} className="hidden" />
+        <p className="text-xs text-muted-foreground mt-2">Click to upload photo</p>
       </div>
 
       {/* Title + First/Last Name */}
