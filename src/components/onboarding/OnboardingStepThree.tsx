@@ -129,8 +129,7 @@ export const OnboardingStepThree = ({ onBack, onSkip, onFinish }: Props) => {
             }}
             className="mt-0.5"
           />
-          <label htmlFor="book-demo-step3" className="text-sm text-foreground leading-snug cursor-pointer font-medium flex items-center gap-1.5">
-            <Calendar className="h-4 w-4 text-brand" />
+          <label htmlFor="book-demo-step3" className="text-sm text-foreground leading-snug cursor-pointer font-medium">
             Book a 1-on-1 demo with an Otto Notes expert
           </label>
         </div>
