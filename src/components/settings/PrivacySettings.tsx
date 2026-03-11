@@ -55,14 +55,20 @@ export const PrivacySettings = () => {
       <div className="space-y-8">
 {/* Consent Settings */}
         <div className="border border-border rounded-lg p-6 bg-card">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="consentPopup" className="text-sm font-medium">
-              Consent popup
-            </Label>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <Label htmlFor="consentPopup" className="text-sm font-medium">
+                Consent popup
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Display a consent script before transcription starts so the patient can provide verbal consent.
+              </p>
+            </div>
             <Switch
               id="consentPopup"
               checked={formData.consentPopupEnabled}
               onCheckedChange={(checked) => setFormData({ ...formData, consentPopupEnabled: checked })}
+              className="mt-0.5 shrink-0"
             />
           </div>
         </div>
