@@ -165,7 +165,7 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
       <div className="mb-6">
         <Label className="text-sm font-medium mb-1.5 block">Display language</Label>
         <Select value={form.displayLanguage} onValueChange={(v) => setForm({ ...form, displayLanguage: v })}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger><SelectValue placeholder="Select language" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="English">English</SelectItem>
             <SelectItem value="French">French</SelectItem>
