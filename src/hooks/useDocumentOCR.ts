@@ -13,7 +13,7 @@ const DEMO_EXTRACTED_TEXTS = [
 
 export const useDocumentOCR = () => {
   const [files, setFiles] = useState<AttachedFile[]>([]);
-  const intervalRefs = useRef<Record<string, NodeJS.Timeout>>({});
+  const intervalRefs = useRef<Record<string, ReturnType<typeof setInterval>>>({});
 
   // Cleanup intervals on unmount
   useEffect(() => {

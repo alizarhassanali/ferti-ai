@@ -16,7 +16,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Timer effect
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording) {
       interval = setInterval(() => {
         setDuration(prev => prev + 1);
@@ -27,7 +27,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Audio level simulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording) {
       interval = setInterval(() => {
         setAudioLevel(Math.random() * 100);
@@ -40,7 +40,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Transcript simulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording && duration >= 2) {
       interval = setInterval(() => {
         if (transcriptIndexRef.current < wordsRef.current.length) {
