@@ -158,7 +158,7 @@ const NewSession = () => {
     return () => clearInterval(interval);
   }, [isRecording, isPaused]);
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording && !isPaused) {
       interval = setInterval(() => setAudioLevel(Math.random() * 100), 100);
     } else {

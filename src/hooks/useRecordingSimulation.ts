@@ -40,7 +40,7 @@ export const useRecordingSimulation = ({ onTranscriptUpdate, mode }: UseRecordin
 
   // Transcript simulation
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRecording && duration >= 2) {
       interval = setInterval(() => {
         if (transcriptIndexRef.current < wordsRef.current.length) {

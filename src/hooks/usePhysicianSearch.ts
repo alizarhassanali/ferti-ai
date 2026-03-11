@@ -14,7 +14,7 @@ export const usePhysicianSearch = (): UsePhysicianSearchResult => {
   const [results, setResults] = useState<ReferringPhysician[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const search = useCallback((query: string) => {
     // Clear any pending debounce
