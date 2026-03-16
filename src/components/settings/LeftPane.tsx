@@ -308,7 +308,7 @@ export const LeftPane = () => {
               if (item.id === 'help') {
                 setHelpPanelOpen(true);
               } else if (item.id === 'whats-new') {
-                setReleaseNotesPanelOpen(true);
+                navigate('/whats-new');
               }
             };
             const showBadge = item.id === 'whats-new' && hasUnseen;
