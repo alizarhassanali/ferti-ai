@@ -124,7 +124,7 @@ export const ReleaseNotesList = ({ selectedNoteId, onSelectNote }: ReleaseNotesL
                               </Badge>
                             </div>
                             <div className="font-medium text-sm text-foreground leading-snug">{note.title}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{note.summary}</div>
+                            
                           </button>
                         </li>
                       );
