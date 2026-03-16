@@ -1,9 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { useReleaseNotes } from '@/hooks/useReleaseNotes';
 import { format } from 'date-fns';
-import { Sparkles, Rocket, Wrench, Zap } from 'lucide-react';
+import { Sparkles, Rocket, Wrench, Zap, ChevronDown } from 'lucide-react';
 import type { ReleaseNote } from '@/data/seedReleaseNotes';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
 interface ReleaseNotesListProps {
   selectedNoteId: string | null;
