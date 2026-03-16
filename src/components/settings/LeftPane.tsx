@@ -8,7 +8,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 import ottoLogo from '@/assets/otto-logo.png';
 import { SwitchAppPopover } from '@/components/sidebar/SwitchAppPopover';
-import { ReleaseNotesPanel } from '@/components/releaseNotes/ReleaseNotesPanel';
 import { useUnseenReleases } from '@/hooks/useUnseenReleases';
 
 // Mock user - in production, this would come from auth context
@@ -24,7 +23,6 @@ export const LeftPane = () => {
   const location = useLocation();
   const user = mockUser;
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
-  const [releaseNotesPanelOpen, setReleaseNotesPanelOpen] = useState(false);
   const { data: hasUnseen } = useUnseenReleases();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -310,7 +308,7 @@ export const LeftPane = () => {
               if (item.id === 'help') {
                 setHelpPanelOpen(true);
               } else if (item.id === 'whats-new') {
-                setReleaseNotesPanelOpen(true);
+                navigate('/whats-new');
               }
             };
             const showBadge = item.id === 'whats-new' && hasUnseen;
@@ -341,6 +339,5 @@ export const LeftPane = () => {
       </div>
       
       <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
-      <ReleaseNotesPanel open={releaseNotesPanelOpen} onOpenChange={setReleaseNotesPanelOpen} />
     </>;
 };
