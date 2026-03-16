@@ -3,7 +3,7 @@ import { useReleaseNotes } from '@/hooks/useReleaseNotes';
 import { format } from 'date-fns';
 import { Sparkles, Rocket, Wrench, Zap, ChevronDown } from 'lucide-react';
 import type { ReleaseNote } from '@/data/seedReleaseNotes';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
 interface ReleaseNotesListProps {
