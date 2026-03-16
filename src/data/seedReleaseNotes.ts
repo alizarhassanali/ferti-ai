@@ -7,9 +7,57 @@ export interface ReleaseNote {
   tag: 'new' | 'improvement' | 'fix';
   image_url: string | null;
   created_at: string;
+  version: string;
 }
 
 export const seedReleaseNotes: ReleaseNote[] = [
+  // v2.3.0 — March 2026
+  {
+    id: 'seed-v230-1',
+    title: 'AI Memory & Context Awareness',
+    summary: 'Otto now remembers your preferences and past interactions to provide smarter suggestions.',
+    description: 'The new AI Memory system learns from your note-taking patterns, preferred templates, and terminology. Over time, Otto adapts to your clinical style, reducing edits and saving you minutes per session. Memory can be reviewed and cleared from Settings > AI.',
+    release_date: '2026-03-14',
+    tag: 'new',
+    image_url: null,
+    created_at: '2026-03-14T00:00:00Z',
+    version: '2.3.0',
+  },
+  {
+    id: 'seed-v230-2',
+    title: 'Multi-Language Transcription',
+    summary: 'Record sessions in French, Spanish, or German with automatic language detection.',
+    description: 'Otto now supports real-time transcription in four languages. The system auto-detects the spoken language or you can pin a preference in session settings. Bilingual sessions are handled with inline language tags.',
+    release_date: '2026-03-10',
+    tag: 'new',
+    image_url: null,
+    created_at: '2026-03-10T00:00:00Z',
+    version: '2.3.0',
+  },
+  {
+    id: 'seed-v230-3',
+    title: 'Patient Timeline View',
+    summary: 'See a chronological timeline of all sessions, letters, and notes for each patient.',
+    description: 'The new Patient Timeline aggregates every interaction—sessions, generated notes, and sent letters—into a single scrollable view. Filter by date range or document type to quickly find what you need.',
+    release_date: '2026-03-06',
+    tag: 'new',
+    image_url: null,
+    created_at: '2026-03-06T00:00:00Z',
+    version: '2.3.0',
+  },
+  {
+    id: 'seed-v230-4',
+    title: 'Faster Note Generation',
+    summary: 'Note generation is now 40% faster thanks to optimized AI pipeline.',
+    description: 'We re-architected the inference pipeline to stream partial results earlier and parallelise post-processing steps. Most notes now appear within 3 seconds of clicking Generate.',
+    release_date: '2026-03-02',
+    tag: 'improvement',
+    image_url: null,
+    created_at: '2026-03-02T00:00:00Z',
+    version: '2.3.0',
+  },
+
+  // v2.2.0 — February 2026
   {
     id: 'seed-1',
     title: 'AI-Powered Note Generation',
@@ -19,6 +67,7 @@ export const seedReleaseNotes: ReleaseNote[] = [
     tag: 'new',
     image_url: null,
     created_at: '2026-02-25T00:00:00Z',
+    version: '2.2.0',
   },
   {
     id: 'seed-2',
@@ -29,6 +78,7 @@ export const seedReleaseNotes: ReleaseNote[] = [
     tag: 'new',
     image_url: null,
     created_at: '2026-02-20T00:00:00Z',
+    version: '2.2.0',
   },
   {
     id: 'seed-3',
@@ -39,6 +89,7 @@ export const seedReleaseNotes: ReleaseNote[] = [
     tag: 'improvement',
     image_url: null,
     created_at: '2026-02-15T00:00:00Z',
+    version: '2.2.0',
   },
   {
     id: 'seed-4',
@@ -49,6 +100,7 @@ export const seedReleaseNotes: ReleaseNote[] = [
     tag: 'improvement',
     image_url: null,
     created_at: '2026-02-10T00:00:00Z',
+    version: '2.2.0',
   },
   {
     id: 'seed-5',
@@ -59,5 +111,63 @@ export const seedReleaseNotes: ReleaseNote[] = [
     tag: 'fix',
     image_url: null,
     created_at: '2026-02-05T00:00:00Z',
+    version: '2.2.0',
+  },
+
+  // v2.1.0 — January 2026
+  {
+    id: 'seed-v210-1',
+    title: 'Team Collaboration',
+    summary: 'Invite team members, assign roles, and collaborate on shared patients.',
+    description: 'Admins can now invite physicians, nurses, and staff to join their workspace. Each member gets role-based access, and shared patient records keep the whole team on the same page.',
+    release_date: '2026-01-28',
+    tag: 'new',
+    image_url: null,
+    created_at: '2026-01-28T00:00:00Z',
+    version: '2.1.0',
+  },
+  {
+    id: 'seed-v210-2',
+    title: 'Dark Mode',
+    summary: 'A new dark theme for comfortable use in low-light environments.',
+    description: 'Toggle between light and dark mode from Settings > Display. The dark theme uses carefully chosen contrast ratios to reduce eye strain during late-night charting.',
+    release_date: '2026-01-22',
+    tag: 'new',
+    image_url: null,
+    created_at: '2026-01-22T00:00:00Z',
+    version: '2.1.0',
+  },
+  {
+    id: 'seed-v210-3',
+    title: 'Keyboard Shortcuts',
+    summary: 'Navigate faster with over 20 new keyboard shortcuts across the app.',
+    description: 'Press Cmd+K (or Ctrl+K) to open the command palette. Shortcuts cover recording, navigation, note editing, and more. View the full list in Settings > Keyboard Shortcuts.',
+    release_date: '2026-01-16',
+    tag: 'improvement',
+    image_url: null,
+    created_at: '2026-01-16T00:00:00Z',
+    version: '2.1.0',
+  },
+  {
+    id: 'seed-v210-4',
+    title: 'Export Improvements',
+    summary: 'Export notes as PDF, DOCX, or plain text with one click.',
+    description: 'The export menu now supports three formats. PDF exports include your clinic header and signature. DOCX preserves formatting for easy editing in Word.',
+    release_date: '2026-01-10',
+    tag: 'improvement',
+    image_url: null,
+    created_at: '2026-01-10T00:00:00Z',
+    version: '2.1.0',
+  },
+  {
+    id: 'seed-v210-5',
+    title: 'Login Session Fix',
+    summary: 'Resolved an issue where users were logged out unexpectedly after 30 minutes.',
+    description: 'A token refresh bug caused sessions to expire prematurely. The fix ensures tokens are refreshed seamlessly in the background, keeping you logged in for the full session duration.',
+    release_date: '2026-01-05',
+    tag: 'fix',
+    image_url: null,
+    created_at: '2026-01-05T00:00:00Z',
+    version: '2.1.0',
   },
 ];

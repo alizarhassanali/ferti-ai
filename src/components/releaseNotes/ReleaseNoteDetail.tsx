@@ -29,8 +29,13 @@ export const ReleaseNoteDetail = ({ note }: ReleaseNoteDetailProps) => {
   return (
     <div className="h-full overflow-y-auto bg-background">
       <div className="max-w-2xl mx-auto px-8 py-8">
-        {/* Date & Tag */}
+        {/* Version, Date & Tag */}
         <div className="flex items-center gap-3 mb-4">
+          {note.version && (
+            <Badge variant="secondary" className="text-xs px-2 py-0.5 font-semibold">
+              v{note.version}
+            </Badge>
+          )}
           <span className="text-sm text-muted-foreground">
             {format(new Date(note.release_date), 'MMMM d, yyyy')}
           </span>

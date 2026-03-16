@@ -1,26 +1,20 @@
 
 
-## Add Version Buckets to Release Notes
+## Remove Shadow from Letters Tab Pills
 
-### Data Changes — `src/data/seedReleaseNotes.ts`
+**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
 
-Add a `version` field to the `ReleaseNote` interface and expand seed data to ~15 notes across 3 versions:
+**Fix in `src/components/letters/LettersList.tsx`:**
 
-- **v2.3.0** (March 2026) — 4-5 notes (e.g., AI Memory, Multi-language support, Patient timeline)
-- **v2.2.0** (February 2026) — 5 existing notes (already there, just add `version: '2.2.0'`)
-- **v2.1.0** (January 2026) — 4-5 notes (e.g., Team collaboration, Dark mode, Keyboard shortcuts, Export improvements)
+Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
 
-### List Component Changes — `src/components/releaseNotes/ReleaseNotesList.tsx`
+```
+// From:
+"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
 
-- Group notes by `version` field
-- Render each group with a sticky version header (e.g., "v2.3.0 — March 2026") styled as a small section divider
-- Notes within each version listed chronologically (newest first)
+// To:
+"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
+```
 
-### Hook Changes — `src/hooks/useReleaseNotes.ts`
-
-- No structural changes needed; the hook already returns all notes sorted by date. The grouping logic will live in the list component.
-
-### Detail Component — `src/components/releaseNotes/ReleaseNoteDetail.tsx`
-
-- Show the version badge alongside the date and tag in the detail header.
+This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
 
