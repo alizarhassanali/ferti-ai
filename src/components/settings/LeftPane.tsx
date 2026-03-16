@@ -23,7 +23,6 @@ export const LeftPane = () => {
   const location = useLocation();
   const user = mockUser;
   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
-  const [releaseNotesPanelOpen, setReleaseNotesPanelOpen] = useState(false);
   const { data: hasUnseen } = useUnseenReleases();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
