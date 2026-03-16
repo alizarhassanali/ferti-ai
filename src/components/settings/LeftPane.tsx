@@ -8,7 +8,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { HelpPanel } from '@/components/help/HelpPanel';
 import ottoLogo from '@/assets/otto-logo.png';
 import { SwitchAppPopover } from '@/components/sidebar/SwitchAppPopover';
-import { ReleaseNotesPanel } from '@/components/releaseNotes/ReleaseNotesPanel';
 import { useUnseenReleases } from '@/hooks/useUnseenReleases';
 
 // Mock user - in production, this would come from auth context
