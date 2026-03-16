@@ -51,6 +51,7 @@ const App = () => (
                     <Route path="/template-hub" element={<TemplateHub />} />
                     
                     <Route path="/letters" element={<Letters />} />
+                    <Route path="/whats-new" element={<WhatsNew />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

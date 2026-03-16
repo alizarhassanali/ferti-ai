@@ -339,6 +339,5 @@ export const LeftPane = () => {
       </div>
       
       <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
-      <ReleaseNotesPanel open={releaseNotesPanelOpen} onOpenChange={setReleaseNotesPanelOpen} />
     </>;
 };
