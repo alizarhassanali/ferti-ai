@@ -21,6 +21,7 @@ import NewUserScreen from "./pages/NewUserScreen";
 import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
+import WhatsNew from "./pages/WhatsNew";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
