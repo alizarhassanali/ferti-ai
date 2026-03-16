@@ -38,10 +38,13 @@ export const ReleaseNotesList = ({ selectedNoteId, onSelectNote }: ReleaseNotesL
     return sorted;
   }, [notes]);
 
-  const [openVersions, setOpenVersions] = useState<Record<string, boolean>>(() => {
-    const first = groupedVersions[0]?.[0];
-    return first ? { [first]: true } : {};
-  });
+  const [openVersions, setOpenVersions] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (groupedVersions.length > 0 && Object.keys(openVersions).length === 0) {
+      setOpenVersions({ [groupedVersions[0][0]]: true });
+    }
+  }, [groupedVersions]);
 
   const toggleVersion = (version: string) => {
     setOpenVersions(prev => ({ ...prev, [version]: !prev[version] }));
