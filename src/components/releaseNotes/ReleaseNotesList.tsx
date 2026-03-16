@@ -38,6 +38,15 @@ export const ReleaseNotesList = ({ selectedNoteId, onSelectNote }: ReleaseNotesL
     return sorted;
   }, [notes]);
 
+  const [openVersions, setOpenVersions] = useState<Record<string, boolean>>(() => {
+    const first = groupedVersions[0]?.[0];
+    return first ? { [first]: true } : {};
+  });
+
+  const toggleVersion = (version: string) => {
+    setOpenVersions(prev => ({ ...prev, [version]: !prev[version] }));
+  };
+
   return (
     <div className="h-full flex flex-col bg-card border-r border-border">
       {/* Header */}
@@ -64,53 +73,62 @@ export const ReleaseNotesList = ({ selectedNoteId, onSelectNote }: ReleaseNotesL
         ) : (
           <div>
             {groupedVersions.map(([version, versionNotes]) => (
-              <div key={version}>
+              <Collapsible
+                key={version}
+                open={!!openVersions[version]}
+                onOpenChange={() => toggleVersion(version)}
+              >
                 {/* Version header */}
-                <div className="sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-5 py-2 border-b border-border">
-                  <span className="text-xs font-semibold text-foreground">
-                    v{version}
-                  </span>
-                  {versionDateLabels[version] && (
-                    <span className="text-xs text-muted-foreground ml-2">
-                      — {versionDateLabels[version]}
+                <CollapsibleTrigger className="w-full sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-5 py-2 border-b border-border flex items-center justify-between cursor-pointer hover:bg-muted transition-colors">
+                  <div>
+                    <span className="text-xs font-semibold text-foreground">
+                      v{version}
                     </span>
-                  )}
-                </div>
+                    {versionDateLabels[version] && (
+                      <span className="text-xs text-muted-foreground ml-2">
+                        — {versionDateLabels[version]}
+                      </span>
+                    )}
+                  </div>
+                  <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${openVersions[version] ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
 
                 {/* Notes in this version */}
-                <ul>
-                  {versionNotes.map((note) => {
-                    const tag = tagConfig[note.tag];
-                    const TagIcon = tag.icon;
-                    const isSelected = selectedNoteId === note.id;
+                <CollapsibleContent>
+                  <ul>
+                    {versionNotes.map((note) => {
+                      const tag = tagConfig[note.tag];
+                      const TagIcon = tag.icon;
+                      const isSelected = selectedNoteId === note.id;
 
-                    return (
-                      <li key={note.id}>
-                        <button
-                          onClick={() => onSelectNote(note)}
-                          className={`w-full text-left px-5 py-3.5 transition-colors duration-150 border-l-2 ${
-                            isSelected
-                              ? 'bg-muted/70 border-l-primary'
-                              : 'border-l-transparent hover:bg-muted/40'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-[11px] text-muted-foreground">
-                              {format(new Date(note.release_date), 'MMM d, yyyy')}
-                            </span>
-                            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 font-medium ${tag.className}`}>
-                              <TagIcon className="h-3 w-3 mr-0.5" />
-                              {tag.label}
-                            </Badge>
-                          </div>
-                          <div className="font-medium text-sm text-foreground leading-snug">{note.title}</div>
-                          <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{note.summary}</div>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                      return (
+                        <li key={note.id}>
+                          <button
+                            onClick={() => onSelectNote(note)}
+                            className={`w-full text-left px-5 py-3.5 transition-colors duration-150 border-l-2 ${
+                              isSelected
+                                ? 'bg-muted/70 border-l-primary'
+                                : 'border-l-transparent hover:bg-muted/40'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[11px] text-muted-foreground">
+                                {format(new Date(note.release_date), 'MMM d, yyyy')}
+                              </span>
+                              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 font-medium ${tag.className}`}>
+                                <TagIcon className="h-3 w-3 mr-0.5" />
+                                {tag.label}
+                              </Badge>
+                            </div>
+                            <div className="font-medium text-sm text-foreground leading-snug">{note.title}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{note.summary}</div>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </CollapsibleContent>
+              </Collapsible>
             ))}
           </div>
         )}
