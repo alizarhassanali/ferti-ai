@@ -16,15 +16,14 @@ interface ProfileFormState {
   title: string;
   firstName: string;
   lastName: string;
+  preferredName: string;
   specialty: string;
   clinicName: string;
   role: UserRole;
   phoneCountryCode: string;
   phoneNumber: string;
   useInfoForSignature: boolean;
-  // Language & time
   displayLanguage: string;
-  
 }
 
 export const ProfileSettings = () => {
@@ -35,6 +34,7 @@ export const ProfileSettings = () => {
     title: user.title || 'Dr.',
     firstName: user.firstName,
     lastName: user.lastName,
+    preferredName: '',
     specialty: user.specialty || 'Fertility Specialist',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
@@ -42,7 +42,6 @@ export const ProfileSettings = () => {
     phoneNumber: '',
     useInfoForSignature: false,
     displayLanguage: 'English',
-    
   });
 
   const [formData, setFormData] = useState<ProfileFormState>(getInitialState);
@@ -171,8 +170,12 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Specialty, Clinic Name, and Role - same row, equal sizing */}
+          {/* Preferred Name, Specialty, and Role */}
           <div className="grid grid-cols-3 gap-4 mb-4">
+            <div>
+              <Label htmlFor="preferredName" className="text-sm font-medium mb-2 block">Preferred name</Label>
+              <Input id="preferredName" value={formData.preferredName} onChange={e => setFormData({ ...formData, preferredName: e.target.value })} placeholder="The name you prefer to go by" />
+            </div>
             <div>
               <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
               <Select value={formData.specialty} onValueChange={value => setFormData({ ...formData, specialty: value })}>
@@ -185,10 +188,6 @@ export const ProfileSettings = () => {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div>
-              <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
-              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
             </div>
             <div>
               <Label htmlFor="role" className="text-sm font-medium mb-2 block">Your role</Label>
@@ -208,23 +207,29 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Phone Number */}
-          <div className="mb-4">
-            <Label className="text-sm font-medium mb-2 block">Phone number</Label>
-            <div className="flex gap-2">
-              <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
-                <SelectTrigger className="w-24">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="+1">+1</SelectItem>
-                  <SelectItem value="+44">+44</SelectItem>
-                  <SelectItem value="+33">+33</SelectItem>
-                  <SelectItem value="+49">+49</SelectItem>
-                  <SelectItem value="+61">+61</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} placeholder="Enter phone number" className="flex-1" />
+          {/* Clinic Name and Phone Number */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
+              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
+            </div>
+            <div>
+              <Label className="text-sm font-medium mb-2 block">Phone number</Label>
+              <div className="flex gap-2">
+                <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="+1">+1</SelectItem>
+                    <SelectItem value="+44">+44</SelectItem>
+                    <SelectItem value="+33">+33</SelectItem>
+                    <SelectItem value="+49">+49</SelectItem>
+                    <SelectItem value="+61">+61</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} placeholder="Enter phone number" className="flex-1" />
+              </div>
             </div>
           </div>
 
