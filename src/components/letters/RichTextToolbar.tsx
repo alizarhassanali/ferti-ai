@@ -9,6 +9,7 @@ import {
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface RichTextToolbarProps {
   editor: Editor;
@@ -17,6 +18,30 @@ interface RichTextToolbarProps {
 
 export const RichTextToolbar = ({ editor, exclude = [] }: RichTextToolbarProps) => {
   const btnClass = "h-8 w-8 p-0 text-muted-foreground data-[state=on]:text-foreground data-[state=on]:bg-muted";
+
+  const getCurrentStyle = () => {
+    if (editor.isActive('heading', { level: 1 })) return 'h1';
+    if (editor.isActive('heading', { level: 2 })) return 'h2';
+    if (editor.isActive('heading', { level: 3 })) return 'h3';
+    return 'paragraph';
+  };
+
+  const handleStyleChange = (value: string) => {
+    switch (value) {
+      case 'paragraph':
+        editor.chain().focus().setParagraph().run();
+        break;
+      case 'h1':
+        editor.chain().focus().toggleHeading({ level: 1 }).run();
+        break;
+      case 'h2':
+        editor.chain().focus().toggleHeading({ level: 2 }).run();
+        break;
+      case 'h3':
+        editor.chain().focus().toggleHeading({ level: 3 }).run();
+        break;
+    }
+  };
 
   const tools = [
     { icon: Heading1, label: 'Heading 1', pressed: editor.isActive('heading', { level: 1 }), action: () => editor.chain().focus().toggleHeading({ level: 1 }).run() },
@@ -42,21 +67,31 @@ export const RichTextToolbar = ({ editor, exclude = [] }: RichTextToolbarProps) 
 
   return (
     <div className="flex items-center gap-0.5 flex-wrap">
+      {/* Paragraph style dropdown */}
+      <Select value={getCurrentStyle()} onValueChange={handleStyleChange}>
+        <SelectTrigger className="h-8 w-[110px] text-xs border-border">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="paragraph">Default</SelectItem>
+          <SelectItem value="h1">Heading 1</SelectItem>
+          <SelectItem value="h2">Heading 2</SelectItem>
+          <SelectItem value="h3">Heading 3</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Separator orientation="vertical" className="h-6 mx-1" />
+
       <TooltipProvider delayDuration={300}>
         {tools.filter((tool, index, arr) => {
           if (tool !== 'separator' && exclude.includes(tool.label)) return false;
-          // Remove orphaned separators (leading, trailing, or consecutive)
           if (tool === 'separator') {
             const prev = arr.slice(0, index).filter((t, i, a) => t !== 'separator' || (i > 0 && a[i-1] !== 'separator')).pop();
             const next = arr.slice(index + 1).find(t => t !== 'separator');
             if (!prev || !next) return false;
-            if (exclude.includes((prev as any).label) || exclude.includes((next as any).label)) {
-              // Check if all items in preceding/following group are excluded
-            }
           }
           return true;
         }).filter((tool, index, arr) => {
-          // Clean consecutive separators after filtering
           if (tool === 'separator' && (index === 0 || index === arr.length - 1 || arr[index - 1] === 'separator')) return false;
           return true;
         }).map((tool, index) => {
