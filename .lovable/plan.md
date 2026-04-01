@@ -1,20 +1,20 @@
 
 
-## Remove Shadow from Letters Tab Pills
+## Rearrange Profile Fields & Add Preferred Name
 
-**Problem:** The Letters tab pills ("To be sent" / "Sent") look different from View Sessions pills because they're missing border overrides, causing the base TabsTrigger's `border-b-2` and `data-[state=active]:border-primary` styles to bleed through.
+### Current layout (lines 174–229)
+- **Row 1**: Specialty | Clinic Name | Role (3-col grid)
+- **Row 2**: Phone number (full width)
+- **Row 3**: Display language
 
-**Fix in `src/components/letters/LettersList.tsx`:**
+### New layout
+- **Row 1**: Preferred Name | Specialty | Role (3-col grid)
+- **Row 2**: Clinic Name | Phone number (2-col grid, clinic on left, phone on right)
+- **Row 3**: Display language
 
-Update both TabsTrigger classNames to match the View Sessions pattern exactly — add `border border-transparent` and `data-[state=active]:border-brand/30`:
+### Changes to `src/components/settings/ProfileSettings.tsx`
 
-```
-// From:
-"rounded-full bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground hover:text-foreground"
-
-// To:
-"rounded-full border border-transparent bg-transparent text-muted-foreground text-xs px-3 py-1 data-[state=active]:bg-[hsl(5_85%_92%)] data-[state=active]:text-foreground data-[state=active]:border-brand/30 hover:text-foreground"
-```
-
-This adds `border border-transparent` (overrides base `border-b-2`) and `data-[state=active]:border-brand/30` (overrides base `data-[state=active]:border-primary`) to both pills, making them identical to View Sessions.
+1. Add `preferredName: string` to `ProfileFormState` interface, initialized to `''`
+2. Replace the current 3-col row (Specialty, Clinic Name, Role) with: **Preferred Name** (input, placeholder "The name you prefer to go by"), **Specialty** (select, moved here from first position), **Role** (stays)
+3. Replace the phone number section with a 2-col grid: left column is **Clinic Name** (input), right column is **Phone Number** (country code select + input)
 
