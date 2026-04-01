@@ -16,15 +16,14 @@ interface ProfileFormState {
   title: string;
   firstName: string;
   lastName: string;
+  preferredName: string;
   specialty: string;
   clinicName: string;
   role: UserRole;
   phoneCountryCode: string;
   phoneNumber: string;
   useInfoForSignature: boolean;
-  // Language & time
   displayLanguage: string;
-  
 }
 
 export const ProfileSettings = () => {
