@@ -26,28 +26,32 @@ const demoLetters: Letter[] = [
     templateType: 'Letter to GP',
     originatingDoctor: 'Dr. Shahid Saya',
     status: 'to_be_sent',
-    content: `Dear Dr. Smith,
-
-Re: Sarah Johnson (DOB: 15/03/1985)
-
-I am writing to inform you about the recent consultation with your patient, Sarah Johnson, who attended our fertility clinic on 15th December 2024.
-
-**Chief Complaint:**
-The patient presented for a follow-up consultation regarding fertility treatment options.
-
-**Assessment:**
-- Hormone levels within normal range
-- Ultrasound showed normal ovarian reserve
-- AMH levels satisfactory
-
-**Plan:**
-We have discussed the option of IVF treatment. The patient has elected to proceed with the first cycle in January 2025.
-
-Please do not hesitate to contact me if you require any further information.
-
-Yours sincerely,
-Dr. Shahid Saya
-Consultant in Reproductive Medicine`,
+    content: `<p>Dear Dr. Smith,</p>
+<p>Re: <strong>Sarah Johnson</strong> (DOB: 15/03/1985)</p>
+<p>Thank you for referring this patient who attended our fertility clinic on 15th December 2024. I am writing to update you on our findings and proposed management plan.</p>
+<h3>History</h3>
+<p>Mrs. Johnson is a 39-year-old woman who has been trying to conceive for approximately 18 months. She reports regular menstrual cycles of 28–30 days with no intermenstrual or post-coital bleeding. There is no significant past medical or surgical history. She is a non-smoker and consumes alcohol occasionally.</p>
+<h3>Previous Investigations</h3>
+<ul>
+<li>Day 2 FSH: 7.2 IU/L (normal)</li>
+<li>AMH: 14.8 pmol/L (satisfactory ovarian reserve)</li>
+<li>Transvaginal ultrasound: Normal uterine cavity, bilateral ovaries with antral follicle count of 12</li>
+<li>Hysterosalpingogram: Bilateral tubal patency confirmed</li>
+<li>Partner semen analysis: Within normal parameters (WHO 2021 criteria)</li>
+</ul>
+<h3>Assessment</h3>
+<p>Based on the above investigations, this couple has <strong>unexplained subfertility</strong>. Given Mrs. Johnson's age and duration of subfertility, we have discussed the treatment options available including ovulation induction with timed intercourse, intrauterine insemination (IUI), and in vitro fertilisation (IVF).</p>
+<h3>Plan</h3>
+<ol>
+<li>The patient has elected to proceed with IVF treatment</li>
+<li>First cycle planned for January 2025 following pre-treatment screening</li>
+<li>Commenced on folic acid 5mg daily and vitamin D supplementation</li>
+<li>Counselling session arranged for 22nd December 2024</li>
+</ol>
+<p>I would be grateful if you could continue to prescribe folic acid 5mg daily for this patient. Please do not hesitate to contact me if you require any further information.</p>
+<p>Yours sincerely,<br>
+<strong>Dr. Shahid Saya</strong><br>
+Consultant in Reproductive Medicine</p>`,
     approvedAt: new Date('2024-12-15T14:30:00'),
     createdAt: new Date('2024-12-15T14:30:00'),
     updatedAt: new Date('2024-12-15T14:30:00'),
