@@ -34,6 +34,7 @@ export const ProfileSettings = () => {
     title: user.title || 'Dr.',
     firstName: user.firstName,
     lastName: user.lastName,
+    preferredName: '',
     specialty: user.specialty || 'Fertility Specialist',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
@@ -41,7 +42,6 @@ export const ProfileSettings = () => {
     phoneNumber: '',
     useInfoForSignature: false,
     displayLanguage: 'English',
-    
   });
 
   const [formData, setFormData] = useState<ProfileFormState>(getInitialState);
