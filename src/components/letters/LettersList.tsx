@@ -28,7 +28,7 @@ export const LettersList = () => {
   };
 
   const formatGroupDate = (date: Date) => {
-    return format(date, 'MM/dd/yy');
+    return format(date, 'EEEE, MMM d');
   };
 
   const groupByDate = (lettersList: typeof letters) => {
