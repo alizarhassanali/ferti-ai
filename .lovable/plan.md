@@ -1,31 +1,57 @@
 
 
-## Fix Sessions Panel Collapse Animation
+## Resource Center — Full Page, Three-Pane Layout
 
-### Problem
-The sessions panel in `AppLayout.tsx` uses conditional rendering (`{showSessionsPanel && <div>...`). When the panel is hidden, the DOM element is immediately removed — so no exit/collapse animation ever plays. Only the enter animation (`animate-slide-in-left`) works.
+### Overview
+Replace the floating help panel with a dedicated `/resource-center` page following the app's standard three-pane pattern: left sidebar (already exists), middle pane (320px fixed, category navigation + topic cards), right pane (article detail with video + text).
 
-### Solution
-Instead of conditionally rendering the panel, **always render it** but animate its width between `w-80` (320px) and `w-0` using a CSS transition. This allows both expand and collapse to animate smoothly.
+### Middle Pane — Categories & Topic Cards
 
-### Changes: `src/components/layout/AppLayout.tsx`
+**Categories** (top section, similar to Settings nav):
+- **Getting Started** — Onboarding guides for new users
+- **FAQs** — Common questions by topic
+- **Contact Support** — Chat/email support form
 
-1. **Always render** the sessions panel wrapper div (remove the `{showSessionsPanel && ...}` conditional)
-2. Use inline style + transition classes to animate width:
-   - When visible: `width: 320px` with `overflow: hidden`
-   - When hidden: `width: 0px` with `overflow: hidden`
-   - Add `transition-all duration-200 ease-in-out` for smooth animation
-3. Remove the `animate-slide-in-left` class (no longer needed — the width transition handles both directions)
-4. Only render the `<GlobalSessionsPanel />` content when `shouldShowGlobalSessionsPanel` is true (to avoid unnecessary component mounting on routes that never show it)
+**Below the category nav**: Topic cards for the selected category, displayed as compact visual cards (icon + title + short description). Examples:
 
-### Result
-```text
-Before: Panel mounts with slide-in → Panel unmounts instantly (no animation)
-After:  Panel width transitions 0→320px → Panel width transitions 320px→0 (smooth both ways)
-```
+| Category | Topic Cards |
+|----------|-------------|
+| Getting Started | "Create Your First Session", "Using Templates", "Dictation & Recording", "Managing Letters", "AI Assistant Basics" |
+| FAQs | "Account & Billing", "Templates & Notes", "Recording & Transcription", "Privacy & Security" |
+| Contact Support | "Send us a message" card (opens chat form inline) |
 
-### Files to change
-| File | Change |
+### Right Pane — Article Detail (Video + Text)
+
+When a topic card is selected:
+1. **Video player** at top (placeholder with thumbnail + play button; videos would be YouTube/Vimeo embeds or hosted MP4s)
+2. **Rich text content** below — step-by-step instructions with headings, screenshots, and callouts
+3. Empty state when nothing is selected: illustration + "Select a topic to get started"
+
+### Sidebar Integration
+
+- Add a **Book/GraduationCap** icon in the left sidebar nav (between What's New and Settings, or in the footer area)
+- Remove the floating help button from `AppLayout.tsx`
+- Route: `/resource-center`
+
+### Contact Support (Chat Tab)
+
+Reuse the existing chat UI from `HelpPanel.tsx` but render it inline in the right pane when "Contact Support" → "Send us a message" is selected, rather than in a floating sheet.
+
+### Data Structure
+
+Static data file `src/data/resourceCenter.ts` containing categories, topics, and article content (title, description, videoUrl, body markdown/HTML). Easy to extend later with database-backed content.
+
+### Files to Create/Change
+
+| File | Action |
 |------|--------|
-| `src/components/layout/AppLayout.tsx` | Replace conditional render with width transition |
+| `src/data/resourceCenter.ts` | Create — static content for categories, topics, articles |
+| `src/pages/ResourceCenter.tsx` | Create — three-pane page layout |
+| `src/components/resourceCenter/CategoryNav.tsx` | Create — middle pane category list + topic cards |
+| `src/components/resourceCenter/ArticleDetail.tsx` | Create — right pane video + text viewer |
+| `src/components/resourceCenter/ContactSupport.tsx` | Create — inline chat form (extracted from HelpPanel) |
+| `src/components/resourceCenter/TopicCard.tsx` | Create — card component for topic items |
+| `src/App.tsx` | Add `/resource-center` route |
+| `src/components/settings/LeftPane.tsx` | Add Resource Center nav item, remove floating help button state |
+| `src/components/layout/AppLayout.tsx` | Remove floating help button + HelpPanel |
 
