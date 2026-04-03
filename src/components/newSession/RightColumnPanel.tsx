@@ -22,6 +22,7 @@ import { availableTemplates } from '@/data/templates';
 import { useLetters } from '@/contexts/LettersContext';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
+import { SendToLettersDialog } from './SendToLettersDialog';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
