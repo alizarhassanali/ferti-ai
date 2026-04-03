@@ -271,7 +271,7 @@ export const NoteTab = ({
     }
   };
 
-  const handleSendNow = () => {
+  const handleSendNow = (doctorNote?: string) => {
     if (activeTab?.content && sessionId) {
       createLetter({
         sessionId,
@@ -279,6 +279,7 @@ export const NoteTab = ({
         sessionDate: sessionDate || new Date(),
         templateType: selectedTemplate?.name || 'Clinical Note',
         content: activeTab.content,
+        doctorNote,
       });
       toast({
         title: "Letter sent",
