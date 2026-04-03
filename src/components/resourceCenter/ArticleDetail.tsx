@@ -2,6 +2,7 @@ import { ResourceTopic } from '@/data/resourceCenter';
 import { BookOpen, Play } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ContactSupport } from './ContactSupport';
+import { FeedbackForm } from './FeedbackForm';
 
 interface ArticleDetailProps {
   topic: ResourceTopic | null;
