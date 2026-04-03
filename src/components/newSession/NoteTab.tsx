@@ -22,6 +22,7 @@ import { TEMPLATES } from '@/data/demoContent';
 import { useLetters } from '@/contexts/LettersContext';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SendToLettersDialog } from './SendToLettersDialog';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
