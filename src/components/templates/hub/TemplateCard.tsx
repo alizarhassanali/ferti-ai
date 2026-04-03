@@ -3,6 +3,8 @@ import { Users, CheckCircle } from 'lucide-react';
 import { HubTemplate } from '@/data/hubTemplates';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { templateTypeDescriptions } from '@/constants/templateTypes';
 
 interface TemplateCardProps {
   template: HubTemplate;
