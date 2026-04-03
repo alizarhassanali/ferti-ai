@@ -5,6 +5,7 @@ import { AppFooter } from './AppFooter';
 import { useLocation } from 'react-router-dom';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { TrainingBanner } from '@/components/onboarding/TrainingBanner';
+import { FeedbackNudgeBanner } from '@/components/onboarding/FeedbackNudgeBanner';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -40,6 +41,7 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         <AppFooter />
       </div>
       <TrainingBanner />
+      <FeedbackNudgeBanner />
     </div>
   );
 };

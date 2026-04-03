@@ -163,6 +163,10 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "slide-in-bottom": {
+          "0%": { opacity: "0", transform: "translate(-50%, 100%)" },
+          "100%": { opacity: "1", transform: "translate(-50%, 0)" },
+        },
         "spinner-morph": {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
@@ -184,6 +188,7 @@ export default {
         "slide-out-right": "slide-out-right 0.2s ease-in-out",
         "slide-in-left": "slide-in-left 0.2s ease-in-out",
         "slide-out-left": "slide-out-left 0.2s ease-in-out",
+        "slide-in-bottom": "slide-in-bottom 0.3s ease-out",
         "spinner": "spinner-morph 1s linear infinite",
         "checkmark": "checkmark-draw 0.3s ease-out forwards",
       },

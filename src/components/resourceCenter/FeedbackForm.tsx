@@ -101,6 +101,7 @@ export const FeedbackForm = () => {
         },
       });
 
+      localStorage.setItem('otto-feedback-submitted', 'true');
       toast({ title: 'Thank you for your feedback!', description: 'Your submission has been received.' });
       resetForm();
       setFeedbackType(null);
