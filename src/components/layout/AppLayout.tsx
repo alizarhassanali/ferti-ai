@@ -30,11 +30,12 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
       <LeftPane />
-      {showSessionsPanel && (
-        <div className="w-80 h-full flex-shrink-0 animate-slide-in-left">
-          <GlobalSessionsPanel />
-        </div>
-      )}
+      <div
+        className="h-full flex-shrink-0 overflow-hidden transition-all duration-200 ease-in-out"
+        style={{ width: showSessionsPanel ? 320 : 0 }}
+      >
+        {shouldShowGlobalSessionsPanel && <GlobalSessionsPanel />}
+      </div>
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-hidden">
           {children}
