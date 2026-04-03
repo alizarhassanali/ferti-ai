@@ -41,6 +41,7 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         <AppFooter />
       </div>
       <TrainingBanner />
+      <FeedbackNudgeBanner />
     </div>
   );
 };

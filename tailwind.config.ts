@@ -188,6 +188,7 @@ export default {
         "slide-out-right": "slide-out-right 0.2s ease-in-out",
         "slide-in-left": "slide-in-left 0.2s ease-in-out",
         "slide-out-left": "slide-out-left 0.2s ease-in-out",
+        "slide-in-bottom": "slide-in-bottom 0.3s ease-out",
         "spinner": "spinner-morph 1s linear infinite",
         "checkmark": "checkmark-draw 0.3s ease-out forwards",
       },

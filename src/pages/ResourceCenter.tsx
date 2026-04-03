@@ -1,12 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CategoryNav } from '@/components/resourceCenter/CategoryNav';
 import { ArticleDetail } from '@/components/resourceCenter/ArticleDetail';
 import { ResourceTopic } from '@/data/resourceCenter';
 
 const ResourceCenter = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategoryId, setSelectedCategoryId] = useState('getting-started');
   const [selectedTopic, setSelectedTopic] = useState<ResourceTopic | null>(null);
+
+  useEffect(() => {
+    const category = searchParams.get('category');
+    if (category) {
+      setSelectedCategoryId(category);
+      setSelectedTopic(null);
+      setSearchParams({}, { replace: true });
+    }
+  }, []);
 
   const handleSelectCategory = (id: string) => {
     setSelectedCategoryId(id);
