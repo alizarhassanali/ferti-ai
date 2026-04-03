@@ -17,7 +17,7 @@ const ROUTES_WITHOUT_SESSIONS_PANEL = ['/settings', '/sessions', '/chart-prep'];
 export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayoutProps) => {
   const location = useLocation();
   const { isSessionsPanelVisible } = useSessionsPanel();
-  const [helpOpen, setHelpOpen] = useState(false);
+  
   
   const shouldShowGlobalSessionsPanel = !hideGlobalSessionsPanel && 
     !ROUTES_WITHOUT_SESSIONS_PANEL.some(route => location.pathname.startsWith(route));
