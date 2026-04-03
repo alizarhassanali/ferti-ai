@@ -24,4 +24,5 @@ export interface LetterFormData {
   sessionDate: Date;
   templateType: string;
   content: string;
+  doctorNote?: string;
 }
