@@ -538,8 +538,10 @@ export const NoteTab = ({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2" onClick={handleSendNow}>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                   <Send className="h-4 w-4" />
+                  Send now
+                </Button>
                   Send now
                 </Button>
                 <Button variant="outline" size="sm" className="gap-2" onClick={handleDownload}>
