@@ -28,6 +28,7 @@ import {
 import { Template, TemplateVisibility } from '@/types/template';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { templateTypeDescriptions } from '@/constants/templateTypes';
 
 interface TemplateRowProps {
   template: Template;
@@ -50,17 +51,26 @@ export const TemplateRow = ({ template, onDelete, onShare }: TemplateRowProps) =
       <TableCell className="py-3.5">
           <div className="flex items-center gap-2.5">
             <span className="font-medium text-[15px] text-foreground">{template.name}</span>
-            <Badge 
-              variant="secondary" 
-              className={cn(
-                "text-[11px] font-medium px-2.5 py-0.5 rounded-full border",
-                template.type === 'Note' && 'bg-amber-100 text-amber-700 border-amber-200',
-                template.type === 'Letter' && 'bg-blue-100 text-blue-700 border-blue-200',
-                template.type === 'Document' && 'bg-purple-100 text-purple-700 border-purple-200',
-              )}
-            >
-              {template.type}
-            </Badge>
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge 
+                    variant="secondary" 
+                    className={cn(
+                      "text-[11px] font-medium px-2.5 py-0.5 rounded-full border cursor-help",
+                      template.type === 'Note' && 'bg-amber-100 text-amber-700 border-amber-200',
+                      template.type === 'Letter' && 'bg-blue-100 text-blue-700 border-blue-200',
+                      template.type === 'Document' && 'bg-purple-100 text-purple-700 border-purple-200',
+                    )}
+                  >
+                    {template.type}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs max-w-[220px]">
+                  {templateTypeDescriptions[template.type] || template.type}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </TableCell>
         
