@@ -32,6 +32,7 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
   const { deleteLetter } = useLetters();
   const { toast } = useToast();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const formatTime = (date: Date) => {
     return format(new Date(date), 'h:mma').toLowerCase();
