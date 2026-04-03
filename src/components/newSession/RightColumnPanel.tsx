@@ -22,6 +22,7 @@ import { availableTemplates } from '@/data/templates';
 import { useLetters } from '@/contexts/LettersContext';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
+import { SendToLettersDialog } from './SendToLettersDialog';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -79,6 +80,7 @@ export const RightColumnPanel = ({
   const { createLetter, getLetterBySessionId } = useLetters();
   const { files: attachedFiles, addFiles, removeFile, retryProcessing } = useDocumentOCR();
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
+  const [showSendDialog, setShowSendDialog] = useState(false);
   
   // Per-tab state for language and undo/redo history
   const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
@@ -110,7 +112,7 @@ export const RightColumnPanel = ({
   };
 
 
-  const handleApproveAndSendToLetters = () => {
+  const handleApproveAndSendToLetters = (doctorNote?: string) => {
     if (activeTab?.content && sessionId) {
       createLetter({
         sessionId,
@@ -118,6 +120,7 @@ export const RightColumnPanel = ({
         sessionDate: sessionDate || new Date(),
         templateType: selectedTemplate?.name || 'Clinical Note',
         content: activeTab.content,
+        doctorNote,
       });
       toast({
         title: "Approved & sent to Letters",
@@ -615,7 +618,7 @@ export const RightColumnPanel = ({
                             Reviewed
                           </Button>
                           {selectedTemplate?.type === 'Letter' && (
-                            <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                            <Button size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                               <Send className="h-4 w-4" />
                               Send to Letters
                             </Button>
@@ -630,6 +633,14 @@ export const RightColumnPanel = ({
           </div>
         )}
       </div>
+
+      <SendToLettersDialog
+        open={showSendDialog}
+        onOpenChange={setShowSendDialog}
+        patientName={patientName || 'Unknown Patient'}
+        templateType={selectedTemplate?.name || 'Clinical Note'}
+        onConfirm={handleApproveAndSendToLetters}
+      />
     </div>
   );
 };

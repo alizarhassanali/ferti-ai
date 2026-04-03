@@ -22,6 +22,7 @@ import { TEMPLATES } from '@/data/demoContent';
 import { useLetters } from '@/contexts/LettersContext';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SendToLettersDialog } from './SendToLettersDialog';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -72,6 +73,7 @@ export const NoteTab = ({
   const { createLetter, getLetterBySessionId } = useLetters();
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
+  const [showSendDialog, setShowSendDialog] = useState(false);
   
   // Per-tab state for language and undo/redo history
   const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
@@ -269,7 +271,7 @@ export const NoteTab = ({
     }
   };
 
-  const handleSendNow = () => {
+  const handleSendNow = (doctorNote?: string) => {
     if (activeTab?.content && sessionId) {
       createLetter({
         sessionId,
@@ -277,6 +279,7 @@ export const NoteTab = ({
         sessionDate: sessionDate || new Date(),
         templateType: selectedTemplate?.name || 'Clinical Note',
         content: activeTab.content,
+        doctorNote,
       });
       toast({
         title: "Letter sent",
@@ -303,7 +306,7 @@ export const NoteTab = ({
     }
   };
 
-  const handleApproveAndSendToLetters = () => {
+  const handleApproveAndSendToLetters = (doctorNote?: string) => {
     if (activeTab?.content && sessionId) {
       createLetter({
         sessionId,
@@ -311,6 +314,7 @@ export const NoteTab = ({
         sessionDate: sessionDate || new Date(),
         templateType: selectedTemplate?.name || 'Clinical Note',
         content: activeTab.content,
+        doctorNote,
       });
       toast({
         title: "Approved & sent to Letters",
@@ -534,7 +538,7 @@ export const NoteTab = ({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2" onClick={handleSendNow}>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                   <Send className="h-4 w-4" />
                   Send now
                 </Button>
@@ -542,7 +546,7 @@ export const NoteTab = ({
                   <Download className="h-4 w-4" />
                   Download
                 </Button>
-                <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                <Button size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                   <CheckCircle className="h-4 w-4" />
                   Approve & send to Letters
                 </Button>
@@ -551,6 +555,14 @@ export const NoteTab = ({
           </div>
         )}
       </div>
+
+      <SendToLettersDialog
+        open={showSendDialog}
+        onOpenChange={setShowSendDialog}
+        patientName={patientName || 'Unknown Patient'}
+        templateType={selectedTemplate?.name || 'Clinical Note'}
+        onConfirm={handleApproveAndSendToLetters}
+      />
     </div>
   );
 };
