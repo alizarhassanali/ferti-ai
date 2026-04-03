@@ -187,6 +187,14 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
     if (selectedLetterId === id) setSelectedLetterId(null);
   };
 
+  const acknowledgeDoctorNote = (id: string) => {
+    setLetters(prev => prev.map(letter =>
+      letter.id === id
+        ? { ...letter, doctorNoteAcknowledgedAt: new Date(), doctorNoteAcknowledgedBy: 'Current User', updatedAt: new Date() }
+        : letter
+    ));
+  };
+
   return (
     <LettersContext.Provider value={{
       letters,
