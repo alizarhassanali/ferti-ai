@@ -10,6 +10,7 @@ export interface Letter {
   originatingDoctor: string;
   status: LetterStatus;
   content: string;
+  doctorNote?: string;
   sentAt?: Date;
   approvedAt: Date;
   createdAt: Date;
