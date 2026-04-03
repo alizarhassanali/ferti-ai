@@ -233,9 +233,7 @@ export const LeftPane = () => {
             const handleClick = () => {
               // Close mobile menu when navigating
               setIsMobileMenuOpen(false);
-              if (item.id === 'help') {
-                setHelpPanelOpen(true);
-              } else if (item.id === 'sessions') {
+              if (item.id === 'sessions') {
                 // If we're on /sessions page, navigate there
                 // If we're on another allowed page, toggle the sessions panel
                 // If we're on settings, just navigate to /sessions
