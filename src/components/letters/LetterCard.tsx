@@ -32,6 +32,7 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
   const { deleteLetter } = useLetters();
   const { toast } = useToast();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const formatTime = (date: Date) => {
     return format(new Date(date), 'h:mma').toLowerCase();
@@ -64,12 +65,12 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
           <span className="text-xs text-foreground/50 shrink-0">{formatTime(letter.sessionDate)}</span>
           {/* Three-dot menu — only for to_be_sent letters; TODO: gate behind doctor/admin role */}
           {letter.status === 'to_be_sent' && (
-            <DropdownMenu>
+            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                  className={`h-6 w-6 p-0 transition-opacity shrink-0 ${menuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />
