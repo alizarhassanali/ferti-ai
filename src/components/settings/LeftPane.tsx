@@ -99,7 +99,7 @@ export const LeftPane = () => {
     id: 'whats-new'
   }, {
     icon: BookOpen,
-    label: 'Resource Center',
+    label: 'Help Center',
     id: 'resource-center'
   }];
   return <>
