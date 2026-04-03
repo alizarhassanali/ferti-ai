@@ -163,6 +163,10 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "slide-in-bottom": {
+          "0%": { opacity: "0", transform: "translate(-50%, 100%)" },
+          "100%": { opacity: "1", transform: "translate(-50%, 0)" },
+        },
         "spinner-morph": {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
