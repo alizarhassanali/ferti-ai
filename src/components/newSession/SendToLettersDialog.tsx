@@ -64,7 +64,7 @@ export const SendToLettersDialog = ({
           <p className="text-xs text-muted-foreground">
             This note will be visible to the nurse or care coordinator reviewing the letter.
           </p>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
