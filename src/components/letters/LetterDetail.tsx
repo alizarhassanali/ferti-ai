@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export const LetterDetail = () => {
-  const { selectedLetterId, getLetter, updateLetterContent, markAsSent, deleteLetter } = useLetters();
+  const { selectedLetterId, getLetter, updateLetterContent, markAsSent, deleteLetter, acknowledgeDoctorNote } = useLetters();
   const { toast } = useToast();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
