@@ -181,16 +181,31 @@ export const LetterDetail = () => {
         </div>
       </div>
 
-      {/* Doctor's Note Callout */}
-      {letter.doctorNote && (
-        <div className="border-b border-border px-6 py-3">
-          <div className="flex items-start gap-3 rounded-lg bg-accent/50 border border-border px-4 py-3">
-            <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-            <div>
-              <p className="text-xs font-semibold text-primary mb-1">Doctor's Note</p>
-              <p className="text-sm text-foreground leading-relaxed">{letter.doctorNote}</p>
+      {/* Doctor's Note Banner */}
+      {letter.doctorNote && letter.status === 'to_be_sent' && (
+        <div className="border-b border-border px-6 py-0">
+          {letter.doctorNoteAcknowledgedAt ? (
+            <div className="flex items-center gap-2 py-2 text-sm text-muted-foreground">
+              <CheckCircle2 className="h-3.5 w-3.5 text-[hsl(142_71%_45%)]" />
+              <span>Note acknowledged</span>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-start gap-3 border-l-4 border-[hsl(45_93%_47%)] bg-[hsl(48_100%_96%)] rounded-r-lg px-4 py-3 my-2">
+              <MessageSquare className="h-4 w-4 text-[hsl(45_93%_47%)] mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-[hsl(32_95%_30%)] mb-1">Doctor's Note</p>
+                <p className="text-sm text-foreground leading-relaxed">{letter.doctorNote}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="shrink-0 text-xs"
+                onClick={() => acknowledgeDoctorNote(letter.id)}
+              >
+                Acknowledge
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

@@ -206,6 +206,7 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       updateLetterContent,
       markAsSent,
       deleteLetter,
+      acknowledgeDoctorNote,
       getLetterBySessionId,
     }}>
       {children}

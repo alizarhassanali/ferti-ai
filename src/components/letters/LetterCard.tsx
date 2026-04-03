@@ -62,6 +62,9 @@ export const LetterCard = ({ letter, isActive, onClick }: LetterCardProps) => {
       >
         <div className="flex items-center gap-1">
           <h4 className="text-sm font-medium text-foreground truncate flex-1">{letter.patientName}</h4>
+          {letter.doctorNote && (
+            <MessageSquare className="h-3.5 w-3.5 text-[hsl(45_93%_47%)] shrink-0" />
+          )}
           <span className="text-xs text-foreground/50 shrink-0">{formatTime(letter.sessionDate)}</span>
           {/* Three-dot menu — only for to_be_sent letters; TODO: gate behind doctor/admin role */}
           {letter.status === 'to_be_sent' && (

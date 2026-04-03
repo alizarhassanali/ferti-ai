@@ -11,6 +11,8 @@ export interface Letter {
   status: LetterStatus;
   content: string;
   doctorNote?: string;
+  doctorNoteAcknowledgedAt?: Date;
+  doctorNoteAcknowledgedBy?: string;
   sentAt?: Date;
   approvedAt: Date;
   createdAt: Date;
