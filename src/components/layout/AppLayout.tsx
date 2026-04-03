@@ -37,22 +37,8 @@ export const AppLayout = ({ children, hideGlobalSessionsPanel = false }: AppLayo
         <div className="flex-1 overflow-hidden">
           {children}
         </div>
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setHelpOpen(true)}
-                className="fixed bottom-16 right-6 z-50 w-12 h-12 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
-              >
-                <MessageCircle className="h-6 w-6" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="left" className="text-xs">Help</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
         <AppFooter />
       </div>
-      <HelpPanel open={helpOpen} onOpenChange={setHelpOpen} />
       <TrainingBanner />
     </div>
   );
