@@ -1,53 +1,31 @@
 
 
-## Defer Session Creation Until User Interaction
+## Fix Sessions Panel Collapse Animation
 
 ### Problem
-Every click on "New Session" immediately creates an "Untitled session" in Drafts (line 76–101 in `NewSession.tsx`). The session should only be persisted once the user actually types something — patient details, context, dictation, transcript, or any meaningful input.
+The sessions panel in `AppLayout.tsx` uses conditional rendering (`{showSessionsPanel && <div>...`). When the panel is hidden, the DOM element is immediately removed — so no exit/collapse animation ever plays. Only the enter animation (`animate-slide-in-left`) works.
 
-### Approach
-Instead of calling `addSession` on mount, work in a "pending" state with a local session ID but don't persist to context until the user provides input.
+### Solution
+Instead of conditionally rendering the panel, **always render it** but animate its width between `w-80` (320px) and `w-0` using a CSS transition. This allows both expand and collapse to animate smoothly.
 
-### Changes: `src/pages/NewSession.tsx`
+### Changes: `src/components/layout/AppLayout.tsx`
 
-1. **Remove the auto-create effect** (lines 76–101) that calls `addSession` immediately when `currentSessionId` is null.
+1. **Always render** the sessions panel wrapper div (remove the `{showSessionsPanel && ...}` conditional)
+2. Use inline style + transition classes to animate width:
+   - When visible: `width: 320px` with `overflow: hidden`
+   - When hidden: `width: 0px` with `overflow: hidden`
+   - Add `transition-all duration-200 ease-in-out` for smooth animation
+3. Remove the `animate-slide-in-left` class (no longer needed — the width transition handles both directions)
+4. Only render the `<GlobalSessionsPanel />` content when `shouldShowGlobalSessionsPanel` is true (to avoid unnecessary component mounting on routes that never show it)
 
-2. **Generate a local ID on mount without persisting**:
-   - Still generate `newId = session-${Date.now()}` and set `currentSessionId`, but do NOT call `addSession` yet.
-   - Add a ref `sessionPersistedRef = useRef(false)` to track whether the session has been saved to context.
-
-3. **Create a `persistSession` function** that calls `addSession` once (guarded by the ref) with current state values. This creates the session in Drafts the first time it's called.
-
-4. **Trigger `persistSession` when user provides any input**:
-   - When `patientDetails` changes (patient selected or typed)
-   - When `contextContent` changes
-   - When `transcriptContent` changes
-   - When `dictationContent` changes
-   - When recording starts
-   - When note tab content changes
-   
-   The simplest approach: in the existing `saveSessionChanges` callback, check if the session is not yet persisted — if so, call `addSession` first, then `updateSession`. This way the existing debounced auto-save (line 149–152) naturally handles persistence on any input.
-
-5. **Guard `updateSession` calls**: In `saveSessionChanges`, only call `updateSession` if the session has been persisted (i.e., `sessionPersistedRef.current === true`). Otherwise, check if there's any content and call `addSession` + set the ref.
-
-### Logic summary
-
+### Result
 ```text
-Mount:
-  → generate localId, set currentSessionId
-  → do NOT call addSession
-
-Any input changes (patient, context, transcript, dictation, notes):
-  → triggers saveSessionChanges via debounce
-  → if not persisted yet AND has any content:
-      → addSession(fullSessionObject)
-      → sessionPersistedRef.current = true
-  → if already persisted:
-      → updateSession(id, updates) as before
+Before: Panel mounts with slide-in → Panel unmounts instantly (no animation)
+After:  Panel width transitions 0→320px → Panel width transitions 320px→0 (smooth both ways)
 ```
 
 ### Files to change
 | File | Change |
 |------|--------|
-| `src/pages/NewSession.tsx` | Remove auto-create, add lazy persist logic in save flow |
+| `src/components/layout/AppLayout.tsx` | Replace conditional render with width transition |
 
