@@ -1,20 +1,53 @@
 
 
-## Fix Three-Dot Menu Disappearing on Open
+## Defer Session Creation Until User Interaction
 
 ### Problem
-The three-dot menu button uses `opacity-0 group-hover:opacity-100`. When the `DropdownMenu` opens, focus/pointer moves to the dropdown content (rendered in a portal outside the card), so `group-hover` no longer applies and the button becomes invisible, collapsing the menu.
+Every click on "New Session" immediately creates an "Untitled session" in Drafts (line 76–101 in `NewSession.tsx`). The session should only be persisted once the user actually types something — patient details, context, dictation, transcript, or any meaningful input.
 
-### Solution: `src/components/letters/LetterCard.tsx`
+### Approach
+Instead of calling `addSession` on mount, work in a "pending" state with a local session ID but don't persist to context until the user provides input.
 
-- Add local state `const [menuOpen, setMenuOpen] = useState(false)` to track whether the dropdown is open
-- Pass `open={menuOpen}` and `onOpenChange={setMenuOpen}` to the `DropdownMenu`
-- Change the button className from `opacity-0 group-hover:opacity-100` to conditionally always show when menu is open: `${menuOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`
+### Changes: `src/pages/NewSession.tsx`
 
-This ensures the trigger button stays visible while the dropdown is open, regardless of hover state.
+1. **Remove the auto-create effect** (lines 76–101) that calls `addSession` immediately when `currentSessionId` is null.
+
+2. **Generate a local ID on mount without persisting**:
+   - Still generate `newId = session-${Date.now()}` and set `currentSessionId`, but do NOT call `addSession` yet.
+   - Add a ref `sessionPersistedRef = useRef(false)` to track whether the session has been saved to context.
+
+3. **Create a `persistSession` function** that calls `addSession` once (guarded by the ref) with current state values. This creates the session in Drafts the first time it's called.
+
+4. **Trigger `persistSession` when user provides any input**:
+   - When `patientDetails` changes (patient selected or typed)
+   - When `contextContent` changes
+   - When `transcriptContent` changes
+   - When `dictationContent` changes
+   - When recording starts
+   - When note tab content changes
+   
+   The simplest approach: in the existing `saveSessionChanges` callback, check if the session is not yet persisted — if so, call `addSession` first, then `updateSession`. This way the existing debounced auto-save (line 149–152) naturally handles persistence on any input.
+
+5. **Guard `updateSession` calls**: In `saveSessionChanges`, only call `updateSession` if the session has been persisted (i.e., `sessionPersistedRef.current === true`). Otherwise, check if there's any content and call `addSession` + set the ref.
+
+### Logic summary
+
+```text
+Mount:
+  → generate localId, set currentSessionId
+  → do NOT call addSession
+
+Any input changes (patient, context, transcript, dictation, notes):
+  → triggers saveSessionChanges via debounce
+  → if not persisted yet AND has any content:
+      → addSession(fullSessionObject)
+      → sessionPersistedRef.current = true
+  → if already persisted:
+      → updateSession(id, updates) as before
+```
 
 ### Files to change
 | File | Change |
 |------|--------|
-| `src/components/letters/LetterCard.tsx` | Add `menuOpen` state, controlled `DropdownMenu`, conditional opacity class |
+| `src/pages/NewSession.tsx` | Remove auto-create, add lazy persist logic in save flow |
 
