@@ -1,38 +1,35 @@
 
 
-## Add Template Type Explanations via Tooltips & Info Icon
+## Add Delete Functionality for "To be sent" Letters
 
-### Tooltip Descriptions
-
-| Type | Tooltip Text |
-|------|-------------|
-| **Note** | "Clinical notes generated from your sessions (e.g., SOAP, progress notes)" |
-| **Letter** | "Generates letters that go to the Letters section for review and sending" |
-| **Document** | "General medical documents and forms" |
+### Summary
+Add delete capability in **both** the letter detail header and the letter list card, restricted to "To be sent" letters only. In production, this would be gated behind Doctor/Administrator roles.
 
 ### Changes
 
-**1. `src/components/templates/TemplateRow.tsx`** — Wrap the type Badge in a Tooltip
-- Wrap the existing `<Badge>` (lines 53–63) with `Tooltip` / `TooltipTrigger` / `TooltipContent`
-- Show the type-specific description on hover
+**1. `src/contexts/LettersContext.tsx`**
+- Add `deleteLetter(id: string)` to the context interface and provider
+- Removes the letter from state; clears `selectedLetterId` if the deleted letter was selected
 
-**2. `src/components/templates/hub/TemplateCard.tsx`** — Same tooltip on the type badge span
-- Wrap the type `<span>` (lines 24–30) with a Tooltip showing the description
+**2. `src/components/letters/LetterDetail.tsx`**
+- Add a `Trash2` icon button (ghost, destructive red) to the left of Copy/PDF in the action buttons row — only visible when `status === 'to_be_sent'`
+- Clicking opens an `AlertDialog` confirmation: "Delete this letter? This action cannot be undone."
+- On confirm, calls `deleteLetter`, shows a toast
 
-**3. `src/components/templates/CreateTemplateModal/BlankTemplateEditor.tsx`** — Add info icon next to the Type selector
-- Add a small `Info` (lucide) icon next to the "Type" label (line 70)
-- Wrap it in a Tooltip (or HoverCard for a richer popup) that lists all three types with their descriptions so the user can see the full picture when choosing
+**3. `src/components/letters/LetterCard.tsx`**
+- Add a three-dot (`MoreHorizontal`) menu button that appears on hover, positioned at the top-right of the card
+- Uses `DropdownMenu` with a single "Delete" item (red text, Trash2 icon) — only shown for `to_be_sent` letters
+- Clicking "Delete" opens the same `AlertDialog` confirmation before deleting
+- The menu button uses `e.stopPropagation()` to avoid triggering the card click
 
-**4. `src/components/templates/CreateTemplateModal/TypeSelection.tsx`** — Already has descriptions per card, no change needed
+**4. Role restriction**
+- Since the app currently uses demo data with no live auth, delete is shown by default (current user is assumed to be a doctor/admin)
+- Code comments will mark where `has_role()` checks should be added when auth is wired up
 
-### Helper
-Create a shared constant map in a small utility (or inline) so all locations use the same descriptions:
-
-```ts
-const templateTypeDescriptions: Record<string, string> = {
-  Note: "Clinical notes generated from your sessions (e.g., SOAP, progress notes)",
-  Letter: "Generates letters sent to the Letters section for review and sending",
-  Document: "General medical documents and forms",
-};
-```
+### Files to change
+| File | Change |
+|------|--------|
+| `src/contexts/LettersContext.tsx` | Add `deleteLetter` function |
+| `src/components/letters/LetterDetail.tsx` | Add delete button + AlertDialog |
+| `src/components/letters/LetterCard.tsx` | Add hover three-dot menu with delete option + AlertDialog |
 
