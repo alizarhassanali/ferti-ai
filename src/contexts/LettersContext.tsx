@@ -179,6 +179,10 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
     ));
   };
 
+  const deleteLetter = (id: string) => {
+    setLetters(prev => prev.filter(letter => letter.id !== id));
+    if (selectedLetterId === id) setSelectedLetterId(null);
+  };
 
   return (
     <LettersContext.Provider value={{
@@ -190,6 +194,7 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       createLetter,
       updateLetterContent,
       markAsSent,
+      deleteLetter,
       getLetterBySessionId,
     }}>
       {children}
