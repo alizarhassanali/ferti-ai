@@ -28,6 +28,7 @@ import {
 import { Template, TemplateVisibility } from '@/types/template';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { templateTypeDescriptions } from '@/constants/templateTypes';
 
 interface TemplateRowProps {
   template: Template;
