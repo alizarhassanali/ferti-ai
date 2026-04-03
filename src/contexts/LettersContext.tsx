@@ -11,6 +11,7 @@ interface LettersContextType {
   updateLetterContent: (id: string, content: string) => void;
   markAsSent: (id: string) => void;
   deleteLetter: (id: string) => void;
+  acknowledgeDoctorNote: (id: string) => void;
   getLetterBySessionId: (sessionId: string) => Letter | undefined;
 }
 
@@ -186,6 +187,14 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
     if (selectedLetterId === id) setSelectedLetterId(null);
   };
 
+  const acknowledgeDoctorNote = (id: string) => {
+    setLetters(prev => prev.map(letter =>
+      letter.id === id
+        ? { ...letter, doctorNoteAcknowledgedAt: new Date(), doctorNoteAcknowledgedBy: 'Current User', updatedAt: new Date() }
+        : letter
+    ));
+  };
+
   return (
     <LettersContext.Provider value={{
       letters,
@@ -197,6 +206,7 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       updateLetterContent,
       markAsSent,
       deleteLetter,
+      acknowledgeDoctorNote,
       getLetterBySessionId,
     }}>
       {children}
