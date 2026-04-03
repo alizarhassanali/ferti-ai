@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      feedback: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          rating: number | null
+          screenshot_url: string | null
+          severity: string | null
+          subject: string | null
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          rating?: number | null
+          screenshot_url?: string | null
+          severity?: string | null
+          subject?: string | null
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          rating?: number | null
+          screenshot_url?: string | null
+          severity?: string | null
+          subject?: string | null
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       invites: {
         Row: {
           created_at: string

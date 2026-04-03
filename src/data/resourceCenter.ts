@@ -1,4 +1,4 @@
-import { BookOpen, FileText, Mic, Mail, Sparkles, CreditCard, ScrollText, Radio, ShieldCheck, MessageSquare } from 'lucide-react';
+import { BookOpen, FileText, Mic, Mail, Sparkles, CreditCard, ScrollText, Radio, ShieldCheck, MessageSquare, MessageCircle } from 'lucide-react';
 
 export interface ResourceCategory {
   id: string;
@@ -20,6 +20,7 @@ export const categories: ResourceCategory[] = [
   { id: 'getting-started', label: 'Getting Started', description: 'Onboarding guides for new users' },
   { id: 'faqs', label: 'FAQs', description: 'Common questions by topic' },
   { id: 'contact-support', label: 'Contact Support', description: 'Chat with our support team' },
+  { id: 'give-feedback', label: 'Give Feedback', description: 'Share your thoughts and report issues' },
 ];
 
 export const topics: ResourceTopic[] = [
@@ -273,6 +274,16 @@ Please contact our security team immediately at security@ottonotes.com or use th
     title: 'Send us a message',
     description: 'Chat with our support team — we typically reply in under 10 minutes.',
     icon: MessageSquare,
+    content: '',
+  },
+
+  // Give Feedback
+  {
+    id: 'give-feedback-form',
+    categoryId: 'give-feedback',
+    title: 'Give Feedback',
+    description: 'Share feedback, report bugs, or rate your experience.',
+    icon: MessageCircle,
     content: '',
   },
 ];

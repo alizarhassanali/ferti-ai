@@ -2,6 +2,7 @@ import { ResourceTopic } from '@/data/resourceCenter';
 import { BookOpen, Play } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ContactSupport } from './ContactSupport';
+import { FeedbackForm } from './FeedbackForm';
 
 interface ArticleDetailProps {
   topic: ResourceTopic | null;
@@ -25,6 +26,11 @@ export const ArticleDetail = ({ topic }: ArticleDetailProps) => {
   // Contact support renders its own UI
   if (topic.id === 'send-message') {
     return <ContactSupport />;
+  }
+
+  // Feedback form renders its own UI
+  if (topic.id === 'give-feedback-form') {
+    return <FeedbackForm />;
   }
 
   // Parse simple markdown-like content
