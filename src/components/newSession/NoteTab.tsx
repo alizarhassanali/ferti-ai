@@ -306,7 +306,7 @@ export const NoteTab = ({
     }
   };
 
-  const handleApproveAndSendToLetters = () => {
+  const handleApproveAndSendToLetters = (doctorNote?: string) => {
     if (activeTab?.content && sessionId) {
       createLetter({
         sessionId,
@@ -314,6 +314,7 @@ export const NoteTab = ({
         sessionDate: sessionDate || new Date(),
         templateType: selectedTemplate?.name || 'Clinical Note',
         content: activeTab.content,
+        doctorNote,
       });
       toast({
         title: "Approved & sent to Letters",
