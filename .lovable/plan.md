@@ -1,59 +1,56 @@
 
 
-## Doctor's Note — Sticky Banner with Acknowledge
+## In-App Feedback via Help Center
 
-### What changes
+### Summary
+Add a new "Give Feedback" category to the Help Center. When selected, the right pane shows a feedback form supporting three types: general feedback, bug report, and quick rating. Submissions are stored in the database and trigger an email notification.
 
-**1. Replace inline callout with a sticky dismissible banner**
+### User Experience
 
-In `LetterDetail.tsx`, replace the current `MessageSquare` callout block with a sticky banner pinned between the header and the toolbar. The banner:
-- Has a light amber/warning background with a left accent border
-- Shows "Doctor's Note" label + the note text
-- Includes an **"Acknowledge"** button on the right side
-- Once acknowledged, the banner collapses to a subtle single-line "Note acknowledged ✓" indicator (stays visible but minimal)
-- Only appears when `letter.doctorNote` exists and the letter is in `to_be_sent` status
+1. User navigates to Help Center and clicks the new **"Give Feedback"** category tab (alongside Getting Started, FAQs, Contact Support)
+2. The middle pane shows three feedback type cards: **General Feedback**, **Bug Report**, **Quick Rating**
+3. Clicking a card opens the corresponding form in the right pane:
 
-**2. Add `doctorNoteAcknowledged` field**
+   - **Quick Rating**: 5 emoji/star selector + optional comment textarea + submit
+   - **General Feedback**: subject input + message textarea + submit
+   - **Bug Report**: subject input + description textarea + severity dropdown (Low/Medium/High/Critical) + optional screenshot upload button + submit
 
-In `src/types/letter.ts`, add:
-- `doctorNoteAcknowledgedAt?: Date` — timestamp of when the note was acknowledged
-- `doctorNoteAcknowledgedBy?: string` — name of the nurse/coordinator who acknowledged
+4. On submit: toast confirmation, form resets, data saved to database
 
-In `src/contexts/LettersContext.tsx`, add:
-- `acknowledgeDoctorNote(id: string)` function that sets the acknowledged timestamp
+### Database
 
-**3. Letter card badge indicator**
+Create a `feedback` table:
+- `id` (uuid, PK)
+- `user_id` (uuid, references auth.users, nullable for anonymous)
+- `type` (text: 'general', 'bug_report', 'rating')
+- `subject` (text, nullable)
+- `message` (text, nullable)
+- `rating` (integer, nullable, 1-5)
+- `severity` (text, nullable: 'low', 'medium', 'high', 'critical')
+- `screenshot_url` (text, nullable)
+- `created_at` (timestamptz, default now())
 
-In `LetterCard.tsx`, add a small `MessageSquare` icon next to the patient name when the letter has a `doctorNote`. This lets nurses quickly see which letters have notes before clicking in — no tooltip, just a visual cue.
+RLS: authenticated users can insert their own rows, admins can select all.
 
-### Banner layout (detail pane)
+### Email Notification
 
-```text
-┌─────────────────────────────────────────────────────┐
-│  Header: Patient Name  [Badge]        [Actions...]  │
-├─────────────────────────────────────────────────────┤
-│ ⚠ Doctor's Note                      [Acknowledge] │
-│ "Please verify the GP address before sending..."    │
-├─────────────────────────────────────────────────────┤
-│  [Rich Text Toolbar]                                │
-├─────────────────────────────────────────────────────┤
-│  Letter content...                                  │
-└─────────────────────────────────────────────────────┘
-```
+Create a backend function `notify-feedback` that sends an email to a configured team inbox when feedback is submitted. Uses Lovable's email infrastructure.
 
-After acknowledging:
-```text
-├─────────────────────────────────────────────────────┤
-│ ✓ Note acknowledged                                 │
-├─────────────────────────────────────────────────────┤
-```
+### Files to create/change
 
-### Files to change
-
-| File | Change |
+| File | Action |
 |------|--------|
-| `src/types/letter.ts` | Add `doctorNoteAcknowledgedAt`, `doctorNoteAcknowledgedBy` fields |
-| `src/contexts/LettersContext.tsx` | Add `acknowledgeDoctorNote` function |
-| `src/components/letters/LetterDetail.tsx` | Replace callout with sticky banner + acknowledge button |
-| `src/components/letters/LetterCard.tsx` | Add `MessageSquare` icon when `doctorNote` exists |
+| `src/data/resourceCenter.ts` | Add "Give Feedback" category |
+| `src/components/resourceCenter/FeedbackForm.tsx` | New — feedback form component with type tabs (rating, general, bug report) |
+| `src/components/resourceCenter/ArticleDetail.tsx` | Render FeedbackForm when feedback category is selected |
+| Migration | Create `feedback` table with RLS |
+| Storage bucket | Create `feedback-screenshots` bucket for bug report attachments |
+| Edge function `notify-feedback` | Send email notification on new feedback |
+
+### Technical Details
+
+- Feedback type cards in the middle pane reuse the existing `TopicCard` pattern
+- The right-pane form component switches between three sub-forms based on selected type
+- Screenshot upload uses Supabase Storage; file path: `feedback-screenshots/{user_id}/{timestamp}.png`
+- Email notification is a simple edge function invoked after successful insert
 
