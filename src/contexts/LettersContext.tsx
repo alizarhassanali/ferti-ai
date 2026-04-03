@@ -53,6 +53,7 @@ const demoLetters: Letter[] = [
 <p>Yours sincerely,<br>
 <strong>Dr. Shahid Saya</strong><br>
 Consultant in Reproductive Medicine</p>`,
+    doctorNote: 'Please double-check the AMH value with the lab report before sending. Also ensure the GP address is correct — patient mentioned she recently changed practices.',
     approvedAt: new Date('2024-12-15T14:30:00'),
     createdAt: new Date('2024-12-15T14:30:00'),
     updatedAt: new Date('2024-12-15T14:30:00'),
