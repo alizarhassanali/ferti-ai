@@ -80,6 +80,7 @@ export const RightColumnPanel = ({
   const { createLetter, getLetterBySessionId } = useLetters();
   const { files: attachedFiles, addFiles, removeFile, retryProcessing } = useDocumentOCR();
   const [showNoContentWarning, setShowNoContentWarning] = useState(false);
+  const [showSendDialog, setShowSendDialog] = useState(false);
   
   // Per-tab state for language and undo/redo history
   const [tabStates, setTabStates] = useState<Record<string, ExtendedTabState>>(() => {
