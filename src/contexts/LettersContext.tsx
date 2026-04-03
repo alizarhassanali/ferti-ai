@@ -10,6 +10,7 @@ interface LettersContextType {
   createLetter: (data: LetterFormData) => Letter;
   updateLetterContent: (id: string, content: string) => void;
   markAsSent: (id: string) => void;
+  deleteLetter: (id: string) => void;
   getLetterBySessionId: (sessionId: string) => Letter | undefined;
 }
 
