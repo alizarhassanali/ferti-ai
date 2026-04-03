@@ -1,47 +1,17 @@
 
 
-## Add Doctor's Note for Letters
+## Fix Glitchy Send to Letters Dialog
 
-### Summary
-When a doctor clicks "Send to Letters", a popup dialog appears where they can optionally type a note for the nurse/care coordinator. The note is stored on the letter and displayed as an inline callout in the Letter Detail pane.
+### Problem
+The dialog's middle content (textarea, label, helper text) is rendered as a bare `<div>` instead of using the standardized `DialogBody` component. Every other dialog in the app uses `DialogHeader` → `DialogBody` → `DialogFooter`, which provides proper padding, scrolling, and flex layout. Without `DialogBody`, the content doesn't integrate with the dialog's flex-column structure, causing visual glitches.
 
-### Changes
+### Fix: `src/components/newSession/SendToLettersDialog.tsx`
+- Import `DialogBody` from the dialog component
+- Replace the bare `<div className="space-y-2 py-2">` wrapper with `<DialogBody className="space-y-2">`
+- This aligns it with every other dialog in the app (PatientSelector, ConsentPopup, NewMemberModal, etc.)
 
-**1. `src/types/letter.ts`**
-- Add `doctorNote?: string` to `Letter` interface
-- Add `doctorNote?: string` to `LetterFormData` interface
-
-**2. `src/contexts/LettersContext.tsx`**
-- Pass `doctorNote` through in `createLetter`
-- Add demo `doctorNote` on one letter for visibility
-
-**3. New: `src/components/newSession/SendToLettersDialog.tsx`**
-- Dialog triggered by "Send to Letters" button
-- Shows letter summary (patient name, template type)
-- Optional textarea: "Add a note for the reviewer (optional)"
-- Footer: Cancel + "Send to Letters" (primary)
-- On confirm, calls `createLetter` with the optional `doctorNote`
-
-**4. `src/components/newSession/RightColumnPanel.tsx`**
-- Replace direct `handleApproveAndSendToLetters` call with opening the dialog
-- Add state for dialog open/close
-- Import and render `SendToLettersDialog`
-
-**5. `src/components/newSession/NoteTab.tsx`**
-- Same change as RightColumnPanel — open dialog instead of direct send
-
-**6. `src/components/letters/LetterDetail.tsx`**
-- Between header and rich text toolbar, render an inline callout when `letter.doctorNote` exists
-- Style: info-style alert box with a `MessageSquare` icon, "Doctor's Note" label, and the note text
-- Non-editable, view-only for the nurse/coordinator
-
-### Files to create/change
-| File | Action |
+### Files to change
+| File | Change |
 |------|--------|
-| `src/types/letter.ts` | Add `doctorNote` field |
-| `src/contexts/LettersContext.tsx` | Pass through `doctorNote` |
-| `src/components/newSession/SendToLettersDialog.tsx` | Create — dialog with optional note textarea |
-| `src/components/newSession/RightColumnPanel.tsx` | Open dialog instead of direct send |
-| `src/components/newSession/NoteTab.tsx` | Open dialog instead of direct send |
-| `src/components/letters/LetterDetail.tsx` | Show doctor's note callout |
+| `src/components/newSession/SendToLettersDialog.tsx` | Wrap content in `DialogBody` instead of bare `div` |
 
