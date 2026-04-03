@@ -28,6 +28,11 @@ export const ArticleDetail = ({ topic }: ArticleDetailProps) => {
     return <ContactSupport />;
   }
 
+  // Feedback form renders its own UI
+  if (topic.id === 'give-feedback-form') {
+    return <FeedbackForm />;
+  }
+
   // Parse simple markdown-like content
   const renderContent = (content: string) => {
     const lines = content.trim().split('\n');

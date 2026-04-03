@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.update-team-member-status]
 verify_jwt = false
+
+[functions.notify-feedback]
+verify_jwt = false

@@ -276,4 +276,14 @@ Please contact our security team immediately at security@ottonotes.com or use th
     icon: MessageSquare,
     content: '',
   },
+
+  // Give Feedback
+  {
+    id: 'give-feedback-form',
+    categoryId: 'give-feedback',
+    title: 'Give Feedback',
+    description: 'Share feedback, report bugs, or rate your experience.',
+    icon: MessageCircle,
+    content: '',
+  },
 ];
