@@ -548,7 +548,7 @@ export const NoteTab = ({
                   <Download className="h-4 w-4" />
                   Download
                 </Button>
-                <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                <Button size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                   <CheckCircle className="h-4 w-4" />
                   Approve & send to Letters
                 </Button>
