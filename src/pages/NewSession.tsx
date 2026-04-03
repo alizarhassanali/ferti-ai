@@ -86,6 +86,7 @@ const NewSession = () => {
     if (currentSessionId) {
       const existingSession = getSession(currentSessionId);
       if (existingSession) {
+        sessionPersistedRef.current = true;
         setContextContent(existingSession.contextContent || "");
         setTranscriptContent(existingSession.transcriptContent || "");
         setDictationContent(existingSession.dictationContent || "");
