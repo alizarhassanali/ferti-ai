@@ -1,57 +1,47 @@
 
 
-## Resource Center — Full Page, Three-Pane Layout
+## Add Doctor's Note for Letters
 
-### Overview
-Replace the floating help panel with a dedicated `/resource-center` page following the app's standard three-pane pattern: left sidebar (already exists), middle pane (320px fixed, category navigation + topic cards), right pane (article detail with video + text).
+### Summary
+When a doctor clicks "Send to Letters", a popup dialog appears where they can optionally type a note for the nurse/care coordinator. The note is stored on the letter and displayed as an inline callout in the Letter Detail pane.
 
-### Middle Pane — Categories & Topic Cards
+### Changes
 
-**Categories** (top section, similar to Settings nav):
-- **Getting Started** — Onboarding guides for new users
-- **FAQs** — Common questions by topic
-- **Contact Support** — Chat/email support form
+**1. `src/types/letter.ts`**
+- Add `doctorNote?: string` to `Letter` interface
+- Add `doctorNote?: string` to `LetterFormData` interface
 
-**Below the category nav**: Topic cards for the selected category, displayed as compact visual cards (icon + title + short description). Examples:
+**2. `src/contexts/LettersContext.tsx`**
+- Pass `doctorNote` through in `createLetter`
+- Add demo `doctorNote` on one letter for visibility
 
-| Category | Topic Cards |
-|----------|-------------|
-| Getting Started | "Create Your First Session", "Using Templates", "Dictation & Recording", "Managing Letters", "AI Assistant Basics" |
-| FAQs | "Account & Billing", "Templates & Notes", "Recording & Transcription", "Privacy & Security" |
-| Contact Support | "Send us a message" card (opens chat form inline) |
+**3. New: `src/components/newSession/SendToLettersDialog.tsx`**
+- Dialog triggered by "Send to Letters" button
+- Shows letter summary (patient name, template type)
+- Optional textarea: "Add a note for the reviewer (optional)"
+- Footer: Cancel + "Send to Letters" (primary)
+- On confirm, calls `createLetter` with the optional `doctorNote`
 
-### Right Pane — Article Detail (Video + Text)
+**4. `src/components/newSession/RightColumnPanel.tsx`**
+- Replace direct `handleApproveAndSendToLetters` call with opening the dialog
+- Add state for dialog open/close
+- Import and render `SendToLettersDialog`
 
-When a topic card is selected:
-1. **Video player** at top (placeholder with thumbnail + play button; videos would be YouTube/Vimeo embeds or hosted MP4s)
-2. **Rich text content** below — step-by-step instructions with headings, screenshots, and callouts
-3. Empty state when nothing is selected: illustration + "Select a topic to get started"
+**5. `src/components/newSession/NoteTab.tsx`**
+- Same change as RightColumnPanel — open dialog instead of direct send
 
-### Sidebar Integration
+**6. `src/components/letters/LetterDetail.tsx`**
+- Between header and rich text toolbar, render an inline callout when `letter.doctorNote` exists
+- Style: info-style alert box with a `MessageSquare` icon, "Doctor's Note" label, and the note text
+- Non-editable, view-only for the nurse/coordinator
 
-- Add a **Book/GraduationCap** icon in the left sidebar nav (between What's New and Settings, or in the footer area)
-- Remove the floating help button from `AppLayout.tsx`
-- Route: `/resource-center`
-
-### Contact Support (Chat Tab)
-
-Reuse the existing chat UI from `HelpPanel.tsx` but render it inline in the right pane when "Contact Support" → "Send us a message" is selected, rather than in a floating sheet.
-
-### Data Structure
-
-Static data file `src/data/resourceCenter.ts` containing categories, topics, and article content (title, description, videoUrl, body markdown/HTML). Easy to extend later with database-backed content.
-
-### Files to Create/Change
-
+### Files to create/change
 | File | Action |
 |------|--------|
-| `src/data/resourceCenter.ts` | Create — static content for categories, topics, articles |
-| `src/pages/ResourceCenter.tsx` | Create — three-pane page layout |
-| `src/components/resourceCenter/CategoryNav.tsx` | Create — middle pane category list + topic cards |
-| `src/components/resourceCenter/ArticleDetail.tsx` | Create — right pane video + text viewer |
-| `src/components/resourceCenter/ContactSupport.tsx` | Create — inline chat form (extracted from HelpPanel) |
-| `src/components/resourceCenter/TopicCard.tsx` | Create — card component for topic items |
-| `src/App.tsx` | Add `/resource-center` route |
-| `src/components/settings/LeftPane.tsx` | Add Resource Center nav item, remove floating help button state |
-| `src/components/layout/AppLayout.tsx` | Remove floating help button + HelpPanel |
+| `src/types/letter.ts` | Add `doctorNote` field |
+| `src/contexts/LettersContext.tsx` | Pass through `doctorNote` |
+| `src/components/newSession/SendToLettersDialog.tsx` | Create — dialog with optional note textarea |
+| `src/components/newSession/RightColumnPanel.tsx` | Open dialog instead of direct send |
+| `src/components/newSession/NoteTab.tsx` | Open dialog instead of direct send |
+| `src/components/letters/LetterDetail.tsx` | Show doctor's note callout |
 
