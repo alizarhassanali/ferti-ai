@@ -69,7 +69,23 @@ export const BlankTemplateEditor = ({ onSave }: BlankTemplateEditorProps) => {
             </div>
 
             <div className="flex items-center gap-2">
-              <Label className="text-sm text-muted-foreground">Type</Label>
+              <div className="flex items-center gap-1">
+                <Label className="text-sm text-muted-foreground">Type</Label>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="text-xs max-w-[280px] space-y-1.5 p-3">
+                      {Object.entries(templateTypeDescriptions).map(([type, desc]) => (
+                        <div key={type}>
+                          <span className="font-semibold">{type}:</span> {desc}
+                        </div>
+                      ))}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <Select value={type} onValueChange={setType}>
                 <SelectTrigger className="w-32 bg-background">
                   <SelectValue />
