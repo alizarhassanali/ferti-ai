@@ -618,7 +618,7 @@ export const RightColumnPanel = ({
                             Reviewed
                           </Button>
                           {selectedTemplate?.type === 'Letter' && (
-                            <Button size="sm" className="gap-2" onClick={handleApproveAndSendToLetters}>
+                            <Button size="sm" className="gap-2" onClick={() => setShowSendDialog(true)}>
                               <Send className="h-4 w-4" />
                               Send to Letters
                             </Button>
