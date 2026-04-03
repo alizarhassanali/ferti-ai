@@ -1,69 +1,38 @@
 
 
-## Match Letters Page to Reference Design
+## Add Template Type Explanations via Tooltips & Info Icon
 
-Comparing the reference screenshot against the current implementation, here are the differences to fix:
+### Tooltip Descriptions
 
-### 1. Letter Detail Header — Patient Name + Status Badge (top line)
+| Type | Tooltip Text |
+|------|-------------|
+| **Note** | "Clinical notes generated from your sessions (e.g., SOAP, progress notes)" |
+| **Letter** | "Generates letters that go to the Letters section for review and sending" |
+| **Document** | "General medical documents and forms" |
 
-**Current**: No patient name or status badge in the detail header — just metadata (date, doctor, template) on the left.
+### Changes
 
-**Reference**: Shows **patient name as a large heading** ("Unknown Patient") followed by a **status badge** ("To be sent" in orange) on the first line. Below that, the metadata line (date, doctor, template type) without icons.
+**1. `src/components/templates/TemplateRow.tsx`** — Wrap the type Badge in a Tooltip
+- Wrap the existing `<Badge>` (lines 53–63) with `Tooltip` / `TooltipTrigger` / `TooltipContent`
+- Show the type-specific description on hover
 
-**Change in `LetterDetail.tsx`**:
-- Add a header section above the toolbar showing `letter.patientName` as a large heading with a status badge next to it
-- Move the metadata (date, doctor, template) to a second line below the name, displayed as plain text with small icons (calendar, user) — similar to current but under the name
-- Keep action buttons (Copy, PDF, Mark as sent, Save) on the right side of this header area
+**2. `src/components/templates/hub/TemplateCard.tsx`** — Same tooltip on the type badge span
+- Wrap the type `<span>` (lines 24–30) with a Tooltip showing the description
 
-### 2. Action Buttons Styling
+**3. `src/components/templates/CreateTemplateModal/BlankTemplateEditor.tsx`** — Add info icon next to the Type selector
+- Add a small `Info` (lucide) icon next to the "Type" label (line 70)
+- Wrap it in a Tooltip (or HoverCard for a richer popup) that lists all three types with their descriptions so the user can see the full picture when choosing
 
-**Current**: Copy and PDF are ghost buttons; Mark as sent is a solid primary button.
+**4. `src/components/templates/CreateTemplateModal/TypeSelection.tsx`** — Already has descriptions per card, no change needed
 
-**Reference**: 
-- "Mark as sent" is a **solid orange/brand button** with an icon
-- "Save" is a **separate outlined/brand button** with a floppy disk icon — always visible (not just on unsaved changes)
-- Copy and PDF are ghost icon+text buttons
+### Helper
+Create a shared constant map in a small utility (or inline) so all locations use the same descriptions:
 
-**Change in `LetterDetail.tsx`**:
-- Add a persistent "Save" button (outlined/brand style) to the right of the action buttons
-- Style "Mark as sent" as a solid brand/orange button
-- Remove the conditional save footer at the bottom; replace with the always-visible Save button in the header
-
-### 3. Rich Text Toolbar — Add "Default" Dropdown
-
-**Current**: Toolbar starts directly with H1, H2, H3, then formatting buttons.
-
-**Reference**: Toolbar has a **"Default" dropdown** (paragraph style selector) before H1/H2/H3, then the same formatting buttons.
-
-**Change in `RichTextToolbar.tsx`**:
-- Add a paragraph style `<Select>` dropdown at the start of the toolbar showing "Default" with options (Default/Paragraph, Heading 1, 2, 3)
-- Keep H1/H2/H3 toggle buttons as they are (or remove them if the dropdown replaces them — reference shows both)
-
-### 4. Date Grouping Label Format
-
-**Current**: Shows day name + MM/DD/YY format (e.g., "Sunday 12/15/24")
-
-**Reference**: Shows day name + month day format (e.g., "Friday, Feb 6")
-
-**Change in `LettersList.tsx`**:
-- Update `formatGroupDate` to use format like "EEEE, MMM d" (e.g., "Friday, Feb 6")
-- Remove the separate right-aligned date; combine into one label
-
-### 5. Letter Content — Update Demo Data
-
-**Current**: Demo content uses basic markdown-style formatting.
-
-**Reference**: Content is a proper referral GP letter with sections (History, Previous Investigations, Assessment, Plan) and clinical detail.
-
-**Change in `LettersContext.tsx`**:
-- Update the first demo letter content to match the reference style — a proper GP referral letter with HTML formatting matching the screenshot
-
-### Summary of Files to Change
-
-| File | Change |
-|------|--------|
-| `src/components/letters/LetterDetail.tsx` | Add patient name heading + status badge, restructure header, persistent Save button |
-| `src/components/letters/RichTextToolbar.tsx` | Add "Default" paragraph style dropdown |
-| `src/components/letters/LettersList.tsx` | Update date format to "Friday, Feb 6" style |
-| `src/contexts/LettersContext.tsx` | Update demo letter content to match reference |
+```ts
+const templateTypeDescriptions: Record<string, string> = {
+  Note: "Clinical notes generated from your sessions (e.g., SOAP, progress notes)",
+  Letter: "Generates letters sent to the Letters section for review and sending",
+  Document: "General medical documents and forms",
+};
+```
 
