@@ -73,32 +73,15 @@ const NewSession = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
   const pendingClearTranscript = useRef(false);
+  const sessionPersistedRef = useRef(false);
+
+  // Generate a local ID on mount without persisting to context
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
-      const now = new Date();
-      const newSession: Session = {
-        id: newId,
-        title: "Untitled session",
-        date: now,
-        time: format(now, "h:mma"),
-        language: "English",
-        duration: 0,
-        status: "draft",
-        hasTranscript: false,
-        hasNotes: false,
-        mode: "transcribe",
-        contextContent: "",
-        transcriptContent: "",
-        dictationContent: "",
-        inputLanguage: "en",
-        outputLanguage: "en",
-        notes: []
-      };
-      addSession(newSession);
       setCurrentSessionId(newId);
     }
-  }, [currentSessionId, addSession]);
+  }, [currentSessionId]);
   useEffect(() => {
     if (currentSessionId) {
       const existingSession = getSession(currentSessionId);
