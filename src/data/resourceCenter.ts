@@ -1,4 +1,4 @@
-import { BookOpen, FileText, Mic, Mail, Sparkles, CreditCard, ScrollText, Radio, ShieldCheck, MessageSquare } from 'lucide-react';
+import { BookOpen, FileText, Mic, Mail, Sparkles, CreditCard, ScrollText, Radio, ShieldCheck, MessageSquare, MessageCircle } from 'lucide-react';
 
 export interface ResourceCategory {
   id: string;
