@@ -1,54 +1,44 @@
 
 
-## Time-Based Feedback Slide-In Banner
+## Help Center — Accordion-Style Category Navigation
 
-### Summary
-After 7 days of first use (tracked via localStorage), a slim banner slides up from the bottom of the app prompting users to share feedback. Clicking it navigates to `/resource-center` with the Give Feedback category pre-selected. The banner is dismissible, and reappears after 30 days if dismissed without giving feedback.
+### Problem
+Currently the middle pane shows all category tabs as buttons at the top, then only displays topics for the selected category below. This separates headings from their content unnaturally.
+
+### Solution
+Replace the tab-based layout with an accordion/collapsible layout where each category heading is a clickable section header with its topics listed directly underneath. Multiple sections can be collapsed/expanded, with the active category expanded by default.
 
 ### User Experience
 
-1. User has been using the app for 7+ days
-2. A slim banner slides in from the bottom edge (above the footer), with smooth slide-up animation
-3. Banner says: **"How's Otto Notes working for you? We'd love your feedback"** with a **"Give Feedback"** button and an **X** dismiss button
-4. Clicking "Give Feedback" → navigates to `/resource-center?category=feedback` and dismisses the banner
-5. Clicking **X** → dismisses for 30 days, then reappears
-6. After submitting feedback via the Help Center form, the banner won't show again (permanent dismiss)
+```text
+┌─────────────────────────────┐
+│ Help Center                 │
+│ Guides, FAQs, and support   │
+├─────────────────────────────┤
+│ ▼ Getting Started           │
+│   ┌─ Create First Session ┐│
+│   ├─ Using Templates      ┤│
+│   ├─ Dictation & Recording┤│
+│   ├─ Managing Letters     ┤│
+│   └─ AI Assistant Basics  ┘│
+│                             │
+│ ▼ FAQs                     │
+│   ┌─ Account & Billing    ┐│
+│   ├─ Templates & Notes    ┤│
+│   ├─ Recording & Transcr. ┤│
+│   └─ Privacy & Security   ┘│
+│                             │
+│ ▶ Contact Support           │
+│                             │
+│ ▶ Give Feedback             │
+└─────────────────────────────┘
+```
 
-### Technical Approach
+### Changes
 
-**New component: `src/components/onboarding/FeedbackNudgeBanner.tsx`**
-- Checks localStorage for `otto-first-use-at` (set on first app load if not present) and `otto-feedback-dismissed-at`
-- Shows banner if 7+ days since first use AND (never dismissed OR 30+ days since last dismiss) AND `otto-feedback-submitted` is not set
-- Slide-up animation using existing `slide-in` keyframe pattern (add `slide-in-bottom` / `slide-out-bottom` to tailwind config)
-- Uses `useNavigate` to go to `/resource-center?category=feedback`
+**`src/components/resourceCenter/CategoryNav.tsx`** — Replace the current two-section layout (category tabs + filtered topic list) with an accordion. Each category becomes a collapsible section header. Clicking the header expands/collapses it. Topics are listed under their parent category. Use the existing `Collapsible` component from `@/components/ui/collapsible`. The currently selected category starts expanded.
 
-**`src/components/layout/AppLayout.tsx`**
-- Render `FeedbackNudgeBanner` alongside `TrainingBanner`
+- For categories with a single topic that renders a custom view (Contact Support → "Send us a message", Give Feedback → "Give Feedback"), clicking the category header directly selects that topic and navigates to it (no expand/collapse needed since there's only one item).
 
-**`src/pages/ResourceCenter.tsx`**
-- Read `?category=feedback` query param and auto-select the Give Feedback category on mount
-
-**`src/components/resourceCenter/FeedbackForm.tsx`**
-- On successful submit, set `otto-feedback-submitted` in localStorage so the nudge banner never shows again
-
-**`tailwind.config.ts`**
-- Add `slide-in-bottom` keyframe (translateY(100%) → translateY(0))
-
-### localStorage keys
-
-| Key | Purpose |
-|-----|---------|
-| `otto-first-use-at` | Timestamp of first app load |
-| `otto-feedback-dismissed-at` | Timestamp of last banner dismiss |
-| `otto-feedback-submitted` | Set to `"true"` after any feedback submission |
-
-### Files to create/change
-
-| File | Change |
-|------|--------|
-| `src/components/onboarding/FeedbackNudgeBanner.tsx` | New — slide-in banner component |
-| `src/components/layout/AppLayout.tsx` | Render the banner |
-| `src/pages/ResourceCenter.tsx` | Handle `?category=feedback` query param |
-| `src/components/resourceCenter/FeedbackForm.tsx` | Set `otto-feedback-submitted` on submit |
-| `tailwind.config.ts` | Add slide-in-bottom animation |
+No other files need to change — `TopicCard`, `ArticleDetail`, and `ResourceCenter` page all remain the same.
 
