@@ -22,6 +22,7 @@ import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
 import WhatsNew from "./pages/WhatsNew";
+import ResourceCenter from "./pages/ResourceCenter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
