@@ -10,6 +10,7 @@ interface LettersContextType {
   createLetter: (data: LetterFormData) => Letter;
   updateLetterContent: (id: string, content: string) => void;
   markAsSent: (id: string) => void;
+  deleteLetter: (id: string) => void;
   getLetterBySessionId: (sessionId: string) => Letter | undefined;
 }
 
@@ -178,6 +179,10 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
     ));
   };
 
+  const deleteLetter = (id: string) => {
+    setLetters(prev => prev.filter(letter => letter.id !== id));
+    if (selectedLetterId === id) setSelectedLetterId(null);
+  };
 
   return (
     <LettersContext.Provider value={{
@@ -189,6 +194,7 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       createLetter,
       updateLetterContent,
       markAsSent,
+      deleteLetter,
       getLetterBySessionId,
     }}>
       {children}

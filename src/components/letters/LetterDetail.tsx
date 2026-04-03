@@ -3,17 +3,28 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useLetters } from '@/contexts/LettersContext';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Calendar, User, FileText, Download, Check, Save } from 'lucide-react';
+import { Copy, Calendar, User, FileText, Download, Check, Save, Trash2 } from 'lucide-react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { RichTextToolbar } from './RichTextToolbar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export const LetterDetail = () => {
-  const { selectedLetterId, getLetter, updateLetterContent, markAsSent } = useLetters();
+  const { selectedLetterId, getLetter, updateLetterContent, markAsSent, deleteLetter } = useLetters();
   const { toast } = useToast();
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const letter = selectedLetterId ? getLetter(selectedLetterId) : null;
   const isEditable = letter?.status === 'to_be_sent';
@@ -70,6 +81,18 @@ export const LetterDetail = () => {
     }
   };
 
+  const handleDelete = () => {
+    if (letter) {
+      // TODO: In production, gate behind has_role() check for doctor/admin roles
+      deleteLetter(letter.id);
+      setShowDeleteDialog(false);
+      toast({
+        title: 'Letter deleted',
+        description: `Letter for ${letter.patientName} has been deleted.`,
+      });
+    }
+  };
+
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'short',
@@ -91,10 +114,9 @@ export const LetterDetail = () => {
 
   return (
     <div className="flex-1 h-screen overflow-hidden bg-background flex flex-col">
-      {/* Header: Patient name + status badge + actions */}
+      {/* Header */}
       <div className="border-b border-border px-6 py-4">
         <div className="flex items-start justify-between">
-          {/* Left: patient name + badge + metadata */}
           <div>
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-xl font-semibold text-foreground">{letter.patientName}</h1>
@@ -122,8 +144,19 @@ export const LetterDetail = () => {
             </div>
           </div>
 
-          {/* Right: action buttons */}
+          {/* Action buttons */}
           <div className="flex items-center gap-1">
+            {/* Delete — only for to_be_sent letters; TODO: gate behind doctor/admin role */}
+            {isEditable && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={() => setShowDeleteDialog(true)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
             <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground" onClick={handleCopy}>
               <Copy className="h-4 w-4" />
               Copy
@@ -161,6 +194,27 @@ export const LetterDetail = () => {
           <EditorContent editor={editor} />
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this letter?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. The letter for {letter.patientName} will be permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
