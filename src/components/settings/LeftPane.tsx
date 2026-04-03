@@ -305,10 +305,10 @@ export const LeftPane = () => {
             const Icon = item.icon;
             const handleClick = () => {
               setIsMobileMenuOpen(false);
-              if (item.id === 'help') {
-                setHelpPanelOpen(true);
-              } else if (item.id === 'whats-new') {
+              if (item.id === 'whats-new') {
                 navigate('/whats-new');
+              } else if (item.id === 'resource-center') {
+                navigate('/resource-center');
               }
             };
             const showBadge = item.id === 'whats-new' && hasUnseen;
