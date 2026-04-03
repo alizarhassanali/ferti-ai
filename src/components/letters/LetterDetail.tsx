@@ -181,6 +181,19 @@ export const LetterDetail = () => {
         </div>
       </div>
 
+      {/* Doctor's Note Callout */}
+      {letter.doctorNote && (
+        <div className="border-b border-border px-6 py-3">
+          <div className="flex items-start gap-3 rounded-lg bg-accent/50 border border-border px-4 py-3">
+            <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-primary mb-1">Doctor's Note</p>
+              <p className="text-sm text-foreground leading-relaxed">{letter.doctorNote}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Rich Text Toolbar */}
       {isEditable && editor && (
         <div className="border-b border-border px-6 py-2">

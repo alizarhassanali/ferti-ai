@@ -633,6 +633,14 @@ export const RightColumnPanel = ({
           </div>
         )}
       </div>
+
+      <SendToLettersDialog
+        open={showSendDialog}
+        onOpenChange={setShowSendDialog}
+        patientName={patientName || 'Unknown Patient'}
+        templateType={selectedTemplate?.name || 'Clinical Note'}
+        onConfirm={handleApproveAndSendToLetters}
+      />
     </div>
   );
 };

@@ -156,6 +156,7 @@ export const LettersProvider = ({ children }: { children: ReactNode }) => {
       originatingDoctor: 'Dr. Shahid Saya', // Current user
       status: 'to_be_sent',
       content: data.content,
+      doctorNote: data.doctorNote,
       approvedAt: new Date(),
       createdAt: new Date(),
       updatedAt: new Date(),
