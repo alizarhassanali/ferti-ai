@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -50,7 +51,7 @@ export const SendToLettersDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-2 py-2">
+        <DialogBody className="space-y-2">
           <label className="text-sm font-medium text-foreground">
             Add a note for the reviewer (optional)
           </label>
@@ -63,7 +64,7 @@ export const SendToLettersDialog = ({
           <p className="text-xs text-muted-foreground">
             This note will be visible to the nurse or care coordinator reviewing the letter.
           </p>
-        </div>
+        </DialogBody>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => handleOpenChange(false)}>
