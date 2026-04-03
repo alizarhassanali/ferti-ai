@@ -1,56 +1,54 @@
 
 
-## In-App Feedback via Help Center
+## Time-Based Feedback Slide-In Banner
 
 ### Summary
-Add a new "Give Feedback" category to the Help Center. When selected, the right pane shows a feedback form supporting three types: general feedback, bug report, and quick rating. Submissions are stored in the database and trigger an email notification.
+After 7 days of first use (tracked via localStorage), a slim banner slides up from the bottom of the app prompting users to share feedback. Clicking it navigates to `/resource-center` with the Give Feedback category pre-selected. The banner is dismissible, and reappears after 30 days if dismissed without giving feedback.
 
 ### User Experience
 
-1. User navigates to Help Center and clicks the new **"Give Feedback"** category tab (alongside Getting Started, FAQs, Contact Support)
-2. The middle pane shows three feedback type cards: **General Feedback**, **Bug Report**, **Quick Rating**
-3. Clicking a card opens the corresponding form in the right pane:
+1. User has been using the app for 7+ days
+2. A slim banner slides in from the bottom edge (above the footer), with smooth slide-up animation
+3. Banner says: **"How's Otto Notes working for you? We'd love your feedback"** with a **"Give Feedback"** button and an **X** dismiss button
+4. Clicking "Give Feedback" → navigates to `/resource-center?category=feedback` and dismisses the banner
+5. Clicking **X** → dismisses for 30 days, then reappears
+6. After submitting feedback via the Help Center form, the banner won't show again (permanent dismiss)
 
-   - **Quick Rating**: 5 emoji/star selector + optional comment textarea + submit
-   - **General Feedback**: subject input + message textarea + submit
-   - **Bug Report**: subject input + description textarea + severity dropdown (Low/Medium/High/Critical) + optional screenshot upload button + submit
+### Technical Approach
 
-4. On submit: toast confirmation, form resets, data saved to database
+**New component: `src/components/onboarding/FeedbackNudgeBanner.tsx`**
+- Checks localStorage for `otto-first-use-at` (set on first app load if not present) and `otto-feedback-dismissed-at`
+- Shows banner if 7+ days since first use AND (never dismissed OR 30+ days since last dismiss) AND `otto-feedback-submitted` is not set
+- Slide-up animation using existing `slide-in` keyframe pattern (add `slide-in-bottom` / `slide-out-bottom` to tailwind config)
+- Uses `useNavigate` to go to `/resource-center?category=feedback`
 
-### Database
+**`src/components/layout/AppLayout.tsx`**
+- Render `FeedbackNudgeBanner` alongside `TrainingBanner`
 
-Create a `feedback` table:
-- `id` (uuid, PK)
-- `user_id` (uuid, references auth.users, nullable for anonymous)
-- `type` (text: 'general', 'bug_report', 'rating')
-- `subject` (text, nullable)
-- `message` (text, nullable)
-- `rating` (integer, nullable, 1-5)
-- `severity` (text, nullable: 'low', 'medium', 'high', 'critical')
-- `screenshot_url` (text, nullable)
-- `created_at` (timestamptz, default now())
+**`src/pages/ResourceCenter.tsx`**
+- Read `?category=feedback` query param and auto-select the Give Feedback category on mount
 
-RLS: authenticated users can insert their own rows, admins can select all.
+**`src/components/resourceCenter/FeedbackForm.tsx`**
+- On successful submit, set `otto-feedback-submitted` in localStorage so the nudge banner never shows again
 
-### Email Notification
+**`tailwind.config.ts`**
+- Add `slide-in-bottom` keyframe (translateY(100%) → translateY(0))
 
-Create a backend function `notify-feedback` that sends an email to a configured team inbox when feedback is submitted. Uses Lovable's email infrastructure.
+### localStorage keys
+
+| Key | Purpose |
+|-----|---------|
+| `otto-first-use-at` | Timestamp of first app load |
+| `otto-feedback-dismissed-at` | Timestamp of last banner dismiss |
+| `otto-feedback-submitted` | Set to `"true"` after any feedback submission |
 
 ### Files to create/change
 
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/data/resourceCenter.ts` | Add "Give Feedback" category |
-| `src/components/resourceCenter/FeedbackForm.tsx` | New — feedback form component with type tabs (rating, general, bug report) |
-| `src/components/resourceCenter/ArticleDetail.tsx` | Render FeedbackForm when feedback category is selected |
-| Migration | Create `feedback` table with RLS |
-| Storage bucket | Create `feedback-screenshots` bucket for bug report attachments |
-| Edge function `notify-feedback` | Send email notification on new feedback |
-
-### Technical Details
-
-- Feedback type cards in the middle pane reuse the existing `TopicCard` pattern
-- The right-pane form component switches between three sub-forms based on selected type
-- Screenshot upload uses Supabase Storage; file path: `feedback-screenshots/{user_id}/{timestamp}.png`
-- Email notification is a simple edge function invoked after successful insert
+| `src/components/onboarding/FeedbackNudgeBanner.tsx` | New — slide-in banner component |
+| `src/components/layout/AppLayout.tsx` | Render the banner |
+| `src/pages/ResourceCenter.tsx` | Handle `?category=feedback` query param |
+| `src/components/resourceCenter/FeedbackForm.tsx` | Set `otto-feedback-submitted` on submit |
+| `tailwind.config.ts` | Add slide-in-bottom animation |
 
