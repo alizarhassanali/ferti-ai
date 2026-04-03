@@ -22,6 +22,7 @@ import ViewSessions from "./pages/ViewSessions";
 import AIAssistant from "./pages/AIAssistant";
 import Letters from "./pages/Letters";
 import WhatsNew from "./pages/WhatsNew";
+import ResourceCenter from "./pages/ResourceCenter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
                     
                     <Route path="/letters" element={<Letters />} />
                     <Route path="/whats-new" element={<WhatsNew />} />
+                    <Route path="/resource-center" element={<ResourceCenter />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

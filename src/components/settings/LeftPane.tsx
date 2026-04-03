@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Mail, FileText, MessageSquare, Store, Settings, HelpCircle, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, Sparkles } from 'lucide-react';
+import { Mail, FileText, MessageSquare, Store, Settings, BookOpen, Plus, ChevronDown, LogOut, ChevronRight, ChevronLeft, Menu, X, Sparkles } from 'lucide-react';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { HelpPanel } from '@/components/help/HelpPanel';
+
 import ottoLogo from '@/assets/otto-logo.png';
 import { SwitchAppPopover } from '@/components/sidebar/SwitchAppPopover';
 import { useUnseenReleases } from '@/hooks/useUnseenReleases';
@@ -22,7 +22,7 @@ export const LeftPane = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = mockUser;
-  const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+  
   const { data: hasUnseen } = useUnseenReleases();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -98,9 +98,9 @@ export const LeftPane = () => {
     label: "What's New",
     id: 'whats-new'
   }, {
-    icon: HelpCircle,
-    label: 'Help',
-    id: 'help'
+    icon: BookOpen,
+    label: 'Resource Center',
+    id: 'resource-center'
   }];
   return <>
       {/* Mobile Hamburger Button */}
@@ -233,9 +233,7 @@ export const LeftPane = () => {
             const handleClick = () => {
               // Close mobile menu when navigating
               setIsMobileMenuOpen(false);
-              if (item.id === 'help') {
-                setHelpPanelOpen(true);
-              } else if (item.id === 'sessions') {
+              if (item.id === 'sessions') {
                 // If we're on /sessions page, navigate there
                 // If we're on another allowed page, toggle the sessions panel
                 // If we're on settings, just navigate to /sessions
@@ -305,10 +303,10 @@ export const LeftPane = () => {
             const Icon = item.icon;
             const handleClick = () => {
               setIsMobileMenuOpen(false);
-              if (item.id === 'help') {
-                setHelpPanelOpen(true);
-              } else if (item.id === 'whats-new') {
+              if (item.id === 'whats-new') {
                 navigate('/whats-new');
+              } else if (item.id === 'resource-center') {
+                navigate('/resource-center');
               }
             };
             const showBadge = item.id === 'whats-new' && hasUnseen;
@@ -338,6 +336,5 @@ export const LeftPane = () => {
         </div>
       </div>
       
-      <HelpPanel open={helpPanelOpen} onOpenChange={setHelpPanelOpen} />
     </>;
 };
