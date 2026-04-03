@@ -21,7 +21,7 @@ export const CategoryNav = ({
     <div className="w-80 h-full flex flex-col border-r border-border bg-card">
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
-        <h2 className="text-lg font-semibold text-foreground">Resource Center</h2>
+        <h2 className="text-lg font-semibold text-foreground">Help Center</h2>
         <p className="text-xs text-muted-foreground mt-1">Guides, FAQs, and support</p>
       </div>
 
