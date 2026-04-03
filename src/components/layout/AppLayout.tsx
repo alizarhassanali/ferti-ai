@@ -1,12 +1,9 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import { LeftPane } from '@/components/settings/LeftPane';
 import { GlobalSessionsPanel } from './GlobalSessionsPanel';
 import { AppFooter } from './AppFooter';
 import { useLocation } from 'react-router-dom';
 import { useSessionsPanel } from '@/contexts/SessionsPanelContext';
-import { MessageCircle } from 'lucide-react';
-import { HelpPanel } from '@/components/help/HelpPanel';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { TrainingBanner } from '@/components/onboarding/TrainingBanner';
 
 interface AppLayoutProps {
