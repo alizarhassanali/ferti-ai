@@ -73,36 +73,20 @@ const NewSession = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionDate] = useState(new Date());
   const pendingClearTranscript = useRef(false);
+  const sessionPersistedRef = useRef(false);
+
+  // Generate a local ID on mount without persisting to context
   useEffect(() => {
     if (!currentSessionId) {
       const newId = `session-${Date.now()}`;
-      const now = new Date();
-      const newSession: Session = {
-        id: newId,
-        title: "Untitled session",
-        date: now,
-        time: format(now, "h:mma"),
-        language: "English",
-        duration: 0,
-        status: "draft",
-        hasTranscript: false,
-        hasNotes: false,
-        mode: "transcribe",
-        contextContent: "",
-        transcriptContent: "",
-        dictationContent: "",
-        inputLanguage: "en",
-        outputLanguage: "en",
-        notes: []
-      };
-      addSession(newSession);
       setCurrentSessionId(newId);
     }
-  }, [currentSessionId, addSession]);
+  }, [currentSessionId]);
   useEffect(() => {
     if (currentSessionId) {
       const existingSession = getSession(currentSessionId);
       if (existingSession) {
+        sessionPersistedRef.current = true;
         setContextContent(existingSession.contextContent || "");
         setTranscriptContent(existingSession.transcriptContent || "");
         setDictationContent(existingSession.dictationContent || "");
@@ -126,6 +110,50 @@ const NewSession = () => {
   }, [currentSessionId, getSession, patients]);
   const saveSessionChanges = useCallback(() => {
     if (!currentSessionId) return;
+
+    const hasAnyContent =
+      contextContent.trim().length > 0 ||
+      transcriptContent.trim().length > 0 ||
+      dictationContent.trim().length > 0 ||
+      !!selectedPatient ||
+      noteTabs.some(t => t.content.trim().length > 0);
+
+    if (!sessionPersistedRef.current) {
+      // Only persist once user has provided meaningful input
+      if (!hasAnyContent) return;
+
+      const now = new Date();
+      const newSession: Session = {
+        id: currentSessionId,
+        title: selectedPatient?.name || "Untitled session",
+        date: now,
+        time: format(now, "h:mma"),
+        language: "English",
+        duration: 0,
+        status: "draft",
+        hasTranscript: transcriptContent.trim().length > 0,
+        hasNotes: noteTabs.some(t => t.content.trim().length > 0),
+        mode: recordingMode,
+        contextContent,
+        transcriptContent,
+        dictationContent,
+        inputLanguage,
+        outputLanguage,
+        patientId: selectedPatient?.id,
+        patientName: selectedPatient?.name,
+        notes: noteTabs.map(t => ({
+          id: t.id,
+          type: (t.templateId || "custom") as "clinical_note" | "custom" | "letter_to_gp" | "soap_note",
+          title: t.title,
+          content: t.content,
+          isClosable: true
+        }))
+      };
+      addSession(newSession);
+      sessionPersistedRef.current = true;
+      return;
+    }
+
     updateSession(currentSessionId, {
       contextContent,
       transcriptContent,
@@ -145,7 +173,7 @@ const NewSession = () => {
         isClosable: true
       }))
     });
-  }, [currentSessionId, updateSession, contextContent, transcriptContent, dictationContent, recordingMode, inputLanguage, outputLanguage, selectedPatient, noteTabs]);
+  }, [currentSessionId, addSession, updateSession, contextContent, transcriptContent, dictationContent, recordingMode, inputLanguage, outputLanguage, selectedPatient, noteTabs]);
   useEffect(() => {
     const timeout = setTimeout(() => saveSessionChanges(), 1000);
     return () => clearTimeout(timeout);
