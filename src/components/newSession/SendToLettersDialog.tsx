@@ -51,7 +51,7 @@ export const SendToLettersDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-2 py-2">
+        <DialogBody className="space-y-2">
           <label className="text-sm font-medium text-foreground">
             Add a note for the reviewer (optional)
           </label>
