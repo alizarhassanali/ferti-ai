@@ -98,9 +98,9 @@ export const LeftPane = () => {
     label: "What's New",
     id: 'whats-new'
   }, {
-    icon: HelpCircle,
-    label: 'Help',
-    id: 'help'
+    icon: BookOpen,
+    label: 'Resource Center',
+    id: 'resource-center'
   }];
   return <>
       {/* Mobile Hamburger Button */}
