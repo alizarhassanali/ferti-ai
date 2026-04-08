@@ -18,6 +18,7 @@ const ALLOWED_FIELDS = new Set([
   "signature_email",
   "include_clinic_name",
   "profile_completed",
+  "primary_location",
 ]);
 
 const MAX_STRING_LENGTH = 255;
