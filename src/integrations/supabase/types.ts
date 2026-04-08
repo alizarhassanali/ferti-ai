@@ -234,6 +234,7 @@ export type Database = {
           last_name: string | null
           phone_country_code: string | null
           phone_number: string | null
+          primary_location: string | null
           profile_completed: boolean | null
           role: string
           signature_email: string | null
@@ -253,6 +254,7 @@ export type Database = {
           last_name?: string | null
           phone_country_code?: string | null
           phone_number?: string | null
+          primary_location?: string | null
           profile_completed?: boolean | null
           role?: string
           signature_email?: string | null
@@ -272,6 +274,7 @@ export type Database = {
           last_name?: string | null
           phone_country_code?: string | null
           phone_number?: string | null
+          primary_location?: string | null
           profile_completed?: boolean | null
           role?: string
           signature_email?: string | null

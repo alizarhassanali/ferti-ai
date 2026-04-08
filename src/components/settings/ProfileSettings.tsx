@@ -18,6 +18,7 @@ interface ProfileFormState {
   lastName: string;
   preferredName: string;
   specialty: string;
+  primaryLocation: string;
   clinicName: string;
   role: UserRole;
   phoneCountryCode: string;
@@ -36,6 +37,7 @@ export const ProfileSettings = () => {
     lastName: user.lastName,
     preferredName: '',
     specialty: user.specialty || 'Fertility Specialist',
+    primaryLocation: '',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
     phoneCountryCode: '+1',
@@ -207,11 +209,25 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Clinic Name and Phone Number */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* Clinic Name, Primary Location, and Phone Number */}
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
               <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
+            </div>
+            <div>
+              <Label htmlFor="primaryLocation" className="text-sm font-medium mb-2 block">Primary location</Label>
+              <Select value={formData.primaryLocation} onValueChange={(value) => setFormData({ ...formData, primaryLocation: value })}>
+                <SelectTrigger id="primaryLocation">
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Victoria">Victoria</SelectItem>
+                  <SelectItem value="Vancouver">Vancouver</SelectItem>
+                  <SelectItem value="Kelowna">Kelowna</SelectItem>
+                  <SelectItem value="Surrey">Surrey</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Phone number</Label>

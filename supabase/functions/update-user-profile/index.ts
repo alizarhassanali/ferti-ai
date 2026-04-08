@@ -18,6 +18,7 @@ const ALLOWED_FIELDS = new Set([
   "signature_email",
   "include_clinic_name",
   "profile_completed",
+  "primary_location",
 ]);
 
 const MAX_STRING_LENGTH = 255;
@@ -140,7 +141,8 @@ serve(async (req: Request) => {
           break;
         case "signature_title":
         case "signature_specialty":
-        case "signature_preferred_name": {
+        case "signature_preferred_name":
+        case "primary_location": {
           const v = validateStringField(value);
           if (v !== null) sanitizedData[key] = v;
           break;
