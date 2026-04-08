@@ -1,44 +1,33 @@
 
 
-## Help Center — Accordion-Style Category Navigation
+## Add Primary Location Field
 
-### Problem
-Currently the middle pane shows all category tabs as buttons at the top, then only displays topics for the selected category below. This separates headings from their content unnaturally.
+### Summary
+Add a "Primary location" dropdown with options Victoria, Vancouver, Kelowna, and Surrey to both the onboarding flow (Step 1) and the Settings Profile tab. Persist the value in the `user_profiles` table via a new `primary_location` column.
 
-### Solution
-Replace the tab-based layout with an accordion/collapsible layout where each category heading is a clickable section header with its topics listed directly underneath. Multiple sections can be collapsed/expanded, with the active category expanded by default.
+### Database
+Add `primary_location` (text, nullable) column to `user_profiles` table. Update the `update-user-profile` edge function to accept and validate this field.
 
-### User Experience
+### Onboarding (OnboardingStepOne.tsx)
+- Add `primaryLocation` to `OnboardingFormState` in `NewUserOnboardingModal.tsx`
+- Add a "Primary location" Select dropdown after the Specialty field with options: Victoria, Vancouver, Kelowna, Surrey
+- Pass `primary_location` in the profile save call
 
-```text
-┌─────────────────────────────┐
-│ Help Center                 │
-│ Guides, FAQs, and support   │
-├─────────────────────────────┤
-│ ▼ Getting Started           │
-│   ┌─ Create First Session ┐│
-│   ├─ Using Templates      ┤│
-│   ├─ Dictation & Recording┤│
-│   ├─ Managing Letters     ┤│
-│   └─ AI Assistant Basics  ┘│
-│                             │
-│ ▼ FAQs                     │
-│   ┌─ Account & Billing    ┐│
-│   ├─ Templates & Notes    ┤│
-│   ├─ Recording & Transcr. ┤│
-│   └─ Privacy & Security   ┘│
-│                             │
-│ ▶ Contact Support           │
-│                             │
-│ ▶ Give Feedback             │
-└─────────────────────────────┘
-```
+### Settings Profile (ProfileSettings.tsx)
+- Add `primaryLocation` to `ProfileFormState`
+- Add a "Primary location" Select in the Clinic name / Phone number row, making it a 3-column grid: Clinic name, Primary location, Phone number
 
-### Changes
+### Edge Function (update-user-profile/index.ts)
+- Add `"primary_location"` to `ALLOWED_FIELDS`
+- Validate as a string with max length, sanitize like other string fields
 
-**`src/components/resourceCenter/CategoryNav.tsx`** — Replace the current two-section layout (category tabs + filtered topic list) with an accordion. Each category becomes a collapsible section header. Clicking the header expands/collapses it. Topics are listed under their parent category. Use the existing `Collapsible` component from `@/components/ui/collapsible`. The currently selected category starts expanded.
+### Files to change
 
-- For categories with a single topic that renders a custom view (Contact Support → "Send us a message", Give Feedback → "Give Feedback"), clicking the category header directly selects that topic and navigates to it (no expand/collapse needed since there's only one item).
-
-No other files need to change — `TopicCard`, `ArticleDetail`, and `ResourceCenter` page all remain the same.
+| File | Change |
+|------|--------|
+| Migration | Add `primary_location` text column to `user_profiles` |
+| `src/components/onboarding/NewUserOnboardingModal.tsx` | Add `primaryLocation` to form state, pass to save |
+| `src/components/onboarding/OnboardingStepOne.tsx` | Add Primary location dropdown after Specialty |
+| `src/components/settings/ProfileSettings.tsx` | Add Primary location dropdown in profile form |
+| `supabase/functions/update-user-profile/index.ts` | Allow `primary_location` field |
 
