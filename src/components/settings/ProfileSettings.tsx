@@ -18,6 +18,7 @@ interface ProfileFormState {
   lastName: string;
   preferredName: string;
   specialty: string;
+  primaryLocation: string;
   clinicName: string;
   role: UserRole;
   phoneCountryCode: string;
