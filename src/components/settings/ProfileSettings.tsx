@@ -231,21 +231,12 @@ export const ProfileSettings = () => {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Phone number</Label>
-              <div className="flex gap-2">
-                <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
-                  <SelectTrigger className="w-24">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="+1">+1</SelectItem>
-                    <SelectItem value="+44">+44</SelectItem>
-                    <SelectItem value="+33">+33</SelectItem>
-                    <SelectItem value="+49">+49</SelectItem>
-                    <SelectItem value="+61">+61</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} placeholder="Enter phone number" className="flex-1" />
-              </div>
+              <PhoneInput
+                countryCode={formData.phoneCountryCode}
+                onCountryCodeChange={(code) => setFormData({ ...formData, phoneCountryCode: code })}
+                value={formData.phoneNumber}
+                onChange={(val) => setFormData({ ...formData, phoneNumber: val })}
+              />
             </div>
           </div>
 
