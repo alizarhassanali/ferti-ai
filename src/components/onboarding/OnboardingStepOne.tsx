@@ -137,6 +137,20 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
         </Select>
       </div>
 
+      {/* Primary Location */}
+      <div className="mb-4">
+        <Label className="text-sm font-medium mb-1.5 block">Primary location</Label>
+        <Select value={form.primaryLocation} onValueChange={(v) => setForm({ ...form, primaryLocation: v })}>
+          <SelectTrigger><SelectValue placeholder="Select location" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Victoria">Victoria</SelectItem>
+            <SelectItem value="Vancouver">Vancouver</SelectItem>
+            <SelectItem value="Kelowna">Kelowna</SelectItem>
+            <SelectItem value="Surrey">Surrey</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Phone Number */}
       <div className="mb-4">
         <Label className="text-sm font-medium mb-1.5 block">Phone number</Label>

@@ -54,6 +54,7 @@ export const NewUserOnboardingModal = () => {
             signature_title: form.title,
             signature_preferred_name: form.preferredName.trim() || null,
             signature_specialty: form.specialty,
+            primary_location: form.primaryLocation || null,
             phone_country_code: form.phoneCountryCode,
             phone_number: form.phoneNumber.trim() || null,
             language: form.displayLanguage,

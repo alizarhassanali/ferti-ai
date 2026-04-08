@@ -141,7 +141,8 @@ serve(async (req: Request) => {
           break;
         case "signature_title":
         case "signature_specialty":
-        case "signature_preferred_name": {
+        case "signature_preferred_name":
+        case "primary_location": {
           const v = validateStringField(value);
           if (v !== null) sanitizedData[key] = v;
           break;
