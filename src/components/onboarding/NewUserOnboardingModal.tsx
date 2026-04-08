@@ -34,7 +34,7 @@ export const NewUserOnboardingModal = () => {
     preferredName: '',
     specialty: '',
     primaryLocation: '',
-    phoneCountryCode: '+1',
+    phoneCountryCode: 'CA',
     phoneNumber: '',
     displayLanguage: 'English',
     agreedToTerms: false,
