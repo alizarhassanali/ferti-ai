@@ -33,6 +33,7 @@ export const NewUserOnboardingModal = () => {
     lastName: '',
     preferredName: '',
     specialty: '',
+    primaryLocation: '',
     phoneCountryCode: '+1',
     phoneNumber: '',
     displayLanguage: 'English',
