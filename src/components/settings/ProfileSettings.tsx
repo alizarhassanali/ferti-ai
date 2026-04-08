@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Camera } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { UserRole } from '@/types/user';
 import { specialtyOptions } from '@/data/hubTemplates';
+import { PhoneInput } from '@/components/ui/phone-input';
 
 interface ProfileFormState {
   title: string;
@@ -40,7 +40,7 @@ export const ProfileSettings = () => {
     primaryLocation: '',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
-    phoneCountryCode: '+1',
+    phoneCountryCode: 'CA',
     phoneNumber: '',
     useInfoForSignature: false,
     displayLanguage: 'English',
@@ -231,21 +231,12 @@ export const ProfileSettings = () => {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Phone number</Label>
-              <div className="flex gap-2">
-                <Select value={formData.phoneCountryCode} onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}>
-                  <SelectTrigger className="w-24">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="+1">+1</SelectItem>
-                    <SelectItem value="+44">+44</SelectItem>
-                    <SelectItem value="+33">+33</SelectItem>
-                    <SelectItem value="+49">+49</SelectItem>
-                    <SelectItem value="+61">+61</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input value={formData.phoneNumber} onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })} placeholder="Enter phone number" className="flex-1" />
-              </div>
+              <PhoneInput
+                countryCode={formData.phoneCountryCode}
+                onCountryCodeChange={(code) => setFormData({ ...formData, phoneCountryCode: code })}
+                value={formData.phoneNumber}
+                onChange={(val) => setFormData({ ...formData, phoneNumber: val })}
+              />
             </div>
           </div>
 

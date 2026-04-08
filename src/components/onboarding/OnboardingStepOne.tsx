@@ -1,13 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
+import { PhoneInput } from '@/components/ui/phone-input';
 import { specialtyOptions } from '@/data/hubTemplates';
 import type { OnboardingFormState } from './NewUserOnboardingModal';
 
@@ -154,25 +154,12 @@ export const OnboardingStepOne = ({ form, setForm, imagePreview, setImagePreview
       {/* Phone Number */}
       <div className="mb-4">
         <Label className="text-sm font-medium mb-1.5 block">Phone number</Label>
-        <div className="flex gap-2">
-          <Select value={form.phoneCountryCode} onValueChange={(v) => setForm({ ...form, phoneCountryCode: v })}>
-            <SelectTrigger className="w-[80px]"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="+1">+1</SelectItem>
-              <SelectItem value="+44">+44</SelectItem>
-              <SelectItem value="+33">+33</SelectItem>
-              <SelectItem value="+49">+49</SelectItem>
-              <SelectItem value="+61">+61</SelectItem>
-              <SelectItem value="+92">+92</SelectItem>
-            </SelectContent>
-          </Select>
-          <Input
-            value={form.phoneNumber}
-            onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
-            placeholder="Enter phone number"
-            className="flex-1"
-          />
-        </div>
+        <PhoneInput
+          countryCode={form.phoneCountryCode}
+          onCountryCodeChange={(code) => setForm({ ...form, phoneCountryCode: code })}
+          value={form.phoneNumber}
+          onChange={(val) => setForm({ ...form, phoneNumber: val })}
+        />
       </div>
 
       {/* Display Language */}
