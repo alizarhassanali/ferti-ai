@@ -40,7 +40,7 @@ export const ProfileSettings = () => {
     primaryLocation: '',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
-    phoneCountryCode: '+1',
+    phoneCountryCode: 'CA',
     phoneNumber: '',
     useInfoForSignature: false,
     displayLanguage: 'English',
