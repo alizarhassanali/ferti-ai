@@ -13,6 +13,7 @@ export interface OnboardingFormState {
   lastName: string;
   preferredName: string;
   specialty: string;
+  primaryLocation: string;
   phoneCountryCode: string;
   phoneNumber: string;
   displayLanguage: string;
