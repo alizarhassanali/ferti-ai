@@ -37,6 +37,7 @@ export const ProfileSettings = () => {
     lastName: user.lastName,
     preferredName: '',
     specialty: user.specialty || 'Fertility Specialist',
+    primaryLocation: '',
     clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
     phoneCountryCode: '+1',
