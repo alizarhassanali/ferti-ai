@@ -65,6 +65,7 @@ export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
   const [selectedSessions, setSelectedSessions] = useState<string[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const formatGroupDate = (date: Date) => {
     return format(date, 'MM/dd/yy');
@@ -216,7 +217,7 @@ export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
         )}
 
         {showFilters && <SessionFilters />}
-        {showSort && <SessionSort />}
+        {showSort && <SessionSort sortOrder={sortOrder} onSortOrderChange={setSortOrder} />}
       </div>
 
       {/* Tabs - Pill style when selected */}
@@ -242,7 +243,7 @@ export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
               No draft sessions
             </div>
           ) : (
-            Object.entries(groupedDraftSessions).map(([date, sessionGroup]) => (
+            Object.entries(groupedDraftSessions).sort(([a], [b]) => sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-1">
                 <div className="flex items-center justify-between text-xs text-foreground/50 px-2 font-medium">
                   <div className="flex items-center gap-1">
@@ -293,7 +294,7 @@ export const SessionList = ({ onSessionSelect }: SessionListProps = {}) => {
               No completed sessions
             </div>
           ) : (
-            Object.entries(groupedCompletedSessions).map(([date, sessionGroup]) => (
+            Object.entries(groupedCompletedSessions).sort(([a], [b]) => sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)).map(([date, sessionGroup]) => (
               <div key={date} className="space-y-1">
                 <div className="flex items-center justify-between text-xs text-foreground/50 px-2 font-medium">
                   <div className="flex items-center gap-1">
