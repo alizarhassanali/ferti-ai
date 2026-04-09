@@ -1,27 +1,35 @@
 
 
-## Simplify Sort to Ascending/Descending Only
+## Fix Sort Functionality in Sessions and Letters
 
-### Summary
-Remove the "Sort By" radio group from the Sessions sort panel and replace it with just two clean toggle buttons (Ascending / Descending). Apply the same design to the Letters sort panel, replacing the placeholder stub.
+### Problem
+- **Sessions**: `SessionSort` manages sort state internally but never passes it up to `SessionList`, so the sorted order is never applied to the actual session list.
+- **Letters**: Sort buttons are static — no state, no click handlers, no sorting logic.
 
-### Changes
+### Solution
 
 **`src/components/sessions/SessionSort.tsx`**
-- Remove the "Sort By" radio group section entirely (date created, date updated, name, status)
-- Keep only the Ascending/Descending toggle buttons
-- Clean up the design: remove the outer border/bg-muted container, use a compact inline style matching the toolbar aesthetic — two small pill-style buttons side by side with icons
+- Accept `sortOrder` and `onSortOrderChange` as props instead of using internal state
+- Parent controls the state
+
+**`src/components/sessions/SessionList.tsx`**
+- Add `sortOrder` state (`'asc' | 'desc'`, default `'desc'`)
+- Pass `sortOrder` and `setSortOrder` to `SessionSort`
+- Sort `groupedDraftSessions` and `groupedCompletedSessions` date keys by `sortOrder` before rendering
 
 **`src/components/letters/LettersList.tsx`**
-- Replace the sort stub ("Sort options coming soon...") with the same two Ascending/Descending toggle buttons inline
-- Use identical styling to the Sessions sort for consistency
+- Add `sortOrder` state (`'asc' | 'desc'`, default `'desc'`)
+- Wire sort buttons with `onClick` handlers and active variant styling
+- Sort the `groupByDate` output keys by `sortOrder` before rendering in both tabs
 
-### Design
-Both panels will show a simple inline row:
+### Sorting logic (same for both)
+Sort the date group keys alphabetically (they're `yyyy-MM-dd` format, so string sort works). Ascending = oldest first, Descending = newest first.
 
-```text
-[ ↑ Ascending ] [ ↓ Descending ]
-```
+### Files to change
 
-Compact, no labels/headers, active state uses the default button variant, inactive uses outline. Matches the small toolbar aesthetic already in place.
+| File | Change |
+|------|--------|
+| `src/components/sessions/SessionSort.tsx` | Accept props instead of internal state |
+| `src/components/sessions/SessionList.tsx` | Add sort state, pass to `SessionSort`, apply sort to date groups |
+| `src/components/letters/LettersList.tsx` | Add sort state, wire buttons, apply sort to date groups |
 
