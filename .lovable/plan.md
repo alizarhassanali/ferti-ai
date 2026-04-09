@@ -1,40 +1,27 @@
 
 
-## Phone Number Field — Flag-Based Country Selector
+## Simplify Sort to Ascending/Descending Only
 
 ### Summary
-Replace the current plain text country code dropdown (`+1`, `+44`, etc.) with a flag-based country selector that shows the country flag emoji and dial code inline, matching the reference screenshots. The input will display as a single unified field with a small flag+chevron dropdown on the left and the phone number input on the right.
-
-### Design (from reference images)
-
-```text
-┌──────────────────────────────────┐
-│ 🇨🇦 ▾ │ +1 416 831 7293          │
-└──────────────────────────────────┘
-```
-
-- Flag emoji + chevron as a button/trigger on the left inside the input border
-- Country dropdown shows flag + country name, scrollable list
-- Selected country auto-sets the dial code prefix
-- Phone number input shares the same visual border as the flag selector
+Remove the "Sort By" radio group from the Sessions sort panel and replace it with just two clean toggle buttons (Ascending / Descending). Apply the same design to the Letters sort panel, replacing the placeholder stub.
 
 ### Changes
 
-**New component: `src/components/ui/phone-input.tsx`**
-- Reusable phone input component
-- Contains a list of countries with name, ISO code, dial code, and flag emoji
-- Left side: clickable flag button that opens a Popover with a scrollable, searchable country list
-- Right side: standard text input for the phone number
-- Props: `value`, `onChange`, `countryCode`, `onCountryCodeChange`
-- Unified border styling so flag selector and input appear as one field
+**`src/components/sessions/SessionSort.tsx`**
+- Remove the "Sort By" radio group section entirely (date created, date updated, name, status)
+- Keep only the Ascending/Descending toggle buttons
+- Clean up the design: remove the outer border/bg-muted container, use a compact inline style matching the toolbar aesthetic — two small pill-style buttons side by side with icons
 
-**`src/components/settings/ProfileSettings.tsx`**
-- Replace the current `Select` + `Input` combo in the phone number section with the new `PhoneInput` component
-- Update `phoneCountryCode` state to store the ISO country code (e.g. `"CA"`) instead of the dial code string
+**`src/components/letters/LettersList.tsx`**
+- Replace the sort stub ("Sort options coming soon...") with the same two Ascending/Descending toggle buttons inline
+- Use identical styling to the Sessions sort for consistency
 
-**`src/components/onboarding/OnboardingStepOne.tsx`**
-- If phone number field exists in onboarding, apply the same `PhoneInput` component (check if it's present there)
+### Design
+Both panels will show a simple inline row:
 
-### Country data (subset)
-The component will include common countries: Canada, US, UK, France, Germany, Australia, Brazil, India, etc. — a comprehensive list similar to the reference screenshot showing all countries alphabetically.
+```text
+[ ↑ Ascending ] [ ↓ Descending ]
+```
+
+Compact, no labels/headers, active state uses the default button variant, inactive uses outline. Matches the small toolbar aesthetic already in place.
 
