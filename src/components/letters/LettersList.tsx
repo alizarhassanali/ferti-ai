@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, SlidersHorizontal, ArrowUpDown, RefreshCw, Calendar } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowUpDown, ArrowUp, ArrowDown, RefreshCw, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useLetters } from '@/contexts/LettersContext';
@@ -129,10 +129,25 @@ export const LettersList = () => {
           </div>
         )}
 
-        {/* Sort panel stub */}
+        {/* Sort panel */}
         {showSort && (
-          <div className="p-3 bg-sidebar rounded-lg border border-border">
-            <p className="text-xs text-foreground/60">Sort options coming soon...</p>
+          <div className="flex gap-1.5">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-xs px-3 rounded-full gap-1.5"
+            >
+              <ArrowUp className="h-3 w-3" />
+              Ascending
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              className="h-7 text-xs px-3 rounded-full gap-1.5"
+            >
+              <ArrowDown className="h-3 w-3" />
+              Descending
+            </Button>
           </div>
         )}
       </div>
