@@ -14,6 +14,7 @@ export const LettersList = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const toBeSentLetters = letters.filter(l => l.status === 'to_be_sent');
   const sentLetters = letters.filter(l => l.status === 'sent');
@@ -180,7 +181,7 @@ export const LettersList = () => {
               No letters pending
             </div>
           ) : (
-            Object.entries(groupByDate(filterLetters(toBeSentLetters))).map(([date, dateLetters]) => (
+            Object.entries(groupByDate(filterLetters(toBeSentLetters))).sort(([a], [b]) => sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)).map(([date, dateLetters]) => (
               <div key={date} className="space-y-1">
                 <div className="flex items-center gap-1 text-xs text-foreground/50 px-2 font-medium">
                   <Calendar className="h-3 w-3" />
@@ -207,7 +208,7 @@ export const LettersList = () => {
               No sent letters
             </div>
           ) : (
-            Object.entries(groupByDate(filterLetters(sentLetters))).map(([date, dateLetters]) => (
+            Object.entries(groupByDate(filterLetters(sentLetters))).sort(([a], [b]) => sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a)).map(([date, dateLetters]) => (
               <div key={date} className="space-y-1">
                 <div className="flex items-center gap-1 text-xs text-foreground/50 px-2 font-medium">
                   <Calendar className="h-3 w-3" />
