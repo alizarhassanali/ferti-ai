@@ -134,17 +134,19 @@ export const LettersList = () => {
         {showSort && (
           <div className="flex gap-1.5">
             <Button
-              variant="outline"
+              variant={sortOrder === 'asc' ? 'default' : 'outline'}
               size="sm"
               className="h-7 text-xs px-3 rounded-full gap-1.5"
+              onClick={() => setSortOrder('asc')}
             >
               <ArrowUp className="h-3 w-3" />
               Ascending
             </Button>
             <Button
-              variant="default"
+              variant={sortOrder === 'desc' ? 'default' : 'outline'}
               size="sm"
               className="h-7 text-xs px-3 rounded-full gap-1.5"
+              onClick={() => setSortOrder('desc')}
             >
               <ArrowDown className="h-3 w-3" />
               Descending
