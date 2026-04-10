@@ -1,25 +1,15 @@
 
 
-## Restrict File Uploads & Show Toast for Unsupported Files
+## Fix: Resolve Build Error
 
-### Summary
-Restrict the Context Tab file upload to PDF, DOCX, DOC, PNG, and JPEG only. Show allowed types in the drop zone hint. Show an immediate toast when an unsupported file is selected or dragged in.
+### Problem
+The preview is not loading due to a transient build error: `vite: command not found`. This means `node_modules` needs to be reinstalled. The actual file upload restriction code in `ContextTab.tsx` is correctly implemented.
 
-### Changes
+### Solution
+Run `npm install` (or `bun install`) to restore `node_modules`, then the dev server will start and the file upload restrictions will work as expected.
 
-**`src/components/newSession/ContextTab.tsx`**
-
-1. Add `accept` attribute to the file input: `.pdf,.docx,.doc,.png,.jpg,.jpeg`
-2. Define an `ALLOWED_EXTENSIONS` constant: `['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg']`
-3. Add a `filterFiles` helper that splits files into valid/invalid based on extension
-4. In `handleDrop` and `handleFileInput`: filter files, pass only valid ones to `addFiles`, and if any are invalid show a toast: *"Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed."*
-5. Update drop zone text to two lines:
-   - "Drag & drop or click to attach files"
-   - "Supported formats: PDF, DOCX, DOC, PNG, JPEG"
-6. Import `toast` from `sonner` for the notification
-
-### File
-| File | Change |
-|------|--------|
-| `src/components/newSession/ContextTab.tsx` | Add accept attr, validation logic, toast, update hint text |
+### Steps
+1. Run package install to restore dependencies
+2. Verify the dev server starts successfully
+3. No code changes needed — the validation logic, toast, and UI labels are all correctly in place
 
