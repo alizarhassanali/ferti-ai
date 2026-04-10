@@ -125,12 +125,16 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
             id="context-file-input"
             type="file"
             multiple
+            accept=".pdf,.docx,.doc,.png,.jpg,.jpeg"
             className="hidden"
             onChange={handleFileInput}
           />
-          <div className="flex items-center justify-center gap-2 text-muted-foreground">
-            <Paperclip className="h-4 w-4" />
-            <span className="text-sm">Drag & drop, click to attach, or paste (Ctrl+V) screenshots</span>
+          <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Paperclip className="h-4 w-4" />
+              <span className="text-sm">Drag & drop or click to attach files</span>
+            </div>
+            <span className="text-xs">Supported formats: PDF, DOCX, DOC, PNG, JPEG</span>
           </div>
         </div>
 
