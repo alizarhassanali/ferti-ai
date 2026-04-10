@@ -31,16 +31,24 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const droppedFiles = e.dataTransfer.files;
+    const droppedFiles = Array.from(e.dataTransfer.files);
     if (droppedFiles.length > 0) {
-      addFiles(Array.from(droppedFiles));
+      const { valid, invalid } = filterFiles(droppedFiles);
+      if (invalid.length > 0) {
+        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
   };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {
-      addFiles(Array.from(selectedFiles));
+      const { valid, invalid } = filterFiles(Array.from(selectedFiles));
+      if (invalid.length > 0) {
+        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
     e.target.value = '';
   };
