@@ -27,6 +27,7 @@ interface ContextTabProps {
 }
 
 export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabProps) => {
+  const { toast } = useToast();
   const { files, addFiles, removeFile, retryProcessing } = useDocumentOCR();
 
   const handleDrop = (e: React.DragEvent) => {
@@ -35,7 +36,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
     if (droppedFiles.length > 0) {
       const { valid, invalid } = filterFiles(droppedFiles);
       if (invalid.length > 0) {
-        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+        toast({ title: "Unsupported file type", description: "Only PDF, DOCX, DOC, PNG, and JPEG are allowed.", variant: "destructive" });
       }
       if (valid.length > 0) addFiles(valid);
     }
@@ -46,7 +47,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
     if (selectedFiles) {
       const { valid, invalid } = filterFiles(Array.from(selectedFiles));
       if (invalid.length > 0) {
-        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+        toast({ title: "Unsupported file type", description: "Only PDF, DOCX, DOC, PNG, and JPEG are allowed.", variant: "destructive" });
       }
       if (valid.length > 0) addFiles(valid);
     }
