@@ -134,7 +134,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
               <Paperclip className="h-4 w-4" />
               <span className="text-sm">Drag & drop or click to attach files</span>
             </div>
-            <span className="text-xs">Supported formats: PDF, DOCX, DOC, PNG, JPEG</span>
+            <span className="text-xs">PDF, DOCX, DOC, PNG, JPEG</span>
           </div>
         </div>
 
