@@ -1,5 +1,19 @@
 import { useState, useCallback } from 'react';
 import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, AlertTriangle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, CheckCircle, Globe } from 'lucide-react';
+import { toast as sonnerToast } from 'sonner';
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg'];
+
+const filterFiles = (files: File[]) => {
+  const valid: File[] = [];
+  const invalid: File[] = [];
+  files.forEach(f => {
+    const ext = '.' + f.name.split('.').pop()?.toLowerCase();
+    if (ALLOWED_EXTENSIONS.includes(ext)) valid.push(f);
+    else invalid.push(f);
+  });
+  return { valid, invalid };
+};
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -130,18 +144,26 @@ export const RightColumnPanel = ({
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      addFiles(Array.from(files));
+    const selectedFiles = e.target.files;
+    if (selectedFiles) {
+      const { valid, invalid } = filterFiles(Array.from(selectedFiles));
+      if (invalid.length > 0) {
+        sonnerToast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
     e.target.value = '';
   };
 
   const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      addFiles(Array.from(files));
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    if (droppedFiles.length > 0) {
+      const { valid, invalid } = filterFiles(droppedFiles);
+      if (invalid.length > 0) {
+        sonnerToast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
   };
 
@@ -535,12 +557,16 @@ export const RightColumnPanel = ({
                   id="right-panel-file-input"
                   type="file"
                   multiple
+                  accept=".pdf,.docx,.doc,.png,.jpg,.jpeg"
                   className="hidden"
                   onChange={handleFileSelect}
                 />
-                <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                  <Paperclip className="h-4 w-4" />
-                  <span className="text-sm">Drag & drop, click to attach, or paste (Ctrl+V) screenshots</span>
+                <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Paperclip className="h-4 w-4" />
+                    <span className="text-sm">Drag & drop or click to attach files</span>
+                  </div>
+                  <span className="text-xs">Supported formats: PDF, DOCX, DOC, PNG, JPEG</span>
                 </div>
               </div>
 
