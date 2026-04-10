@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg'];
 

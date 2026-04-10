@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Plus, X, FileText, ChevronDown, Copy, Undo, Redo, MoreHorizontal, Loader2, AlertCircle, AlertTriangle, Bold, Italic, List, Paperclip, Printer, FileDown, Send, PenLine, CheckCircle, Globe } from 'lucide-react';
-import { toast as sonnerToast } from 'sonner';
+
 
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg'];
 
@@ -148,7 +148,7 @@ export const RightColumnPanel = ({
     if (selectedFiles) {
       const { valid, invalid } = filterFiles(Array.from(selectedFiles));
       if (invalid.length > 0) {
-        sonnerToast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+        toast({ title: "Unsupported file type", description: "Only PDF, DOCX, DOC, PNG, and JPEG are allowed.", variant: "destructive" });
       }
       if (valid.length > 0) addFiles(valid);
     }
@@ -161,7 +161,7 @@ export const RightColumnPanel = ({
     if (droppedFiles.length > 0) {
       const { valid, invalid } = filterFiles(droppedFiles);
       if (invalid.length > 0) {
-        sonnerToast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+        toast({ title: "Unsupported file type", description: "Only PDF, DOCX, DOC, PNG, and JPEG are allowed.", variant: "destructive" });
       }
       if (valid.length > 0) addFiles(valid);
     }
