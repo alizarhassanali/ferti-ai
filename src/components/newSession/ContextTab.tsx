@@ -5,6 +5,20 @@ import { cn } from '@/lib/utils';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { toast } from 'sonner';
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg'];
+
+const filterFiles = (files: File[]) => {
+  const valid: File[] = [];
+  const invalid: File[] = [];
+  files.forEach(f => {
+    const ext = '.' + f.name.split('.').pop()?.toLowerCase();
+    if (ALLOWED_EXTENSIONS.includes(ext)) valid.push(f);
+    else invalid.push(f);
+  });
+  return { valid, invalid };
+};
 
 interface ContextTabProps {
   content: string;
@@ -17,16 +31,24 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const droppedFiles = e.dataTransfer.files;
+    const droppedFiles = Array.from(e.dataTransfer.files);
     if (droppedFiles.length > 0) {
-      addFiles(Array.from(droppedFiles));
+      const { valid, invalid } = filterFiles(droppedFiles);
+      if (invalid.length > 0) {
+        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
   };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {
-      addFiles(Array.from(selectedFiles));
+      const { valid, invalid } = filterFiles(Array.from(selectedFiles));
+      if (invalid.length > 0) {
+        toast.error('Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed.');
+      }
+      if (valid.length > 0) addFiles(valid);
     }
     e.target.value = '';
   };
@@ -103,12 +125,16 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
             id="context-file-input"
             type="file"
             multiple
+            accept=".pdf,.docx,.doc,.png,.jpg,.jpeg"
             className="hidden"
             onChange={handleFileInput}
           />
-          <div className="flex items-center justify-center gap-2 text-muted-foreground">
-            <Paperclip className="h-4 w-4" />
-            <span className="text-sm">Drag & drop, click to attach, or paste (Ctrl+V) screenshots</span>
+          <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Paperclip className="h-4 w-4" />
+              <span className="text-sm">Drag & drop or click to attach files</span>
+            </div>
+            <span className="text-xs">Supported formats: PDF, DOCX, DOC, PNG, JPEG</span>
           </div>
         </div>
 
