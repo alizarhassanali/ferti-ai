@@ -132,7 +132,7 @@ export const ContextTab = ({ content, onContentChange, onLoadDemo }: ContextTabP
           <div className="flex flex-col items-center justify-center gap-1 text-muted-foreground">
             <div className="flex items-center gap-2">
               <Paperclip className="h-4 w-4" />
-              <span className="text-sm">Drag & drop or click to attach files</span>
+              <span className="text-sm">Drag & drop, click to attach, or paste (Ctrl+V) screenshots</span>
             </div>
             <span className="text-xs">PDF, DOCX, DOC, PNG, JPEG</span>
           </div>
