@@ -5,6 +5,20 @@ import { cn } from '@/lib/utils';
 import { useDocumentOCR } from '@/hooks/useDocumentOCR';
 import { FileProcessingItem } from './FileProcessingItem';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { toast } from 'sonner';
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg'];
+
+const filterFiles = (files: File[]) => {
+  const valid: File[] = [];
+  const invalid: File[] = [];
+  files.forEach(f => {
+    const ext = '.' + f.name.split('.').pop()?.toLowerCase();
+    if (ALLOWED_EXTENSIONS.includes(ext)) valid.push(f);
+    else invalid.push(f);
+  });
+  return { valid, invalid };
+};
 
 interface ContextTabProps {
   content: string;
