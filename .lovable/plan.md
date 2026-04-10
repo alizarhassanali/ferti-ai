@@ -1,35 +1,25 @@
 
 
-## Fix Sort Functionality in Sessions and Letters
+## Restrict File Uploads & Show Toast for Unsupported Files
 
-### Problem
-- **Sessions**: `SessionSort` manages sort state internally but never passes it up to `SessionList`, so the sorted order is never applied to the actual session list.
-- **Letters**: Sort buttons are static — no state, no click handlers, no sorting logic.
+### Summary
+Restrict the Context Tab file upload to PDF, DOCX, DOC, PNG, and JPEG only. Show allowed types in the drop zone hint. Show an immediate toast when an unsupported file is selected or dragged in.
 
-### Solution
+### Changes
 
-**`src/components/sessions/SessionSort.tsx`**
-- Accept `sortOrder` and `onSortOrderChange` as props instead of using internal state
-- Parent controls the state
+**`src/components/newSession/ContextTab.tsx`**
 
-**`src/components/sessions/SessionList.tsx`**
-- Add `sortOrder` state (`'asc' | 'desc'`, default `'desc'`)
-- Pass `sortOrder` and `setSortOrder` to `SessionSort`
-- Sort `groupedDraftSessions` and `groupedCompletedSessions` date keys by `sortOrder` before rendering
+1. Add `accept` attribute to the file input: `.pdf,.docx,.doc,.png,.jpg,.jpeg`
+2. Define an `ALLOWED_EXTENSIONS` constant: `['.pdf', '.docx', '.doc', '.png', '.jpg', '.jpeg']`
+3. Add a `filterFiles` helper that splits files into valid/invalid based on extension
+4. In `handleDrop` and `handleFileInput`: filter files, pass only valid ones to `addFiles`, and if any are invalid show a toast: *"Unsupported file type. Only PDF, DOCX, DOC, PNG, and JPEG are allowed."*
+5. Update drop zone text to two lines:
+   - "Drag & drop or click to attach files"
+   - "Supported formats: PDF, DOCX, DOC, PNG, JPEG"
+6. Import `toast` from `sonner` for the notification
 
-**`src/components/letters/LettersList.tsx`**
-- Add `sortOrder` state (`'asc' | 'desc'`, default `'desc'`)
-- Wire sort buttons with `onClick` handlers and active variant styling
-- Sort the `groupByDate` output keys by `sortOrder` before rendering in both tabs
-
-### Sorting logic (same for both)
-Sort the date group keys alphabetically (they're `yyyy-MM-dd` format, so string sort works). Ascending = oldest first, Descending = newest first.
-
-### Files to change
-
+### File
 | File | Change |
 |------|--------|
-| `src/components/sessions/SessionSort.tsx` | Accept props instead of internal state |
-| `src/components/sessions/SessionList.tsx` | Add sort state, pass to `SessionSort`, apply sort to date groups |
-| `src/components/letters/LettersList.tsx` | Add sort state, wire buttons, apply sort to date groups |
+| `src/components/newSession/ContextTab.tsx` | Add accept attr, validation logic, toast, update hint text |
 
