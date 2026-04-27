@@ -134,7 +134,7 @@ export const ProfileSettings = () => {
             <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleImageUpload} className="hidden" />
 
             {/* Read-only email under avatar */}
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-5 flex items-center gap-2">
               <span className="text-xs font-medium text-muted-foreground">Email</span>
               <span className="text-sm text-muted-foreground">{user.email}</span>
             </div>
