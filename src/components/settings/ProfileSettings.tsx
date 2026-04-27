@@ -16,10 +16,8 @@ interface ProfileFormState {
   title: string;
   firstName: string;
   lastName: string;
-  preferredName: string;
   specialty: string;
   primaryLocation: string;
-  clinicName: string;
   role: UserRole;
   phoneCountryCode: string;
   phoneNumber: string;
@@ -30,15 +28,15 @@ interface ProfileFormState {
 export const ProfileSettings = () => {
   const { user, updateProfile, isSaving } = useSettings();
   const { toast } = useToast();
-  
+
+  const clinicName = user.clinicName || user.clinic || '';
+
   const getInitialState = (): ProfileFormState => ({
     title: user.title || 'Dr.',
     firstName: user.firstName,
     lastName: user.lastName,
-    preferredName: '',
     specialty: user.specialty || 'Fertility Specialist',
     primaryLocation: '',
-    clinicName: user.clinicName || user.clinic || '',
     role: user.role as UserRole,
     phoneCountryCode: 'CA',
     phoneNumber: '',
@@ -108,15 +106,6 @@ export const ProfileSettings = () => {
       </div>
 
       <div className="space-y-8">
-        {/* Account Section */}
-        <div className="border border-border rounded-lg p-6 bg-card">
-          <h4 className="text-sm font-semibold text-foreground mb-4">Account</h4>
-          <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium">Email</Label>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
-          </div>
-        </div>
-
         {/* About You Section */}
         <div className="border border-border rounded-lg p-6 bg-card">
           <h4 className="text-sm font-semibold text-foreground mb-6">About you</h4>
@@ -143,9 +132,15 @@ export const ProfileSettings = () => {
               </TooltipContent>
             </Tooltip>
             <input id="image-upload" type="file" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleImageUpload} className="hidden" />
+
+            {/* Read-only email under avatar */}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">Email</span>
+              <span className="text-sm text-muted-foreground">{user.email}</span>
+            </div>
           </div>
 
-          {/* Name Fields */}
+          {/* Row 1: Title, First name, Last name */}
           <div className="grid grid-cols-[120px_1fr_1fr] gap-4 mb-4">
             <div>
               <Label htmlFor="title" className="text-sm font-medium mb-2 block">Title</Label>
@@ -172,11 +167,16 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Preferred Name, Specialty, and Role */}
+          {/* Row 2: Phone number, Specialty, Your role */}
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
-              <Label htmlFor="preferredName" className="text-sm font-medium mb-2 block">Preferred name</Label>
-              <Input id="preferredName" value={formData.preferredName} onChange={e => setFormData({ ...formData, preferredName: e.target.value })} placeholder="The name you prefer to go by" />
+              <Label className="text-sm font-medium mb-2 block">Phone number</Label>
+              <PhoneInput
+                countryCode={formData.phoneCountryCode}
+                onCountryCodeChange={(code) => setFormData({ ...formData, phoneCountryCode: code })}
+                value={formData.phoneNumber}
+                onChange={(val) => setFormData({ ...formData, phoneNumber: val })}
+              />
             </div>
             <div>
               <Label htmlFor="specialty" className="text-sm font-medium mb-2 block">Specialty</Label>
@@ -209,11 +209,11 @@ export const ProfileSettings = () => {
             </div>
           </div>
 
-          {/* Clinic Name, Primary Location, and Phone Number */}
+          {/* Row 3: Clinic name (read-only), Primary location, Display language */}
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <Label htmlFor="clinicName" className="text-sm font-medium mb-2 block">Clinic name</Label>
-              <Input id="clinicName" value={formData.clinicName} onChange={e => setFormData({ ...formData, clinicName: e.target.value })} placeholder="Enter your clinic name" />
+              <Input id="clinicName" value={clinicName} disabled readOnly />
             </div>
             <div>
               <Label htmlFor="primaryLocation" className="text-sm font-medium mb-2 block">Primary location</Label>
@@ -230,28 +230,17 @@ export const ProfileSettings = () => {
               </Select>
             </div>
             <div>
-              <Label className="text-sm font-medium mb-2 block">Phone number</Label>
-              <PhoneInput
-                countryCode={formData.phoneCountryCode}
-                onCountryCodeChange={(code) => setFormData({ ...formData, phoneCountryCode: code })}
-                value={formData.phoneNumber}
-                onChange={(val) => setFormData({ ...formData, phoneNumber: val })}
-              />
+              <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
+              <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
+                <SelectTrigger id="displayLanguage">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="French">French</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-
-          {/* Display Language */}
-          <div className="mb-4">
-            <Label htmlFor="displayLanguage" className="text-sm font-medium mb-2 block">Display language</Label>
-            <Select value={formData.displayLanguage} onValueChange={(value) => setFormData({ ...formData, displayLanguage: value })}>
-              <SelectTrigger id="displayLanguage">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">English</SelectItem>
-                <SelectItem value="French">French</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
