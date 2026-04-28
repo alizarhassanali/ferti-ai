@@ -135,8 +135,8 @@ export const ProfileSettings = () => {
 
             {/* Read-only email under avatar */}
             <div className="mt-5 flex items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Email</span>
-              <span className="text-sm text-muted-foreground">{user.email}</span>
+              <span className="text-sm font-medium text-muted-foreground">Email</span>
+              <span className="text-base text-muted-foreground">{user.email}</span>
             </div>
           </div>
 
