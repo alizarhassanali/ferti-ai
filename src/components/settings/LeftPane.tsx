@@ -301,22 +301,20 @@ export const LeftPane = () => {
             
             {footerItems.map(item => {
             const Icon = item.icon;
+            const itemRoute = item.id === 'whats-new' ? '/whats-new' : '/resource-center';
+            const isActive = location.pathname === itemRoute;
             const handleClick = () => {
               setIsMobileMenuOpen(false);
-              if (item.id === 'whats-new') {
-                navigate('/whats-new');
-              } else if (item.id === 'resource-center') {
-                navigate('/resource-center');
-              }
+              navigate(itemRoute);
             };
             const showBadge = item.id === 'whats-new' && hasUnseen;
             return <li key={item.id}>
                   {isCollapsed ? <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button onClick={handleClick} className="relative w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground">
+                          <button onClick={handleClick} className={`relative w-full flex items-center justify-center p-2.5 rounded-xl text-sm transition-all duration-200 group hover:bg-muted hover:text-foreground ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>
                              <div className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 group-hover:scale-105">
-                               <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                               <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
                              </div>
                              {showBadge && <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-sidebar" />}
                            </button>
@@ -325,8 +323,8 @@ export const LeftPane = () => {
                           <p>{item.label}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </TooltipProvider> : <button onClick={handleClick} className="relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group text-muted-foreground hover:bg-muted hover:text-foreground font-medium">
-                       <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                    </TooltipProvider> : <button onClick={handleClick} className={`relative w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group hover:bg-muted hover:text-foreground ${isActive ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium'}`}>
+                       <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.5 : 1.75} />
                        <span className="flex-1 text-left">{item.label}</span>
                        {showBadge && <span className="h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-sidebar" />}
                      </button>}

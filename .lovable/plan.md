@@ -1,33 +1,22 @@
-## Reorganize Profile settings layout
+## Goal
+Make Switch App, What's New, and Help Center indicate active state via a **color shift only** (no background, no border, no icon wrapper change). Icons and labels switch from muted to full foreground and gain `font-semibold`, matching the rest of the muted footer styling at rest.
 
-### Changes to `src/components/settings/ProfileSettings.tsx`
+## Changes
 
-**1. Remove the standalone "Account" card**
-- Delete the entire top card that currently shows the email on its own.
+### `src/components/settings/LeftPane.tsx`
+- Determine active state for the two route-based items:
+  - What's New → active when `location.pathname === '/whats-new'`
+  - Help Center → active when `location.pathname === '/resource-center'`
+- When active:
+  - Icon `className`: swap `text-muted-foreground` → `text-foreground`
+  - Label `className`: swap `text-muted-foreground font-medium` → `text-foreground font-semibold`
+- Leave background, padding, borders, and icon wrappers untouched (no `bg-sidebar-accent`, no white-bordered icon).
+- Apply the same logic to both expanded and collapsed states (collapsed = icon-only color shift).
 
-**2. Move email into the "About you" card, under the profile image**
-- Directly beneath the 64x64 avatar, add a subtle muted row:
-  - Small "Email" label (muted, `text-xs`) followed by the email value (`text-sm text-muted-foreground`).
-  - No input — purely read-only display.
-- This keeps the avatar as the visual anchor and makes the email feel like part of the user's identity block without adding a fourth row.
+### `src/components/sidebar/SwitchAppPopover.tsx`
+- Convert `Popover` to controlled with local `open` state.
+- Pass `open` down to the trigger button so it applies the same color-shift active treatment (icon + label → `text-foreground`, label → `font-semibold`) while the popover is visible. No background/border change.
 
-**3. Restructure the form rows inside "About you"**
-
-Row 1 (unchanged) — `[Title 120px | First name | Last name]`
-
-Row 2 (changed) — `[Phone number | Specialty | Your role]`
-- Remove the "Preferred name" field entirely (also remove `preferredName` from form state).
-- Phone number takes the leftmost slot in a 3-column grid.
-
-Row 3 (changed) — `[Clinic name (read-only) | Primary location | Display language]`
-- Clinic name becomes non-editable: render as a disabled `Input` (greyed but visually consistent with other fields) showing `user.clinicName || user.clinic`.
-- Remove it from `formData` state since it can no longer change.
-- Primary location dropdown moves into slot 2.
-- Display language dropdown moves into slot 3.
-
-Row 4 — **removed entirely** (display language is now in row 3).
-
-### Result
-- One consolidated "About you" card (no separate Account card).
-- Email shown as a subtle, non-editable line under the profile image.
-- Three clean rows of fields, no preferred name, clinic name visibly locked.
+## Out of scope
+- No changes to the main nav items.
+- No background fills, accent bars, dots, or icon wrapper styling for the footer items.

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { LayoutGrid } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -14,30 +15,32 @@ const apps = [
 ];
 
 export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
+  const [open, setOpen] = useState(false);
+
   const handleAppClick = (appId: string) => {
-    // Placeholder for app switching logic
     console.log(`Switching to app: ${appId}`);
   };
 
   const TriggerButton = (
     <button className={`
-      w-full flex items-center ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'} 
-      rounded-xl text-sm transition-all duration-200 group 
-      text-muted-foreground hover:bg-muted hover:text-foreground font-medium
+      w-full flex items-center ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'}
+      rounded-xl text-sm transition-all duration-200 group
+      hover:bg-muted hover:text-foreground
+      ${open ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium'}
     `}>
       <div className={`
-        flex items-center justify-center ${isCollapsed ? 'w-9 h-9' : ''} 
+        flex items-center justify-center ${isCollapsed ? 'w-9 h-9' : ''}
         rounded-xl transition-all duration-200 group-hover:scale-105
       `}>
-        <LayoutGrid className="h-[18px] w-[18px]" strokeWidth={1.75} />
+        <LayoutGrid className="h-[18px] w-[18px]" strokeWidth={open ? 2.5 : 1.75} />
       </div>
       {!isCollapsed && <span className="flex-1 text-left">Switch App</span>}
     </button>
   );
 
   const PopoverContentComponent = (
-    <PopoverContent 
-      side="right" 
+    <PopoverContent
+      side="right"
       align="end"
       sideOffset={8}
       className="w-52 p-3 bg-card border border-border/50 shadow-xl rounded-2xl"
@@ -53,8 +56,8 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
             className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl border border-transparent hover:bg-muted/50 hover:border-border transition-all duration-200"
           >
             <div className={`
-              w-9 h-9 rounded-full ${app.color} 
-              flex items-center justify-center 
+              w-9 h-9 rounded-full ${app.color}
+              flex items-center justify-center
               text-white text-[10px] font-bold shadow-sm
             `}>
               {app.initials}
@@ -70,7 +73,7 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
 
   if (isCollapsed) {
     return (
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -89,7 +92,7 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {TriggerButton}
       </PopoverTrigger>
