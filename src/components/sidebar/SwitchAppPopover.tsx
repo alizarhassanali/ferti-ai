@@ -23,11 +23,12 @@ export const SwitchAppPopover = ({ isCollapsed }: SwitchAppPopoverProps) => {
 
   const TriggerButton = (
     <button className={`
-      w-full flex items-center ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'}
+      relative w-full flex items-center ${isCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'}
       rounded-xl text-sm transition-all duration-200 group
       hover:bg-muted hover:text-foreground
       ${open ? 'text-foreground font-semibold' : 'text-muted-foreground font-medium'}
     `}>
+      {open && <span className="absolute left-0 top-1/2 -translate-y-1/2 h-[60%] w-[3px] rounded-r-full bg-primary" />}
       <div className={`
         flex items-center justify-center ${isCollapsed ? 'w-9 h-9' : ''}
         rounded-xl transition-all duration-200 group-hover:scale-105
